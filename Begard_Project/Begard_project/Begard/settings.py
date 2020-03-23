@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'googlemaps',
     'pprint',
-    'myapp1',
+    'begard_app',
     'rest_framework.authtoken'
 ]
 
@@ -52,7 +52,6 @@ REST_FRAMEWORK = {
     ),
 
 }
-
 
 
 MIDDLEWARE = [

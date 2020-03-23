@@ -1,5 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, decorators
@@ -16,13 +14,13 @@ permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       IsOwnerOrReadOnly]
 
 
-class begarduserList(generics.ListCreateAPIView):
+class BegardUserList(generics.ListCreateAPIView):
     queryset = begarduser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class begarduserDetail(generics.RetrieveUpdateDestroyAPIView):
+class BegardUserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = begarduser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -52,26 +50,3 @@ class SuggestList(generics.ListAPIView):
         queryset += models.Museum.objects.filter(city=city).order_by('-rating')[0:3]
 
         return queryset
-
-
-@decorators.api_view(['GET'])
-def get_data(request):
-    api = google_map_api.API()
-
-    lat = 35.738222
-    lng = 51.506882
-    place_type = 'tourist_attraction'
-
-    result = api.search_nearby(lat, lng, place_type)
-    city = models.City.objects.get(name="Tehran")
-    for r in result:
-        try:
-            obj = models.HistoricalPlace(city=city, place_id=r['place_id'], name=r['name'], rating=r['rating'],
-                                         address=r['vicinity'], photo_ref=r['photos'][0]['photo_reference'],
-                                         lng=r['geometry']['location']['lng'], lat=r['geometry']['location']['lat'])
-            if not models.HistoricalPlace.objects.filter(place_id=obj.place_id).exists():
-                obj.save()
-        except KeyError:
-            pass
-
-    return Response(result, status.HTTP_200_OK)

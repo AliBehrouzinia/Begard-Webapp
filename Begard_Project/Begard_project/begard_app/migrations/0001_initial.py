@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('photo_ref', models.TextField(default='Nothing')),
                 ('lng', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
                 ('lat', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
-                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='myapp1.City')),
+                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='begard_app.City')),
             ],
             options={
                 'abstract': False,
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('photo_ref', models.TextField(default='Nothing')),
                 ('lng', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
                 ('lat', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
-                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='myapp1.City')),
+                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='begard_app.City')),
             ],
             options={
                 'abstract': False,
@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 ('photo_ref', models.TextField(default='Nothing')),
                 ('lng', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
                 ('lat', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
-                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='myapp1.City')),
+                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='begard_app.City')),
             ],
             options={
                 'abstract': False,
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
                 ('photo_ref', models.TextField(default='Nothing')),
                 ('lng', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
                 ('lat', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
-                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='myapp1.City')),
+                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='begard_app.City')),
             ],
             options={
                 'abstract': False,
@@ -102,7 +102,7 @@ class Migration(migrations.Migration):
                 ('photo_ref', models.TextField(default='Nothing')),
                 ('lng', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
                 ('lat', models.DecimalField(decimal_places=9, max_digits=13, null=True)),
-                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='myapp1.City')),
+                ('city', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='begard_app.City')),
             ],
             options={
                 'abstract': False,
