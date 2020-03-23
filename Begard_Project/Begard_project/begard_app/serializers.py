@@ -36,7 +36,7 @@ class MuseumSerializer(serializers.ModelSerializer):
 
 class HistoricalPlaceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HistoricalPlace
+        model = TouristAttraction
         fields = '__all__'
 
 

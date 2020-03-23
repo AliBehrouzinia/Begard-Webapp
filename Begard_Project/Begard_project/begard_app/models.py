@@ -56,7 +56,7 @@ class Museum(Place):
         return self.city.name+"-"+self.name
 
 
-class HistoricalPlace(Place):
+class TouristAttraction(Place):
 
     def __str__(self):
         return self.city.name+"-"+self.name
