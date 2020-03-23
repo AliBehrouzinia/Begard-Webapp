@@ -6,7 +6,6 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 
 
-
 class begarduser(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
@@ -17,9 +16,6 @@ class begarduser(models.Model):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
-
-
 
 
 class City(models.Model):
@@ -46,28 +42,28 @@ class Place(models.Model):
 class Restaurant(Place):
 
     def __str__(self):
-        return self.city.name+self.name
+        return self.city.name+"-"+self.name
 
 
 class Hotel(Place):
 
     def __str__(self):
-        return self.city+self.name
+        return self.city.name+"-"+self.name
 
 
 class Museum(Place):
 
     def __str__(self):
-        return self.city+self.name
+        return self.city.name+"-"+self.name
 
 
 class HistoricalPlace(Place):
 
     def __str__(self):
-        return self.city+self.name
+        return self.city.name+"-"+self.name
 
 
 class RecreationalPlace(Place):
 
     def __str__(self):
-        return self.city+self.name
+        return self.city.name+"-"+self.name
