@@ -27,11 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-#ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-#ACCOUNT_EMAIL_REQUIRED = True
-#ACCOUNT_USERNAME_REQUIRED = False
-#ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,18 +55,18 @@ SITE_ID = 1
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
                'rest_framework.authentication.TokenAuthentication',
-               #'rest_framework.authentication.BasicAuthentication',
-               #'rest_framework.authentication.SessionAuthentication',
+               # 'rest_framework.authentication.BasicAuthentication',
+               # 'rest_framework.authentication.SessionAuthentication',
     ),
 
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#REST_SESSION_LOGIN = True
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#ACCOUNT_EMAIL_REQUIRED = True
-#ACCOUNT_AUTHENTICATION_METHOD = 'EMAIL'
-#ACCOUNT_EMAIL_VERIFICATION = 'optional'
+# REST_SESSION_LOGIN = True
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_AUTHENTICATION_METHOD = 'EMAIL'
+# ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -102,7 +97,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Begard.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

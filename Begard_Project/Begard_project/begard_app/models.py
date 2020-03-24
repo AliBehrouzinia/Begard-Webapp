@@ -1,8 +1,4 @@
 from django.db import models
-from django.conf import settings
-from django.dispatch import receiver
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
 
 
 class begarduser(models.Model):
