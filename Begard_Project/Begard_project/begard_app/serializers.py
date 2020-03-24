@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import *
 from django.contrib.auth.models import User
+from .models import *
 from .models import begarduser
 
 
@@ -8,6 +8,15 @@ class SuggestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
         fields = '__all__'
+
+
+#class UserSerializer(serializers.ModelSerializer):
+#    owner = serializers.ReadOnlyField(source='owner.username')
+#    begardusers = serializers.PrimaryKeyRelatedField(many=True, queryset=begarduser.objects.all())
+
+    #class Meta:
+        #model = begarduser
+        #fields = '__all__'
 
 
 class CitySerializer(serializers.ModelSerializer):

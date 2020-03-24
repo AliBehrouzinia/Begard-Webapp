@@ -41,13 +41,22 @@ INSTALLED_APPS = [
     'googlemaps',
     'pprint',
     'begard_app',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'rest_auth',
 ]
 
+SITE_ID = 1
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
                'rest_framework.authentication.TokenAuthentication',
+               #'rest_framework.authentication.BasicAuthentication', 
                'rest_framework.authentication.SessionAuthentication',
     ),
 

@@ -1,12 +1,15 @@
+from rest_framework import status, generics, decorators
+from rest_framework import status, generics, mixins,decorators
+from rest_framework import permissions
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics, decorators
-from . import models, serializers, google_map_api
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
+from . import models, serializers
 from .models import begarduser
 from .serializers import UserSerializer
-from rest_framework import permissions
 from .permissions import IsOwnerOrReadOnly
 
 
