@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-success">New Location</button>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-xs-12">
+        <a 
+        href="#" 
+        class="list-group-item clearfix" 
+        *ngFor="let location of locations">
+            <div class="pull-left">
+                <h4 class="list-group-item-heading">{{ location.name }}</h4>
+                <p class="list-group-item-text">{{ location.address }}</p>
+            </div>
+            <span class="pull-right">
+                <img
+                 [src]="location.imagePath"  
+                 alt="{{ location.name }}" 
+                 class="img-responsive" 
+                 style="max-height: 50px;">
+            </span>
+        </a>
+        <app-location-item></app-location-item>
+    </div>
+</div>
