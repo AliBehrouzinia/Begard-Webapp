@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 
 @Component({
@@ -6,10 +6,12 @@ import { Component, AfterViewInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent  {
+  
+  loadedFeature = 'login'
 
-  ngAfterViewInit() {
+  onNavigate(feature: string){
+    this.loadedFeature = feature;
   }
- 
-   
+
 }
