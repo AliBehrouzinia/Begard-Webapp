@@ -3,7 +3,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule , ReactiveFormsModule} from '@angular/forms';
 
 import { AngularMaterialModule } from './angular-material.module';
-
+import { HttpClientModule } from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
@@ -16,6 +16,7 @@ import { LocationItemComponent } from './map/location-list/location-item/locatio
 import { LocationDetailComponent } from './map/location-detail/location-detail.component';
 import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DataStorageService } from './data-storage.service';
 
 
 
@@ -36,9 +37,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       FormsModule,
       BrowserAnimationsModule,
       AngularMaterialModule,  
-      ReactiveFormsModule 
+      ReactiveFormsModule,
+      HttpClientModule
    ],
-   providers: [],
+   providers: [DataStorageService],
    bootstrap: [
       AppComponent
    ],

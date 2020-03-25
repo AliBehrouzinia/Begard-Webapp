@@ -10,6 +10,12 @@ import {map, startWith} from 'rxjs/operators';
 })
 
 export class SearchComponent implements OnInit {
+  
+  constructor(){
+
+  }
+
+  
   myControl = new FormControl();
   options: string[] = ['One', 'Two', 'Three','four','tehran'];
   filteredOptions: Observable<string[]>;
