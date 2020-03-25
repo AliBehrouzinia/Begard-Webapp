@@ -8,7 +8,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers
-from .models import begarduser
+from .models import BegardUser
 from .serializers import UserSerializer
 from .permissions import IsOwnerOrReadOnly
 
@@ -18,13 +18,13 @@ permission_classes = [permissions.IsAuthenticatedOrReadOnly,
 
 
 class BegardUserList(generics.ListCreateAPIView):
-    queryset = begarduser.objects.all()
+    queryset = BegardUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class BegardUserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = begarduser.objects.all()
+    queryset = BegardUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 

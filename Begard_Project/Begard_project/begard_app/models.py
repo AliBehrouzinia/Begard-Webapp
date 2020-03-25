@@ -1,10 +1,44 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
+from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+
+from .managers import BegardUserManager
 
 
-class begarduser(models.Model):
-    username = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    token = models.CharField(max_length=300)
+class BegardUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_('email address'), unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+    is_admin = True
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = BegardUserManager()
+
+    def __str__(self):
+        return self.email
+
+    @property
+    def is_superuser(self):
+        return self.is_admin
+
+    @property
+    def is_staff(self):
+       return self.is_admin
+
+    def has_perm(self, perm, obj=None):
+       return self.is_admin
+
+    def has_module_perms(self, app_label):
+       return self.is_admin
+
+    @is_staff.setter
+    def is_staff(self, value):
+        self._is_staff = value
 
 
 class City(models.Model):

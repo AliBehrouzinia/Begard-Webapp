@@ -1,21 +1,12 @@
 from rest_framework import serializers
 from .models import *
-from .models import begarduser
+from .models import BegardUser
 
 
 class SuggestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
         fields = '__all__'
-
-
-# class UserSerializer(serializers.ModelSerializer):
-#    owner = serializers.ReadOnlyField(source='owner.username')
-#    begardusers = serializers.PrimaryKeyRelatedField(many=True, queryset=begarduser.objects.all())
-
-    # class Meta:
-        # model = begarduser
-        # fields = '__all__'
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -55,9 +46,9 @@ class RecreationalPlaceSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
-    begardusers = serializers.PrimaryKeyRelatedField(many=True, queryset=begarduser.objects.all())
+    # owner = serializers.ReadOnlyField(source='owner.email')
+    # BegardUsers = serializers.PrimaryKeyRelatedField(many=True, queryset=BegardUser.objects.all())
 
     class Meta:
-        model = begarduser
-        fields = '__all__'
+        model = BegardUser
+        fields = 'email'
