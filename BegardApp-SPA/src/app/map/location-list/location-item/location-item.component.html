@@ -1,1 +1,16 @@
-<p>location-item works!</p>
+<a 
+href="#" 
+class="list-group-item clearfix" 
+(click)="onSeleceted()">
+    <div class="pull-left">
+        <h4 class="list-group-item-heading">{{ location.name }}</h4>
+        <p class="list-group-item-text">{{ location.address }}</p>
+    </div>
+    <span class="pull-right">
+        <img
+         [src]="location.imagePath"  
+         alt="{{ location.name }}" 
+         class="img-responsive" 
+         style="max-height: 50px;">
+    </span>
+</a>

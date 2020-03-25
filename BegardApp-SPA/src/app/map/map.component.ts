@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { defaults as defaultControls } from 'ol/control';
 
+import { Location } from './location.model';
+
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
@@ -12,6 +14,7 @@ import vector from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import {fromLonLat} from 'ol/proj';
+import { LocationService } from './location.service';
 
 
 
@@ -19,13 +22,32 @@ import {fromLonLat} from 'ol/proj';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
+  providers:[LocationService]
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit  {
+
+  constructor(private locationService : LocationService){
+
+  }
+
+
+  selectedLocation: Location;
+  markerLocations: Location[];
+
+ 
   
 
   ngAfterViewInit() {
-
+    this.locationService.locationSelected
+    .subscribe(
+      (location:Location )=>{
+        this.selectedLocation=location; 
+      }
+      
+    );
+    
+    this.markerLocations=this.locationService.getLocations();
     //
     // elements that make up the popup.
     //
@@ -82,30 +104,25 @@ export class MapComponent implements AfterViewInit {
       ])
     });
 
+
     // 
-    // Create the markers.
+    // Add the marker layers to map
     // 
+  for(var i=0;i<this.markerLocations.length;i++)
+  {
     var layer = new Vector({
       source: new vector({
           features: [
               new Feature({
-                  geometry: new Point(fromLonLat([4.35247, 50.84673]))
+                  geometry: new Point(fromLonLat(
+                    [parseFloat(this.markerLocations[i].lng),
+                  parseFloat(this.markerLocations[i].lat)]))
               })
           ]
       })
-  });
-  var layer2 = new Vector({
-    source: new vector({
-      features: [
-        new Feature({
-          geometry: new Point(fromLonLat([250.45456 , 50.55656]))
-        })
-      ]
-    })
-  });
-  map.addLayer(layer2);
-  map.addLayer(layer);
-
+    });
+    map.addLayer(layer);
+  }
 
 
 
