@@ -1,5 +1,4 @@
-from rest_framework import status, generics, decorators
-from rest_framework import status, generics, mixins,decorators
+from rest_framework import status, generics
 from rest_framework import permissions
 
 from rest_framework.views import APIView
@@ -8,25 +7,11 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers
-from .models import BegardUser
-from .serializers import UserSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
 permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       IsOwnerOrReadOnly]
-
-
-class BegardUserList(generics.ListCreateAPIView):
-    queryset = BegardUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-
-class BegardUserDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = BegardUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class BuildTrigger(APIView):

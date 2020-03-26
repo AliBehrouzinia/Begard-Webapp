@@ -57,8 +57,8 @@ AUTH_USER_MODEL = 'begard_app.BegardUser'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
                'rest_framework.authentication.TokenAuthentication',
-               # 'rest_framework.authentication.BasicAuthentication',
-               # 'rest_framework.authentication.SessionAuthentication',
+               'rest_framework.authentication.BasicAuthentication',
+               'rest_framework.authentication.SessionAuthentication',
     ),
 
 }
@@ -98,8 +98,6 @@ TEMPLATES = [
         },
     },
 ]
-
-#AUTH_USER_MODEL = 'myapp.MyUser'
 
 WSGI_APPLICATION = 'Begard.wsgi.application'
 
