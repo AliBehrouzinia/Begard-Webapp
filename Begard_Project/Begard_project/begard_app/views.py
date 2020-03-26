@@ -14,11 +14,6 @@ permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       IsOwnerOrReadOnly]
 
 
-class BuildTrigger(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
-
 class CitiesList(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
