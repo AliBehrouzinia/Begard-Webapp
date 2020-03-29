@@ -54,6 +54,10 @@ SITE_ID = 1
 
 AUTH_USER_MODEL = 'begard_app.BegardUser'
 
+REST_AUTH_SERIALIZERS = {
+ 'USER_DETAILS_SERIALIZER': 'begard_app.serializers.CustomUserDetailsSerializer',
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
                'rest_framework.authentication.TokenAuthentication',
