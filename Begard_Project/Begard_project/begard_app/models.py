@@ -50,10 +50,10 @@ class City(models.Model):
 
 
 class Plan(models.Model):
-    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE, null=True)
-    destination_city = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
-    description = models.TextField(default="nothing")
-    public = models.BooleanField(default=True)
+    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
+    destination_city = models.ForeignKey(City, on_delete=models.CASCADE)
+    description = models.TextField()
+    is_public = models.BooleanField(default=True)
     like = models.IntegerField(default=0)
     like_user = ArrayField(base_field=models.CharField(max_length=200, blank=True), null=True)
     creation_date = models.DateTimeField()
@@ -62,16 +62,16 @@ class Plan(models.Model):
 
 
 class PlanItem(models.Model):
-    place_id = models.CharField(max_length=300, null=True)
+    place_id = models.CharField(max_length=300)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
-    start_time = models.DateTimeField()
-    finish_time = models.DateTimeField()
+    start_date = models.DateTimeField()
+    finish_date = models.DateTimeField()
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE, null=True)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
-    content = models.TextField(default="no comment")
+    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    content = models.TextField()
 
 
 class Place(models.Model):
@@ -118,13 +118,13 @@ class RecreationalPlace(Place):
         return self.city.name+"-"+self.name
 
 
-class Cafe(Plan):
+class Cafe(Place):
 
     def __str__(self):
         return self.city.name+"-"+self.name
 
 
-class ShoppingMall(Plan):
+class ShoppingMall(Place):
 
     def __str__(self):
         return self.city.name + "-" + self.name
