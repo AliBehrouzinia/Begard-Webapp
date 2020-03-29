@@ -46,9 +46,15 @@ class RecreationalPlaceSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # owner = serializers.ReadOnlyField(source='owner.email')
-    # BegardUsers = serializers.PrimaryKeyRelatedField(many=True, queryset=BegardUser.objects.all())
 
     class Meta:
         model = BegardUser
         fields = 'email'
+
+
+class CustomUserDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BegardUser
+        fields = ('email',)
+        read_only_fields = ('email',)

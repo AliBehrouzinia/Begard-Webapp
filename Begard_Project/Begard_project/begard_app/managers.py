@@ -1,34 +1,34 @@
 from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
 
 
 class BegardUserManager(BaseUserManager):
-    """
-    Begard user model manager where email is the unique identifiers
-    for authentication instead of usernames.
-    """
-    def create_user(self, email, password,**kwargs):
-        """
-        Create and save a User with the given email and password.
-        """
+    def create_user(self, email, password=None, is_admin=False, is_staff=False, is_active=True):
         if not email:
-            raise ValueError(_('The Email must be set'))
-        email = self.normalize_email(email)
-        user = self.model(email=email)
-        user.set_password(password)
-        user.save()
+            raise ValueError("User must have an email")
+        if not password:
+            raise ValueError("User must have a password")
+
+        user = self.model(
+            email=self.normalize_email(email)
+        )
+        user.set_password(password)  # change password to hash
+        user.admin = is_admin
+        user.staff = is_staff
+        user.active = is_active
+        user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password,**kwargs):
-        """
-        Create and save a SuperUser with the given email and password.
-        """
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+    def create_superuser(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("User must have an email")
+        if not password:
+            raise ValueError("User must have a password")
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Superuser must have is_staff=True.'))
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError(_('Superuser must have is_superuser=True.'))
-        return self.create_user(email, password)
+        user = self.model(
+            email=self.normalize_email(email)
+        )
+        user.set_password(password)
+        user.admin = True
+        user.staff = True
+        user.save(using=self._db)
+        return user
