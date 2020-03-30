@@ -31,4 +31,5 @@ class BegardUserManager(BaseUserManager):
         user.admin = True
         user.staff = True
         user.save(using=self._db)
+
         return user
