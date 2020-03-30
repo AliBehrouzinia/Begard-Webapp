@@ -1,5 +1,4 @@
 from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import ugettext_lazy as _
 
 
 class BegardUserManager(BaseUserManager):
@@ -31,7 +30,5 @@ class BegardUserManager(BaseUserManager):
         user.set_password(password)
         user.admin = True
         user.staff = True
-        # user.active = is_active
         user.save(using=self._db)
         return user
-

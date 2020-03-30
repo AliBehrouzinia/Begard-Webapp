@@ -9,7 +9,6 @@ from rest_framework.permissions import IsAuthenticated
 from . import models, serializers
 from .permissions import IsOwnerOrReadOnly
 
-
 permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                       IsOwnerOrReadOnly]
 
