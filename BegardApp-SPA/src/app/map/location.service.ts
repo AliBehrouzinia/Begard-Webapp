@@ -31,7 +31,6 @@ export class LocationService{
         var url = "http://127.0.0.1:8000/location/"+this.cityId;
           this.httpClinet.get<Location[]>(url).subscribe(resdata =>{
               this.locations=resdata;
-              console.log(this.locations);
           })
           
 

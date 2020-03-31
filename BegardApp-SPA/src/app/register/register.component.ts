@@ -19,10 +19,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
   onCreateUser(registerData ){
-    console.log((registerData.value));
     this.dataStorageService.register(registerData.value)
     .subscribe(dataResponse => {
-      console.log(dataResponse);
       this.router.navigate(["/search"])
     });
   }

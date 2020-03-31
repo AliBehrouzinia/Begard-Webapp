@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
     
     this.dataStorageService.userLogin(loginData)
     .subscribe(dataResponse => {
-      console.log(dataResponse);
       this.router.navigate(["/search"]);
     });
     

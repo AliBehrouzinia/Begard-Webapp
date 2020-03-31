@@ -66,7 +66,6 @@ export class SearchComponent implements OnInit {
   }
 
   onSearch(target:{cityName : string,cityId:number}){
-    console.log(target);
     this.locationService.setId(target.cityId);
     this.locationService.setLocation();
     this.route.navigate(['/map']);

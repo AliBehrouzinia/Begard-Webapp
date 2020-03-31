@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Front-End documention:
 
 You need to install NodeJS and NPM from https://nodejs.org/en/download/ .
@@ -24,7 +23,6 @@ to start the application run the following command from the command line in the 
 -----------------------------------------------------------
 
 your browser should automatically open the project at http://localhost:4200.
-=======
 # Back-End documention:
 
 you need to install python 3.6 and up.
@@ -90,7 +88,5 @@ for run server in this directory, run following:
 
 ------------------------------------------------
 
-
->>>>>>> feature/v1.0.0/showplaces
 
 
