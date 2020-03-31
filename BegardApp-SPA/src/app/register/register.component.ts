@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Subject } from 'rxjs';
+import { User } from '../user.model';
+import { DataStorageService } from '../data-storage.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -7,9 +12,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  user = new Subject<User>();
+
+  constructor(private dataStorageService :DataStorageService, private router : Router) { }
 
   ngOnInit(): void {
+  }
+  onCreateUser(registerData ){
+    console.log((registerData.value));
+    this.dataStorageService.register(registerData.value)
+    .subscribe(dataResponse => {
+      console.log(dataResponse);
+      this.router.navigate(["/search"])
+    });
   }
 
 }

@@ -9,15 +9,13 @@ import { LocationService } from '../../location.service';
   styleUrls: ['./location-item.component.css']
 })
 export class LocationItemComponent implements OnInit {
-  @Input() location:Location;
-
-  constructor(private locationService : LocationService) { }
+   @Input() location:Location;
+   @Input() index : number;
+  
 
   ngOnInit(): void {
   }
 
-  onSeleceted(){
-    this.locationService.locationSelected.emit(this.location);
-  }
+ 
 
 }

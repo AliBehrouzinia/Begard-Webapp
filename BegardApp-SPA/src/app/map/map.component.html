@@ -7,12 +7,13 @@
       </div>
   </div>
   <div class="col-md-6">
-    <app-location-detail
+    <!-- <app-location-detail
      *ngIf="selectedLocation; else infoText"
-     [location]="selectedLocation"></app-location-detail>
-    <ng-template #infoText>
+     [location]="selectedLocation"></app-location-detail> -->
+     <router-outlet ></router-outlet>
+    <!-- <ng-template #infoText>
       <p>Please Select a Location!</p>
-    </ng-template>
+    </ng-template> -->
   </div>
 </div>
 

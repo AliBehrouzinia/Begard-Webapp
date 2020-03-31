@@ -1,10 +1,10 @@
 export class User{
-    public email: string;
-    public password: string;
+   
+    constructor(public email: string,
+        private _token:string
+    ){}
 
-    constructor(eamil: string, password: string){
-        this.email=eamil;
-        this.password=password;
-
+    get token(){
+        return this._token;   
     }
 }

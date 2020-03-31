@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Location } from '../location.model';
 import { LocationService } from '../location.service';
@@ -12,12 +12,15 @@ import { LocationService } from '../location.service';
 })
 export class LocationListComponent implements OnInit {
 
+
    locations:Location[] ;
 
   constructor(private locationService: LocationService) { }
 
   ngOnInit() {
     this.locations=this.locationService.getLocations();
+    this.locationService.setLocation();
+
   }
 
 }

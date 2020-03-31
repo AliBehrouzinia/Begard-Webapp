@@ -1,11 +1,8 @@
-<app-header (featureSelected)="onNavigate($event)"></app-header>
+<app-header></app-header>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <app-login *ngIf="loadedFeature === 'login'"></app-login>
-            <!-- <app-register *ngIf="loadedFeature === 'register'"></app-register> -->
-            <app-map *ngIf="loadedFeature === 'register'"></app-map>
-            <!-- <app-search *ngIf="loadedFeature === 'register'"></app-search> -->
+            <router-outlet> </router-outlet>
         </div>
     </div>
 </div>

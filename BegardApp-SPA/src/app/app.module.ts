@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule , ReactiveFormsModule} from '@angular/forms';
+import { UserService} from './user.service';
 
 import { AngularMaterialModule } from './angular-material.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,6 +18,9 @@ import { LocationDetailComponent } from './map/location-detail/location-detail.c
 import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataStorageService } from './data-storage.service';
+import { AppRoutingModule } from './app-routing.module';
+import { LocationDetailStartComponent} from './map/location-detail-start/location-detail-start.component';
+import { LocationService } from './map/location.service';
 
 
 
@@ -30,7 +34,8 @@ import { DataStorageService } from './data-storage.service';
       LocationListComponent,
       LocationItemComponent,
       LocationDetailComponent,
-      SearchComponent
+      LocationDetailStartComponent,
+      SearchComponent,
    ],
    imports: [
       BrowserModule,
@@ -38,9 +43,10 @@ import { DataStorageService } from './data-storage.service';
       BrowserAnimationsModule,
       AngularMaterialModule,  
       ReactiveFormsModule,
-      HttpClientModule
+      HttpClientModule,
+      AppRoutingModule
    ],
-   providers: [DataStorageService],
+   providers: [DataStorageService,UserService,LocationService],
    bootstrap: [
       AppComponent
    ],

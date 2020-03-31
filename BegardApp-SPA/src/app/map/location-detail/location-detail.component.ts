@@ -1,6 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Location } from '../location.model';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { LocationService } from '../location.service';
 
 @Component({
   selector: 'app-location-detail',
@@ -8,11 +10,19 @@ import { Location } from '../location.model';
   styleUrls: ['./location-detail.component.css']
 })
 export class LocationDetailComponent implements OnInit {
-  @Input() location: Location;
+location: Location;
+id: number;
 
-  constructor() { }
+  constructor(private route : ActivatedRoute
+    ,private locationService: LocationService) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
+    this.route.params.subscribe(
+      (params:Params)=>{
+        this.id = +params['id'];
+        this.location =this.locationService.getLocation(this.id);
+      }
+    );
   }
 
 }
