@@ -3,8 +3,7 @@ from . import views
 
 my_app = 'begard_app'
 urlpatterns = [
-    path('cities/', views.CitiesList.as_view()),
-    path('location/<int:id>/', views.SuggestList.as_view()),
-    path('planning/', views.SuggestPlan.as_view()),
-    path('planning/save/', views.SavePlan.as_view()),
+    path('cities/', views.CitiesListView.as_view()),
+    path('cities/<int:id>/', views.SuggestListView.as_view()),
+    path('cities/<int:id>/plans/', views.SavePlanView.as_view()),
 ]
