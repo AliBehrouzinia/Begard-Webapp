@@ -46,15 +46,25 @@ class RecreationalPlaceSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = BegardUser
         fields = 'email'
 
 
 class CustomUserDetailsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = BegardUser
         fields = ('email',)
         read_only_fields = ('email',)
+
+
+class PlanItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanItem
+        fields = ['place_id', 'plan', 'start_date', 'finish_date']
+
+
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
