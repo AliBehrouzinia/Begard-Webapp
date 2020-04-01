@@ -57,8 +57,8 @@ class Plan(models.Model):
     like = models.IntegerField(default=0)
     like_user = ArrayField(base_field=models.CharField(max_length=200, blank=True), null=True)
     creation_date = models.DateTimeField()
-    start_day = models.DateTimeField()
-    finish_day = models.DateTimeField()
+    start_date = models.DateTimeField()
+    finish_date = models.DateTimeField()
 
 
 class PlanItem(models.Model):

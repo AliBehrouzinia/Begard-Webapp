@@ -12,9 +12,6 @@ from . import models, serializers
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanSerializer, PlanItemSerializer, SavePlanSerializer
 
-permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                      IsOwnerOrReadOnly]
-
 
 class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
@@ -42,8 +39,8 @@ class SavePlanView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated, )
 
     def post(self, request, *args, **kwargs):
-        validation = SavePlanSerializer(data=request.data)
-        if validation.is_valid(True):
+        serializer = SavePlanSerializer(data=request.data)
+        if serializer.is_valid(True):
             created_plan = self.create_plan(request.data)
             self.create_plan_item(request.data)
             created_plan.save()
@@ -52,16 +49,14 @@ class SavePlanView(generics.CreateAPIView):
     def create_plan_item(self, data):
         plan_items = data['plan_items']
         for item in plan_items:
-            validation = PlanItemSerializer(data=item)
-            if validation.is_valid(True):
-                plan_item = models.PlanItem(place_id=item['place_id'], start_date=item['start_date'],
-                                            finish_date=item['finish_date'])
-                plan_item.save()
+            serializer = PlanItemSerializer(data=item)
+            if serializer.is_valid(True):
+                serializer.save()
 
     def create_plan(self, data):
         city_id = self.kwargs.get('id')
         destination_city = models.City.objects.get(pk=city_id)
         creation_date = datetime.datetime.now()
         plan = models.Plan(user=self.request.user, destination_city=destination_city, description=data['description'],
-                           creation_date=creation_date, start_day=data['start_day'], finish_day=data['finish_day'])
+                           creation_date=creation_date, start_date=data['start_date'], finish_date=data['finish_date'])
         return plan

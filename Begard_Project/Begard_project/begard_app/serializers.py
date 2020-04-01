@@ -62,7 +62,7 @@ class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = ['destination_city', 'description',
-                  'creation_date', 'start_day', 'finish_day']
+                  'creation_date', 'start_date', 'finish_date']
 
 
 class PlanItemSerializer(serializers.ModelSerializer):
@@ -74,4 +74,4 @@ class PlanItemSerializer(serializers.ModelSerializer):
 class SavePlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = ['description', 'start_day', 'finish_day']
+        fields = ['description', 'start_date', 'finish_date']
