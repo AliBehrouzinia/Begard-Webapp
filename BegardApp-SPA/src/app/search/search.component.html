@@ -1,37 +1,17 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
+<h3>Select Your City</h3>
+<p>
+  <mat-form-field>
+    <mat-select [formControl]="cityCtrl" placeholder="City" #singleSelect>
+      <mat-option>
+        <ngx-mat-select-search [formControl]="cityFilterCtrl"></ngx-mat-select-search>
+      </mat-option>
 
-<form #searchForm="ngForm" class="example-form" (ngSubmit)="onSearch(searchForm.value)">
-  <div class="form-group">
-    <mat-form-field class="example-full-width">
-      
-      <input type="text"
-             class="form-control"
-             placeholder="Pick one"
-             aria-label="Number"
-             id="cityName"
-             matInput
-             [formControl]="myControl"
-             [matAutocomplete]="auto"
-             required ngModel name="cityName"
-             >
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredCities | async" [value]="option">
-          {{option}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    <button
-    class="btn btn-primary"
-    type="submit"
-    [disabled]="!searchForm.valid"
-  >
-    Search
-  </button>
-  </div>
-</form>
+      <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+        {{city.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</p>
 
-    </div>
-  </div>
-</div>
+<button mat-raised-button color="primary" (click)="onSearch()">Search </button>
+

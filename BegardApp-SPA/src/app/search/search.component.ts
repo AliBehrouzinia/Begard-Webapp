@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith, first} from 'rxjs/operators';
-import { DataStorageService } from '../data-storage.service';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
+import { ReplaySubject, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
+
 import { City } from '../city.model';
-import { rejects } from 'assert';
-import { promise } from 'protractor';
-import { Router } from '@angular/router';
 import { LocationService } from '../map/location.service';
+import { Router } from '@angular/router';
+import { DataStorageService } from '../data-storage.service';
 
 
 @Component({
@@ -15,65 +15,112 @@ import { LocationService } from '../map/location.service';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
+export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
-export class SearchComponent implements OnInit {
-
+  /** list of cities */
+  protected cities: City[] =[];
   
-  constructor(private route : Router,private dataStorageService :DataStorageService,
-    private locationService : LocationService){}
+
+  /** control for the selected city */
+  public cityCtrl: FormControl = new FormControl();
+
+  /** control for the MatSelect filter keyword */
+  public cityFilterCtrl: FormControl = new FormControl();
+
+  /** list of cities filtered by search keyword */
+  public filteredCities: ReplaySubject<City[]> = new ReplaySubject<City[]>(1);
+
+  @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+
+  /** Subject that emits when the component has been destroyed. */
+  protected _onDestroy = new Subject<void>();
 
 
-  targetCity:string;
-  
-  myControl = new FormControl();
-  cities : City[]=[] ;
-  filteredCities: Observable<string[]>;
-  options : string[] =[];
+  constructor(private locationService:LocationService,
+    private router: Router,
+    private dataStorageService :DataStorageService) { }
 
   ngOnInit() {
     this.getCities();
-    this.filteredCities = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+    // set initial selection
+    this.cityCtrl.setValue(this.cities[0]);
+
+    // load the initial city list
+    this.filteredCities.next(this.cities.slice());
+
+    // listen for search field value changes
+    this.cityFilterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterCities();
+      });
   }
 
-  private _filter(city: string): string[] {
-    const filtercityName = city.toLowerCase();
-
-    return this.options.filter(city => city.toLowerCase().includes(filtercityName));
+  ngAfterViewInit() {
+    this.setInitialValue();
   }
 
-  private getCities(){
-    const promise = new Promise((resolve,reject) =>{
-      this.dataStorageService.getCities()
-      .toPromise()
-      .then((cities:City[]) => {
-        this.cities =cities;
-        for(var i =0;i<this.cities.length;i++)
-        {
-          this.options[i]=this.cities[i].name;
-        }
-        resolve();
-      },
-        err => {
-          reject(err);
-        }
-      ); 
-    });
-    return promise;
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 
-  onSearch(target:{cityName : string,cityId:number}){
-    this.locationService.setId(target.cityId);
+  /**
+   * Sets the initial value after the filteredCities are loaded initially
+   */
+  protected setInitialValue() {
+    this.filteredCities
+      .pipe(take(1), takeUntil(this._onDestroy))
+      .subscribe(() => {
+        // setting the compareWith property to a comparison function
+        // triggers initializing the selection according to the initial value of
+        // the form control (i.e. _initializeSelection())
+        // this needs to be done after the filteredCities are loaded initially
+        // and after the mat-option elements are available
+        this.singleSelect.compareWith = (a: City, b: City) => a && b && a.id === b.id;
+      });
+  }
+
+  protected filterCities() {
+    if (!this.cities) {
+      return;
+    }
+    // get the search keyword
+    let search = this.cityFilterCtrl.value;
+    if (!search) {
+      this.filteredCities.next(this.cities.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the cities
+    this.filteredCities.next(
+      this.cities.filter(bank => bank.name.toLowerCase().indexOf(search) > -1)
+    );
+  }
+  
+  onSearch(){
+    this.locationService.setId(this.cityCtrl.value?.id);
     this.locationService.setLocation();
-    this.route.navigate(['/map']);
-
+    var path = '/map/'+this.cityCtrl.value?.id;
+    this.router.navigate([path]);
   }
 
-  // onUpdateCity(value : string){
-  //   // this.targetCity=(<HTMLInputElement>event.target).value;
-  //   this.targetCity=value;
-  // }
+    private getCities(){
+        const promise = new Promise((resolve,reject) =>{
+          this.dataStorageService.getCities()
+          .toPromise()
+          .then((cities:City[]) => {
+            this.cities =cities;
+            resolve();
+          },
+            err => {
+              reject(err);
+            }
+          ); 
+        });
+        return promise;
+      }
+    
+
 }

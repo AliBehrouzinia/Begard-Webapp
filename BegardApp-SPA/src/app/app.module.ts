@@ -2,6 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule , ReactiveFormsModule} from '@angular/forms';
 import { UserService} from './user.service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 
 import { AngularMaterialModule } from './angular-material.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,6 +29,7 @@ import { DataStorageService } from './data-storage.service';
 import { AppRoutingModule } from './app-routing.module';
 import { LocationDetailStartComponent} from './map/location-detail-start/location-detail-start.component';
 import { LocationService } from './map/location.service';
+
 
 
 
@@ -44,7 +53,14 @@ import { LocationService } from './map/location.service';
       AngularMaterialModule,  
       ReactiveFormsModule,
       HttpClientModule,
-      AppRoutingModule
+      AppRoutingModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatIconModule,
+    NgxMatSelectSearchModule,
+    MatButtonModule
+      
    ],
    providers: [DataStorageService,UserService,LocationService],
    bootstrap: [
