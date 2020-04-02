@@ -58,3 +58,15 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
         model = BegardUser
         fields = ('email',)
         read_only_fields = ('email',)
+
+
+class SuggestPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['start_day', 'finish_day', 'destination_city', 'user']
+
+
+class PlanItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanItem
+        fields = '__all__'
