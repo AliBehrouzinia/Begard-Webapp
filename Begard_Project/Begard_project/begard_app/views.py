@@ -62,7 +62,7 @@ class SuggestPlan(mixins.ListModelMixin):
     def generate_items(self, plan, city_id, start_date, finish_date):
 
         time_table = TimeTable(start_date, finish_date)
-        time_table.create_slots(120, 60)
+        time_table.create_table(120, 60)
 
         places = self.places(city_id)
 
