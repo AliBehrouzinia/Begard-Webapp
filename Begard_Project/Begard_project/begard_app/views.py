@@ -1,4 +1,5 @@
 import datetime
+from itertools import chain
 
 from rest_framework import status, generics, mixins
 from rest_framework import permissions
@@ -10,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers
 from .permissions import IsOwnerOrReadOnly
-from .serializers import PlanItemSerializer, PlanSerializer
+from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -58,3 +59,19 @@ class SavePlanView(generics.CreateAPIView):
             plan = serializer.save()
             return plan
         return None
+
+
+class GlobalSearchList(generics.ListAPIView):
+    serializer_class = GlobalSearchSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('query', None)
+        restaurants = models.Restaurant.objects.filter(name=query)
+        museums = models.Museum.objects.filter(name=query)
+        cafes = models.Cafe.objects.filter(name=query)
+        recreationalplaces = models.RecreationalPlace.objects.filter(name=query)
+        touristattractions = models.TouristAttraction.objects.filter(name=query)
+        hotels = models.Hotel.objects.filter(name=query)
+        all_results = list(chain(restaurants, museums, cafes, recreationalplaces,
+                                 touristattractions, hotels))
+        return all_results
