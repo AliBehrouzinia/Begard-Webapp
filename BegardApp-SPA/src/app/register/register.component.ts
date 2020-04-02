@@ -16,6 +16,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(private dataStorageService :DataStorageService, private router : Router) { }
 
+
+  
   ngOnInit(): void {
   }
   onCreateUser(registerData ){

@@ -7,6 +7,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
@@ -59,7 +60,8 @@ import { LocationService } from './map/location.service';
     MatFormFieldModule,
     MatIconModule,
     NgxMatSelectSearchModule,
-    MatButtonModule
+    MatButtonModule,
+    FlexLayoutModule
       
    ],
    providers: [DataStorageService,UserService,LocationService],
