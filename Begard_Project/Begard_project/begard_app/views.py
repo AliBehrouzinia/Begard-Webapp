@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers
 from .permissions import IsOwnerOrReadOnly
-from .serializers import PlanSerializer, PlanItemSerializer, SavePlanSerializer
+from .serializers import PlanItemSerializer, PlanSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -36,27 +36,25 @@ class SuggestListView(generics.ListAPIView):
 
 class SavePlanView(generics.CreateAPIView):
     serializer_class = serializers.PlanSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        serializer = SavePlanSerializer(data=request.data)
-        if serializer.is_valid(True):
-            created_plan = self.create_plan(request.data)
-            self.create_plan_item(request.data)
-            created_plan.save()
+        plan = self.create_plan(request.data)
+        self.create_plan_items(request.data['plan_items'], plan.id)
         return Response()
 
-    def create_plan_item(self, data):
-        plan_items = data['plan_items']
+    def create_plan_items(self, plan_items, plan_id):
         for item in plan_items:
+            item['plan'] = plan_id
             serializer = PlanItemSerializer(data=item)
             if serializer.is_valid(True):
                 serializer.save()
 
-    def create_plan(self, data):
-        city_id = self.kwargs.get('id')
-        destination_city = models.City.objects.get(pk=city_id)
-        creation_date = datetime.datetime.now()
-        plan = models.Plan(user=self.request.user, destination_city=destination_city, description=data['description'],
-                           creation_date=creation_date, start_date=data['start_date'], finish_date=data['finish_date'])
-        return plan
+    def create_plan(self, plan_dict):
+        plan_dict['user'] = self.request.user.id
+        plan_dict['creation_date'] = datetime.datetime.now()
+        serializer = PlanSerializer(data=plan_dict)
+        if serializer.is_valid(True):
+            plan = serializer.save()
+            return plan
+        return None

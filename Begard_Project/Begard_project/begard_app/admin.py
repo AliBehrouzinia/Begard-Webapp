@@ -32,8 +32,7 @@ admin.site.register(BegardUser, BegardUserAdmin)
 
 class CityAdmin(admin.ModelAdmin):
     model = City
-    list_display = ('name', 'name')
-    # list_filter = 'name'
+    list_display = ('name', )
 
 
 admin.site.register(City, CityAdmin)

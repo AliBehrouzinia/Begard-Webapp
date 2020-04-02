@@ -58,20 +58,13 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
         read_only_fields = ('email',)
 
 
-class PlanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Plan
-        fields = ['destination_city', 'description',
-                  'creation_date', 'start_date', 'finish_date']
-
-
 class PlanItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanItem
-        fields = ['place_id', 'start_date', 'finish_date']
+        fields = ['place_id', 'plan', 'start_date', 'finish_date']
 
 
-class SavePlanSerializer(serializers.ModelSerializer):
+class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = ['description', 'start_date', 'finish_date']
+        fields = ['user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']

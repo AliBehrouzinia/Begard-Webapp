@@ -63,7 +63,7 @@ class Plan(models.Model):
 
 class PlanItem(models.Model):
     place_id = models.CharField(max_length=300)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
     finish_date = models.DateTimeField()
 
