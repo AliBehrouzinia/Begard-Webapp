@@ -11,13 +11,26 @@ def calculate_total_hours(start_time, end_time):
     return hours
 
 
+class Tags(enum.Enum):
+    Unavailable = 1
+    BreakFast = 2
+    Lunch = 3
+    Dinner = 4
+    Rest = 5
+    Museum = 6
+    RecreationalPlace = 7
+    TouristAttraction = 8
+    ShoppingMall = 9
+
+
 class Slot:
     def __init__(self, start, finish):
         self.Start = start
         self.Finish = finish
         self.Place_id = None
         self.Plan_id = None
-        self.Tags = None
+        self.Tags = []
+        self.Is_Lock_for_Tagging = False
 
 
 class TimeTable:
@@ -26,16 +39,80 @@ class TimeTable:
         self.StartDateTime = start
         self.FinishDateTime = finish
 
-    def create_slots(self, activity_minute, rest_minute):
-
-        total_hours = calculate_total_hours(self.StartDateTime, self.FinishDateTime)
+    def create_table(self, activity_minute, rest_minute):
         total_days = self.FinishDateTime.day - self.StartDateTime.day + 1
-        slot_count = total_hours / (activity_minute + rest_minute)
+        slot_count_per_day = 24 / (activity_minute + rest_minute)
 
-        activity_datetime = datetime.timedelta(0, 0, 0, activity_minute/60, activity_minute % 60)
-        rest_datetime = datetime.timedelta(0, 0, 0, rest_minute/60, rest_minute % 60)
+        activity_timedelta = datetime.timedelta(0, 0, 0, activity_minute/60, activity_minute % 60)
+        rest_timedelta = datetime.timedelta(0, 0, 0, rest_minute/60, rest_minute % 60)
 
-        flag = self.StartDateTime
-        for i in range(total_days):
-            self.Table.append(Slot(flag, flag + activity_datetime))
-            flag = flag + activity_datetime + rest_datetime
+        for day in range(total_days):
+            self.Table.append([])
+            flag = datetime.datetime(self.StartDateTime.year, self.StartDateTime.month, self.StartDateTime.day, 0, 0, 0)
+            for s in range(slot_count_per_day):
+                self.Table[day].append(Slot(flag, flag + activity_timedelta))
+                # slots.append(Slot(flag, flag + activity_timedelta))
+                flag = flag + activity_timedelta + rest_timedelta
+
+    def tagging(self):
+        self.unavailable_tags(self.Table)
+        self.rest_tags(self.Table)
+        self.breakfast_lunch_dinner_tags(self.Table)
+        self.museum_touristattraction_tags(self.Table)
+        self.recreationalplace_shoppingmall_tags(self.Table)
+
+    def unavailable_tags(self, table):
+        hour_start_trip = self.StartDateTime.hour
+        hour_finish_trip = self.FinishDateTime
+
+        for slot in table[0]:
+            if slot.Start.hour < hour_start_trip:
+                slot.Tags.append(Tags.Unavailable)
+                slot.Is_Lock_for_Tagging = True
+
+        last = len(table) - 1
+        for slot in table[last]:
+            if slot.Finish.hour > hour_finish_trip:
+                slot.Tags.append(Tags.Unavailable)
+                slot.Is_Lock_for_Tagging = True
+
+    def rest_tags(self, table, intervals_per_day=None):
+        if intervals_per_day is None:
+            intervals_per_day = [(0, 8), (22, 24)]
+
+        for day in table:
+            for slot in day:
+                if not slot.Is_Lock_for_Tagging:
+                    for i in intervals_per_day:
+                        if i[0] <= slot.Start.hour <= (i[1] - 1):
+                            slot.Tags.append(Tags.Rest)
+                            slot.Is_Lock_for_Tagging = True
+
+    def breakfast_lunch_dinner_tags(self, table, breakfast, lunch, dinner):
+        for day in table:
+            for slot in day:
+                if not slot.Is_Lock_for_Tagging:
+                    if slot.Start.hour <= breakfast <= slot.Finish.hour:
+                        slot.Tags.append(Tags.BreakFast)
+                        slot.Is_Lock_for_Tagging = True
+                    elif slot.Start.hour <= lunch <= slot.Finish.hour:
+                        slot.Tags.append(Tags.Lunch)
+                        slot.Is_Lock_for_Tagging = True
+                    elif slot.Start.hour <= dinner <= slot.Finish.hour:
+                        slot.Tags.append(Tags.Dinner)
+                        slot.Is_Lock_for_Tagging = True
+
+    def museum_touristattraction_tags(self, table):
+        for day in table:
+            for slot in day:
+                if not slot.Is_Lock_for_Tagging:
+                    if slot.Start.hour <= 16:
+                        slot.Tags.append(Tags.Museum)
+                        slot.Tags.append(Tags.TouristAttraction)
+
+    def recreationalplace_shoppingmall_tags(self, table):
+        for day in table:
+            for slot in day:
+                if not slot.Is_Lock_for_Tagging:
+                    slot.Tags.append(Tags.RecreationalPlace)
+                    slot.Tags.append(Tags.ShoppingMall)
