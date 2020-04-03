@@ -57,6 +57,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 
+
 @NgModule({
    imports: [
       CommonModule,
@@ -76,7 +77,8 @@ import { MatTreeModule } from '@angular/material/tree';
       MatChipsModule,
       MatTooltipModule,
       MatTableModule,
-      MatPaginatorModule
+      MatPaginatorModule,
+      MatCheckboxModule
    ],
    exports: [
       MatButtonModule,
@@ -94,7 +96,8 @@ import { MatTreeModule } from '@angular/material/tree';
       MatChipsModule,
       MatTooltipModule,
       MatTableModule,
-      MatPaginatorModule
+      MatPaginatorModule,
+      MatCheckboxModule
    ],
    providers: [
       MatDatepickerModule,

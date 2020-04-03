@@ -1,6 +1,9 @@
-<h3>Select Your City</h3>
+
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
 <p>
-  <mat-form-field>
+  
+  <mat-form-field class="search-box">
     <mat-select [formControl]="cityCtrl" placeholder="City" #singleSelect>
       <mat-option>
         <ngx-mat-select-search [formControl]="cityFilterCtrl"></ngx-mat-select-search>
@@ -10,8 +13,15 @@
         {{city.name}}
       </mat-option>
     </mat-select>
+
+
   </mat-form-field>
+ 
+
+ 
+  
 </p>
 
-<button mat-raised-button color="primary" (click)="onSearch()">Search </button>
+<button (click)="onSearch()" at-stroked-button color="primary" class="btn-block">Search</button>
+</div>
 

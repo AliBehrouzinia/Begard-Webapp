@@ -30,11 +30,6 @@ body {
   height: 100%;
 }
 
-.positronx {
-  text-decoration: none;
-  color: #ffffff;
-}
-
 .box {
   position: relative;
   top: 0;
@@ -50,6 +45,8 @@ body {
   z-index: 5;
   max-width: 330px;
 }
+
+
 
 .box.back {
   transform: scale(.95);
@@ -111,3 +108,4 @@ body {
 .login-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix {
   padding: 0.8375em 0;
 }
+
