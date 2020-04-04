@@ -1,7 +1,7 @@
 
  /* You can add global styles to this file, and also import other style files  */
  @import '../node_modules/@syncfusion/ej2-material-theme/styles/material.css';
- /* @import '../node_modules/@syncfusion/ej2-base/styles/material.css';
+ @import '../node_modules/@syncfusion/ej2-base/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-calendars/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
@@ -9,7 +9,7 @@
 @import '../node_modules/@syncfusion/ej2-lists/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
-@import '../node_modules/@syncfusion/ej2-angular-schedule/styles/material.css'; */
+@import '../node_modules/@syncfusion/ej2-angular-schedule/styles/material.css';
 
 html,
 body {
@@ -19,7 +19,7 @@ body {
 }
 
 body {
-   background-image: url(https://lh4.googleusercontent.com/-XplyTa1Za-I/VMSgIyAYkHI/AAAAAAAADxM/oL-rD6VP4ts/w1184-h666/Android-Lollipop-wallpapers-Google-Now-Wallpaper-2.png); 
+   background-image: url(https://lh4.googleusercontent.com/-XplyTa1Za-I/VMSgIyAYkHI/AAAAAAAADxM/oL-rD6VP4ts/w1184-h666/Android-Lollipop-wallpapers-Google-Now-Wallpaper-2.png);
   background-position: center;
   background-size: cover;
   background-repeat:repeat;
@@ -119,4 +119,3 @@ body {
 .login-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix {
   padding: 0.8375em 0;
 }
-

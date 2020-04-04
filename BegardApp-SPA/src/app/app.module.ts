@@ -34,6 +34,9 @@ import { ScheduleModule, RecurrenceEditorModule,DayService,WeekService,WorkWeekS
 import { CalenderComponent } from './calender/calender.component';
 
 import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-grids';
+import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
+
 
 
 
@@ -50,13 +53,13 @@ import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-g
       LocationDetailStartComponent,
       SearchComponent,
       CalenderComponent
-      
+
    ],
    imports: [
       BrowserModule,
       FormsModule,
       BrowserAnimationsModule,
-      AngularMaterialModule,  
+      AngularMaterialModule,
       ReactiveFormsModule,
       HttpClientModule,
       AppRoutingModule,
@@ -68,11 +71,11 @@ import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-g
     MatButtonModule,
     FlexLayoutModule,
     ScheduleModule, RecurrenceEditorModule,
-    GridModule
-      
+    GridModule,DropDownListModule,DateTimePickerModule
+
    ],
    providers: [DataStorageService,UserService,LocationService,
-      DayService,WeekService,WorkWeekService,MonthService,MonthAgendaService,DragAndDropService,ResizeService,RowDDService, EditService],
+      DayService,WeekService,DragAndDropService,ResizeService,RowDDService, EditService],
    bootstrap: [
       AppComponent
    ],
