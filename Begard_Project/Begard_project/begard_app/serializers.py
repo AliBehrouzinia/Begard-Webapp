@@ -45,6 +45,24 @@ class RecreationalPlaceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CafeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cafe
+        fields = '__all__'
+
+
+class ShoppingMallSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingMall
+        fields = '__all__'
+
+
+class TouristAttractionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TouristAttraction
+        fields = '__all__'
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
@@ -74,3 +92,22 @@ class GlobalSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
         fields = '__all__'
+
+    def to_native(self, obj):
+        if isinstance(obj, Restaurant):
+            serializer = RestaurantSerializer(obj)
+        elif isinstance(obj, Hotel):
+            serializer = HotelSerializer(obj)
+        elif isinstance(obj, Museum):
+            serializer = MuseumSerializer(obj)
+        elif isinstance(obj, Cafe):
+            serializer = CafeSerializer(obj)
+        elif isinstance(obj, ShoppingMall):
+            serializer = ShoppingMallSerializer(obj)
+        elif isinstance(obj, TouristAttraction):
+            serializer = TouristAttractionSerializer(obj)
+        elif isinstance(obj, RecreationalPlace):
+            serializer = RecreationalPlaceSerializer(obj)
+        else:
+            raise Exception("Neither a Snippet nor User instance!")
+        return serializer.data

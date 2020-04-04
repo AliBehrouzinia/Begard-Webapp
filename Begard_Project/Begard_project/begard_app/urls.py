@@ -7,4 +7,5 @@ urlpatterns = [
     path('cities/<int:id>/', views.SuggestListView.as_view()),
     path('plans/', views.SavePlanView.as_view()),
     path('cities/<int:id>/search/', views.GlobalSearchList.as_view()),
+    path('cities/<int:id>/field-search/', views.FieldSearch.as_view()),
 ]

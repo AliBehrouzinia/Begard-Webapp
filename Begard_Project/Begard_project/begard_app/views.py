@@ -80,3 +80,27 @@ class GlobalSearchList(generics.ListAPIView):
         all_results = list(chain(restaurants, museums, cafes, recreationalplaces,
                                  touristattractions, hotels))
         return all_results
+
+
+class FieldSearch(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        all_result = self.get_queryset(request.data)
+        print(all_result)
+        return Response()
+
+    def get_queryset(self, data):
+        city_id = self.kwargs.get('id')
+        city = models.City.objects.get(pk=city_id)
+        type_of_location = data['type']
+        rate = data['rate']
+        if type_of_location == 'Restaurant':
+            all_results = models.Restaurant.objects.filter(Q(rating__gte=rate) & Q(city=city))
+        if type_of_location == "Hotel":
+            all_results = models.Hotel.objects.filter(Q(rating__gte=rate) & Q(city=city))
+        if type_of_location == "Cafe":
+            all_results = models.Cafe.objects.filter(Q(rating__gte=rate) & Q(city=city))
+        return all_results
+
+
