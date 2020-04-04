@@ -21,6 +21,7 @@ class Slot:
         self.Finish = finish
         self.Place_id = None
         self.Place_name = None
+        self.Place_location = None
         self.Plan_id = None
         self.Tags = []
         self.Is_Lock_for_Tagging = False
@@ -84,6 +85,7 @@ class TimeTable:
         selected_place = places[type_of_place][0]
         slot.Place_id = selected_place.place_id
         slot.Place_name = selected_place.name
+        slot.Place_location = (selected_place.lat, selected_place.lng)
         places[type_of_place].remove(selected_place)
 
     def unavailable_choose_location(self, slot, places):
@@ -223,7 +225,11 @@ class TimeTable:
                     json_slot = {
                         'start_date': s_slot.Start,
                         'finish_date': s_slot.Finish,
-                        'place_id': s_slot.Place_id,
+                        'place_info': {
+                            'id': s_slot.Place_id,
+                            'lat': s_slot.Place_location[0],
+                            'lng': s_slot.Place_location[1]
+                        },
                         'place_name': s_slot.Place_name
                     }
 
