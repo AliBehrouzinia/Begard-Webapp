@@ -22,15 +22,16 @@
     "@angular/platform-browser": "~9.0.6",
     "@angular/platform-browser-dynamic": "~9.0.6",
     "@angular/router": "~9.0.6",
+    "@syncfusion/ej2-angular-grids": "^18.1.42",
     "@syncfusion/ej2-angular-schedule": "^18.1.42",
+    "@syncfusion/ej2-material-theme": "~18.1.36",
     "@types/ol": "^6.1.0",
     "bootstrap": "^3.4.1",
     "ngx-mat-select-search": "^2.1.2",
     "ol": "^6.2.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
-    "zone.js": "~0.10.2",
-    "@syncfusion/ej2-material-theme": "~18.1.36"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.900.6",

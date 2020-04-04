@@ -1,3 +1,31 @@
-<div class="center">
-<ejs-schedule  height="500" width="700"></ejs-schedule>
-</div>
+<div >
+
+    <div  class="center"  >
+
+    <ejs-schedule height=500 width=750 id='Schedule' #scheduleObj
+      [currentView]="currentView"
+      [selectedDate]="selectedDate"
+      [eventSettings]="eventSettings">
+    </ejs-schedule>
+
+    <div style="width:400px;float:right;margin-left:30px; margin-right:30px">
+
+     <ejs-grid id='Grid' #gridObj
+          [dataSource]='gridDS' width="300px"
+          [allowSelection]="true"
+          [allowRowDragAndDrop]="true"
+          [editSettings]='editSettings'
+          [rowDropSettings]="srcDropOptions"
+          (rowDrop)="onDragStop($event)"
+          (rowDrag)="onRowDrag($event)">
+        <e-columns>
+          <e-column field='Id' isPrimaryKey='primaryKeyVal' headerText='ID' width='30' textAlign='Right'></e-column>
+          <e-column field='Name' headerText='Name' width='40'></e-column>
+          <e-column field='Description' headerText='Reason' width='50'></e-column>
+        </e-columns>
+     </ejs-grid>
+    </div>
+
+    </div>
+
+    </div>

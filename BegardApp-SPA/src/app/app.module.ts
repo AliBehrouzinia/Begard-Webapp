@@ -33,6 +33,8 @@ import { LocationService } from './map/location.service';
 import { ScheduleModule, RecurrenceEditorModule,DayService,WeekService,WorkWeekService,MonthService,MonthAgendaService,DragAndDropService,ResizeService } from '@syncfusion/ej2-angular-schedule';
 import { CalenderComponent } from './calender/calender.component';
 
+import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-grids';
+
 
 
 @NgModule({
@@ -65,11 +67,12 @@ import { CalenderComponent } from './calender/calender.component';
     NgxMatSelectSearchModule,
     MatButtonModule,
     FlexLayoutModule,
-    ScheduleModule, RecurrenceEditorModule
+    ScheduleModule, RecurrenceEditorModule,
+    GridModule
       
    ],
    providers: [DataStorageService,UserService,LocationService,
-      DayService,WeekService,WorkWeekService,MonthService,MonthAgendaService,DragAndDropService,ResizeService],
+      DayService,WeekService,WorkWeekService,MonthService,MonthAgendaService,DragAndDropService,ResizeService,RowDDService, EditService],
    bootstrap: [
       AppComponent
    ],
