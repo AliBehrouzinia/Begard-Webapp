@@ -60,7 +60,7 @@ class TimeTable:
             for day in range(len(self.Table)):
                 s_slot = self.Table[day][slot]
                 tag = self.get_least_used(s_slot.Tags, chosen_so_far)
-                
+
                 # if chosen_so_far.keys().__contains__(tag):
                 #     chosen_so_far[tag] += 1
 

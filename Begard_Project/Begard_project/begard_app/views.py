@@ -37,11 +37,11 @@ class SuggestList(generics.ListAPIView):
         return queryset
 
 
-class SuggestPlan(APIView):
+class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
-    def get(self, request, city_id):
+    def get(self, request, id):
 
-        dest_city = models.City.objects.get(pk=city_id)
+        dest_city = models.City.objects.get(pk=id)
         start_day = datetime.strptime(self.request.data["start_day"], "%Y-%m-%dT%H:%MZ")
         finish_day = datetime.strptime(self.request.data["finish_day"], "%Y-%m-%dT%H:%MZ")
 
