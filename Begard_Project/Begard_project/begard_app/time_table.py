@@ -3,13 +3,6 @@ import datetime
 from .models import *
 
 
-def calculate_total_hours(start_time, end_time):
-    hours = (start_time.day - end_time.day - 2) * 24
-    hours += end_time.hour
-    hours += 24 - start_time.hour
-    return hours
-
-
 class Tags(enum.Enum):
     Unavailable = 1
     BreakFast = 2
@@ -27,6 +20,7 @@ class Slot:
         self.Start = start
         self.Finish = finish
         self.Place_id = None
+        self.Place_name = None
         self.Plan_id = None
         self.Tags = []
         self.Is_Lock_for_Tagging = False
@@ -40,10 +34,10 @@ class TimeTable:
 
     def create_table(self, activity_minute, rest_minute):
         total_days = self.FinishDateTime.day - self.StartDateTime.day + 1
-        slot_count_per_day = 24 / (activity_minute + rest_minute)
+        slot_count_per_day = (int)(1440 / (activity_minute + rest_minute))
 
-        activity_timedelta = datetime.timedelta(0, 0, 0, activity_minute/60, activity_minute % 60)
-        rest_timedelta = datetime.timedelta(0, 0, 0, rest_minute/60, rest_minute % 60)
+        activity_timedelta = datetime.timedelta(minutes=activity_minute)
+        rest_timedelta = datetime.timedelta(minutes=rest_minute)
 
         for day in range(total_days):
             self.Table.append([])
@@ -52,13 +46,49 @@ class TimeTable:
                 self.Table[day].append(Slot(flag, flag + activity_timedelta))
                 flag = flag + activity_timedelta + rest_timedelta
 
+    def set_places(self, dest_city):
+        places = self.top_from_all_models(10, dest_city)
+
+        chosen_so_far = {
+            Tags.Museum: 0,
+            Tags.RecreationalPlace: 0,
+            Tags.TouristAttraction: 0,
+            Tags.ShoppingMall: 0
+        }
+
+        for slot in range(len(self.Table[0])):
+            for day in range(len(self.Table)):
+                s_slot = self.Table[day][slot]
+                tag = self.get_least_used(s_slot.Tags, chosen_so_far)
+                
+                # if chosen_so_far.keys().__contains__(tag):
+                #     chosen_so_far[tag] += 1
+
+                places = self.select_location[tag](self=self, slot=s_slot, places=places)
+
+    @staticmethod
+    def top_from_all_models(n, city_id):
+        """get top n places from every model in database according to rating"""
+        result = {
+            "restaurant": list(Restaurant.objects.filter(city=city_id).order_by('-rating')[0:n]),
+            "museum": list(Museum.objects.filter(city=city_id).order_by('-rating')[0:n]),
+            "tourist_attraction": list(TouristAttraction.objects.filter(city=city_id).order_by('-rating')[0:n]),
+            "recreational_place": list(RecreationalPlace.objects.filter(city=city_id).order_by('-rating')[0:n]),
+            "cafe": list(Cafe.objects.filter(city=city_id).order_by('-rating')[0:n]),
+            "shopping_all": list(ShoppingMall.objects.filter(city=city_id).order_by('-rating')[0:n]),
+        }
+
+        return result
+
     def choose(self, slot, places, type_of_place):
         selected_place = places[type_of_place][0]
-        slot.Place_id = selected_place['place_id']
+        slot.Place_id = selected_place.place_id
+        slot.Place_name = selected_place.name
         places[type_of_place].remove(selected_place)
 
     def unavailable_choose_location(self, slot, places):
         slot.Place_id = "unavailable"
+        slot.Place_name = "out of trip"
         return places
 
     def breakfast_choose_location(self, slot, places):
@@ -71,6 +101,7 @@ class TimeTable:
 
     def rest_choose_location(self, slot, places):
         slot.Place_id = "rest"
+        slot.Place_name = "Resting time"
         return places
 
     def museum_choose_location(self, slot, places):
@@ -101,45 +132,16 @@ class TimeTable:
         Tags.ShoppingMall: shopping_mall_choose_location
     }
 
-    def set_places(self):
-        places = self.top_from_all_models(10)
-        chosen_so_far = {
-            Tags.Museum: 0,
-            Tags.RecreationalPlace: 0,
-            Tags.TouristAttraction: 0,
-            Tags.ShoppingMall: 0
-        }
-
-        for slot in range(len(self.Table[0])):
-            for day in range(len(self.Table)):
-                slot = self.Table[day][slot]
-                tag = self.get_least_used(slot.Tags, chosen_so_far)
-                places = self.select_location[tag](slot, places)
-
-    @staticmethod
-    def top_from_all_models(n):
-        """get top n places from every model in database according to rating"""
-        result = {
-            "restaurant": list(Restaurant.objects.order_by('-rating')[0:n]),
-            "museum": list(Museum.objects.order_by('-rating')[0:n]),
-            "tourist_attraction": list(TouristAttraction.objects.order_by('-rating')[0:n]),
-            "recreational_place": list(RecreationalPlace.objects.order_by('-rating')[0:n]),
-            "cafe": list(Cafe.objects.order_by('-rating')[0:n]),
-            "shopping_all": list(ShoppingMall.objects.order_by('-rating')[0:n]),
-        }
-
-        return result
-
     def tagging(self):
         self.unavailable_tags(self.Table)
         self.rest_tags(self.Table)
-        self.breakfast_lunch_dinner_tags(self.Table)
+        self.breakfast_lunch_dinner_tags(self.Table, 8, 14, 22)
         self.museum_touristattraction_tags(self.Table)
         self.recreationalplace_shoppingmall_tags(self.Table)
 
     def unavailable_tags(self, table):
         hour_start_trip = self.StartDateTime.hour
-        hour_finish_trip = self.FinishDateTime
+        hour_finish_trip = self.FinishDateTime.hour
 
         for slot in table[0]:
             if slot.Start.hour < hour_start_trip:
@@ -154,7 +156,7 @@ class TimeTable:
 
     def rest_tags(self, table, intervals_per_day=None):
         if intervals_per_day is None:
-            intervals_per_day = [(0, 8), (22, 24)]
+            intervals_per_day = [(0, 8), (23, 24)]
 
         for day in table:
             for slot in day:
@@ -194,13 +196,37 @@ class TimeTable:
                     slot.Tags.append(Tags.ShoppingMall)
 
     def get_least_used(self, tags, chosen_so_far):
-        if len(tags)==1:
+        if len(tags) == 1:
             return tags[0]
 
         my_list = {}
         for t in tags:
             my_list[t] = chosen_so_far[t]
 
-        tag = sorted(my_list, key=lambda items: items[1])[0]
+        tag = sorted(my_list.items(), key=lambda items: items[1])[0]
 
         return tag[0]
+
+    def get_json_table(self):
+        table = self.Table
+        json = {
+            'plan': {
+                'start_date': self.StartDateTime,
+                'finish_date': self.FinishDateTime,
+                'plan_items': []
+            }
+        }
+
+        for day in table:
+            for s_slot in day:
+                if not (s_slot.Tags.__contains__(Tags.Unavailable) or s_slot.Tags.__contains__(Tags.Rest)):
+                    json_slot = {
+                        'start_date': s_slot.Start,
+                        'finish_date': s_slot.Finish,
+                        'place_id': s_slot.Place_id,
+                        'place_name': s_slot.Place_name
+                    }
+
+                    json['plan']['plan_items'].append(json_slot)
+
+        return json
