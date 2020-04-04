@@ -109,5 +109,5 @@ class GlobalSearchSerializer(serializers.ModelSerializer):
         elif isinstance(obj, RecreationalPlace):
             serializer = RecreationalPlaceSerializer(obj)
         else:
-            raise Exception("Neither a Snippet nor User instance!")
+            raise Exception("Neither a model instance!")
         return serializer.data
