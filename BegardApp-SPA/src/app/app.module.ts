@@ -30,7 +30,8 @@ import { DataStorageService } from './data-storage.service';
 import { AppRoutingModule } from './app-routing.module';
 import { LocationDetailStartComponent} from './map/location-detail-start/location-detail-start.component';
 import { LocationService } from './map/location.service';
-
+import { ScheduleModule, RecurrenceEditorModule,DayService,WeekService,WorkWeekService,MonthService,MonthAgendaService,DragAndDropService,ResizeService } from '@syncfusion/ej2-angular-schedule';
+import { CalenderComponent } from './calender/calender.component';
 
 
 
@@ -46,6 +47,8 @@ import { LocationService } from './map/location.service';
       LocationDetailComponent,
       LocationDetailStartComponent,
       SearchComponent,
+      CalenderComponent
+      
    ],
    imports: [
       BrowserModule,
@@ -61,10 +64,12 @@ import { LocationService } from './map/location.service';
     MatIconModule,
     NgxMatSelectSearchModule,
     MatButtonModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ScheduleModule, RecurrenceEditorModule
       
    ],
-   providers: [DataStorageService,UserService,LocationService],
+   providers: [DataStorageService,UserService,LocationService,
+      DayService,WeekService,WorkWeekService,MonthService,MonthAgendaService,DragAndDropService,ResizeService],
    bootstrap: [
       AppComponent
    ],

@@ -7,6 +7,7 @@ import { SearchComponent } from './search/search.component';
 import { LocationDetailComponent } from './map/location-detail/location-detail.component';
 import { LocationDetailStartComponent } from './map/location-detail-start/location-detail-start.component';
 import { DataStorageService} from './data-storage.service';
+import { CalenderComponent} from './calender/calender.component';
 
 const appRoutes: Routes = [
     { path: '', redirectTo:'/login',pathMatch:'full'},
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
         {path : '' , component : LocationDetailStartComponent  },
         {path : ':id', component :LocationDetailComponent }  
     ]},
+    {path:'calender' , component : CalenderComponent},
     { path: 'search' , component : SearchComponent}
 ]
 @NgModule({
