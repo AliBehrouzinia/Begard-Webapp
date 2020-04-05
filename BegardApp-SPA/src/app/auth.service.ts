@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient,HttpErrorResponse } from "@angular/common/http";
-import { catchError } from "rxjs/operators";
-import { throwError } from "rxjs";
+import { catchError , tap} from "rxjs/operators";
+import { throwError,Subject } from "rxjs";
+import { User } from "./user.model";
 
 
 export interface AuthResponseData{
@@ -11,19 +12,33 @@ export interface AuthResponseData{
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
+
+    user =new Subject<User>();
+
   constructor(private http: HttpClient){}
 
   signup(userData : { email : string , password1: string, password2:string}){
    return this.http.post<AuthResponseData>('http://127.0.0.1:8000/rest-auth/registration/',
    userData)
-   .pipe(catchError(this.handleError));
+   .pipe(catchError(this.handleError), tap(resData => {
+     this.handleAuthentication(userData.email,resData.key);
+   }
+ ));
+  }
+
+  login(userData : { email : string , password : string}){
+    return this.http.post<AuthResponseData>('http://127.0.0.1:8000/rest-auth/login/',
+    userData).
+    pipe(catchError(this.handleError), tap(resData => {
+      this.handleAuthentication(userData.email,resData.key);
+    }
+  ));
 
   }
 
-  login(userData){
-    return this.http.post<AuthResponseData>('http://127.0.0.1:8000/rest-auth/login/',
-    userData).
-    pipe(catchError(this.handleError));
+  private handleAuthentication(email: string, token: string){
+    const user = new User(email,token);
+    this.user.next(user);
 
   }
 

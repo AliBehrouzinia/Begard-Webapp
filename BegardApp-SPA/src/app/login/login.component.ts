@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
       }
     );
 
-  
+    loginData.reset();
 
   }
 

@@ -22,6 +22,8 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  
   onCreateUser(registerData : NgForm){
     if(!registerData.valid){
       return;
