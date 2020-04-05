@@ -1,5 +1,6 @@
 import datetime
 
+from django.http import JsonResponse
 from rest_framework import status, generics
 
 from rest_framework.views import APIView
@@ -43,7 +44,7 @@ class SuggestPlanView(APIView):
 
         result = self.get_plan(dest_city, start_day, finish_day)
 
-        return Response(result, status=status.HTTP_200_OK)
+        return JsonResponse(data=result)
 
     def get_plan(self, dest_city, start_date, finish_date):
 
