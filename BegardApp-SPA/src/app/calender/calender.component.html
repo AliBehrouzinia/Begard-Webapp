@@ -9,9 +9,9 @@
       (dragStart)="onDragStart($event)"
       (resizeStart)="onResizeStart($event)">
       <e-views>
-        <e-view option='Day' displayName='3 DAYS' interval=3></e-view>
-        <e-view option='Week' ></e-view>
-        <e-view option='Week' interval=2 displayName='2 WEEKS'></e-view>
+            <e-view displayName='3 Days' option='Day' [interval]="dayInterval"></e-view>
+            <e-view displayName='Weeks' option='Week' [isSelected]="isSelected" [interval]="weekInterval"></e-view>
+            <e-view displayName='2 Weeks' option='Week' [interval]="weeksInterval"></e-view>
       </e-views>
       <ng-template  #editorTemplate let-data>
         <table *ngIf="data != undefined" class="custom-event-editor" width="100%" cellpadding="5">
@@ -23,16 +23,16 @@
                                 name="Subject" style="width: 100%" />
                         </td>
                     </tr>
+                    <br />
 
-                    <tr>
+                    <!-- <tr>
                        <td class="e-textlabel">Status</td>
                        <td colspan="4">
                            <ejs-dropdownlist id='Status' class="e-field" data-name="Status" placeholder='Choose Status'
                                [dataSource]='StatusData' [fields]='statusFields' value='{{data.Status}}'>
                            </ejs-dropdownlist>
                        </td>
-                   </tr>
-
+                   </tr> -->
                    <tr>
                        <td class="e-textlabel">From</td>
                        <td colspan="4">
@@ -41,6 +41,8 @@
                                [value]="dateParser(data.startTime || data.StartTime)"></ejs-datetimepicker>
                        </td>
                    </tr>
+                   <br />
+
                    <tr>
                        <td class="e-textlabel">To</td>
                        <td colspan="4">
@@ -51,7 +53,7 @@
                    </tr>
 
                    <tr>
-                        <td class="e-textlabel">Reason</td>
+                        <td class="e-textlabel">Description</td>
                         <td colspan="4">
                             <textarea id="Description" class="e-field e-input" name="Description" rows="3" cols="50"
                                 value="{{data.Description}}"

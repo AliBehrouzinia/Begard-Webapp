@@ -1,4 +1,4 @@
-<!-- 
+<!--
 <div class="container">
     <div class="row">
       <div class="col-xs-12 col-md-6 col-md-offset-3">
@@ -54,23 +54,41 @@
       <mat-card-title>Register</mat-card-title>
     </mat-card-header>
 
-    <form class="example-form">
+    <form #loginForm="ngForm" (ngSubmit)="onCreateUser(loginForm)" class="example-form" >
 
       <mat-card-content>
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Email">
+          <input matInput placeholder="Email"
+          type="email"
+          required
+          email
+          ngModel
+          name="email"
+          >
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Password">
+          <input matInput placeholder="Password"
+          type="password"
+          required
+          minlength="8"
+          ngModel
+          name="password1">
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Confirm Password">
+          <input matInput placeholder="Confirm Password"
+          type="password"
+          required
+          minlength="8"
+          ngModel
+          name="password2">
         </mat-form-field>
       </mat-card-content>
 
-      <button mat-stroked-button color="accent" class="btn-block">Register</button>
+      <button
+      [disabled]="!loginForm.valid"
+      type="submit" mat-stroked-button color="accent" class="btn-block">Register</button>
 
     </form>
   </mat-card>

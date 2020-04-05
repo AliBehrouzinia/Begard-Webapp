@@ -17,12 +17,12 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(loginData: {email : string , password : string }){
-    
-    this.dataStorageService.userLogin(loginData)
-    .subscribe(dataResponse => {
-      this.router.navigate(["/search"]);
-    });
-    
+
+    // this.dataStorageService.userLogin(loginData)
+    // .subscribe(dataResponse => {
+    //   this.router.navigate(["/search"]);
+    // });
+
   }
 
 }

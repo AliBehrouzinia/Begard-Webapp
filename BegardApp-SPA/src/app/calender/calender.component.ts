@@ -26,6 +26,10 @@ L10n.load({
     providers:[DayService,WeekService]
 })
 export class CalenderComponent {
+    public isSelected: Boolean = true;
+    public dayInterval: number = 3;
+    public weeksInterval: number = 2;
+    public weekInterval: number = 1;
     title = 'drag-resize-actions';
     public selectedDate: Date = new Date(2018, 7, 1);
     public currentView: View = 'Week';
