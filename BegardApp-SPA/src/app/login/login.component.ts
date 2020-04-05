@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { DataStorageService } from '../data-storage.service';
+import { AuthService } from '../auth.service';
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -11,17 +12,28 @@ import { DataStorageService } from '../data-storage.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router : Router,private dataStorageService:DataStorageService) { }
+    error : string =null;
+
+  constructor(private router : Router,private authService: AuthService ) { }
 
   ngOnInit(): void {
   }
 
-  onLogin(loginData: {email : string , password : string }){
+  onLogin(loginData: NgForm){
 
-    // this.dataStorageService.userLogin(loginData)
-    // .subscribe(dataResponse => {
-    //   this.router.navigate(["/search"]);
-    // });
+    this.authService.login(loginData.value)
+    .subscribe(
+      resData=> {
+      // this.router.navigate(["/search"])
+      console.log(resData);
+    },
+      errorMessage => {
+        console.log(errorMessage);
+        this.error=errorMessage;
+      }
+    );
+
+  
 
   }
 

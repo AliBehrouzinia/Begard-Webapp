@@ -31,4 +31,23 @@ export class AuthService {
    }));
 
   }
+
+  login(userData){
+    return this.http.post<AuthResponseData>('http://127.0.0.1:8000/rest-auth/login/',
+    userData).
+    pipe(catchError(errorRes => {
+      let errorMessage = 'An unknown error';
+
+      // if(!errorRes.error || !errorRes.error.error){
+      //   return throwError(errorMessage);
+      // }
+      // switch (errorRes.error.error.message) {
+      //  case 'Email-exsits':
+      //    errorMessage='this email already exists';
+      //
+      // }
+      return throwError(errorMessage);
+    }));
+
+  }
 }
