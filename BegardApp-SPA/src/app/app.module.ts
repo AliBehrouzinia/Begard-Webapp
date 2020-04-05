@@ -11,7 +11,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
-
 import { AngularMaterialModule } from './angular-material.module';
 import { HttpClientModule } from '@angular/common/http';
 

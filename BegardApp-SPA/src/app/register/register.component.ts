@@ -13,6 +13,7 @@ import { NgForm } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
 
+  error : string =null;
   user = new Subject<User>();
 
   constructor(private authService : AuthService , private router : Router) { }
@@ -31,8 +32,9 @@ export class RegisterComponent implements OnInit {
       // this.router.navigate(["/search"])
       console.log(resData);
       },
-      error => {
-        console.log(error);
+      errorMessage => {
+        console.log(errorMessage);
+        this.error=errorMessage;
       }
     );
     // console.log(registerData.value);
