@@ -3,6 +3,15 @@ import datetime
 from ..models import *
 
 
+class Constants:
+    museum_and_tourist_attraction_start_time_limit = 16
+    rest_time_interval_per_day = [(0, 8), (23, 24)]
+    default_breakfast_time = 8
+    default_lunch_time = 14
+    default_dinner_time = 22
+    top_place_count = 10
+
+
 class Tags(enum.Enum):
     unavailable = 1
     breakfast = 2
@@ -47,7 +56,7 @@ class TimeTable:
                 flag = flag + activity_timedelta + rest_timedelta
 
     def set_places(self, dest_city):
-        places = self.top_from_all_models(10, dest_city)
+        places = self.top_from_all_models(Constants.top_place_count, dest_city)
 
         chosen_so_far = {
             Tags.museum: 0,
@@ -74,12 +83,23 @@ class TimeTable:
     def top_from_all_models(n, city_id):
         """get top n places from every model in database according to rating"""
         result = {
-            "restaurant": list(Restaurant.objects.filter(city=city_id).order_by('-rating')[0:n]),
-            "museum": list(Museum.objects.filter(city=city_id).order_by('-rating')[0:n]),
-            "tourist_attraction": list(TouristAttraction.objects.filter(city=city_id).order_by('-rating')[0:n]),
-            "recreational_place": list(RecreationalPlace.objects.filter(city=city_id).order_by('-rating')[0:n]),
-            "cafe": list(Cafe.objects.filter(city=city_id).order_by('-rating')[0:n]),
-            "shopping_mall": list(ShoppingMall.objects.filter(city=city_id).order_by('-rating')[0:n]),
+            "restaurant": list(Restaurant.objects.filter(city=city_id).order_by('-rating')[0:n] if
+                               Restaurant.objects.count() > n else Restaurant.objects.all()),
+
+            "museum": list(Museum.objects.filter(city=city_id).order_by('-rating')[0:n] if
+                           Museum.objects.count() > n else Museum.objects.all()),
+
+            "tourist_attraction": list(TouristAttraction.objects.filter(city=city_id).order_by('-rating')[0:n] if
+                                       TouristAttraction.objects.count() > n else TouristAttraction.objects.all()),
+
+            "recreational_place": list(RecreationalPlace.objects.filter(city=city_id).order_by('-rating')[0:n] if
+                                       RecreationalPlace.objects.count() > n else RecreationalPlace.objects.all()),
+
+            "cafe": list(Cafe.objects.filter(city=city_id).order_by('-rating')[0:n] if
+                         Cafe.objects.count() > n else Cafe.objects.all()),
+
+            "shopping_mall": list(ShoppingMall.objects.filter(city=city_id).order_by('-rating')[0:n] if
+                                  ShoppingMall.objects.count() > n else ShoppingMall.objects.all())
         }
 
         return result
@@ -135,7 +155,10 @@ class TimeTable:
     def tagging(self):
         self.unavailable_tags(self.table)
         self.rest_tags(self.table)
-        self.breakfast_lunch_dinner_tags(self.table, 8, 14, 22)
+        self.breakfast_lunch_dinner_tags(self.table,
+                                         Constants.default_breakfast_time,
+                                         Constants.default_lunch_time,
+                                         Constants.default_dinner_time)
         self.museum_touristattraction_tags(self.table)
         self.recreationalplace_shoppingmall_tags(self.table)
 
@@ -156,7 +179,7 @@ class TimeTable:
 
     def rest_tags(self, table, intervals_per_day=None):
         if intervals_per_day is None:
-            intervals_per_day = [(0, 8), (23, 24)]
+            intervals_per_day = Constants.rest_time_interval_per_day
 
         for day in table:
             for slot in day:
@@ -184,7 +207,7 @@ class TimeTable:
         for day in table:
             for slot in day:
                 if not slot.is_lock_for_tagging:
-                    if slot.start_date.hour <= 16:
+                    if slot.start_date.hour <= Constants.museum_and_tourist_attraction_start_time_limit:
                         slot.tags.append(Tags.museum)
                         slot.tags.append(Tags.tourist_attraction)
 
