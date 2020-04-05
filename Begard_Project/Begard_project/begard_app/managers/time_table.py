@@ -1,6 +1,6 @@
 import enum
 import datetime
-from .models import *
+from ..models import *
 
 
 class Tags(enum.Enum):
@@ -60,10 +60,14 @@ class TimeTable:
         for slot in range(len(self.Table[0])):
             for day in range(len(self.Table)):
                 s_slot = self.Table[day][slot]
-                tag = self.get_least_used(s_slot.Tags, chosen_so_far)
 
-                # if chosen_so_far.keys().__contains__(tag):
-                #     chosen_so_far[tag] += 1
+                tag_chosen = self.get_least_used(s_slot.Tags, chosen_so_far)
+
+                tag = tag_chosen[0]
+                chosen_so_far = tag_chosen[1]
+
+                if chosen_so_far.keys().__contains__(tag):
+                    chosen_so_far[tag] += 1
 
                 places = self.select_location[tag](self=self, slot=s_slot, places=places)
 
@@ -76,7 +80,7 @@ class TimeTable:
             "tourist_attraction": list(TouristAttraction.objects.filter(city=city_id).order_by('-rating')[0:n]),
             "recreational_place": list(RecreationalPlace.objects.filter(city=city_id).order_by('-rating')[0:n]),
             "cafe": list(Cafe.objects.filter(city=city_id).order_by('-rating')[0:n]),
-            "shopping_all": list(ShoppingMall.objects.filter(city=city_id).order_by('-rating')[0:n]),
+            "shopping_mall": list(ShoppingMall.objects.filter(city=city_id).order_by('-rating')[0:n]),
         }
 
         return result
@@ -87,6 +91,7 @@ class TimeTable:
         slot.Place_name = selected_place.name
         slot.Place_location = (selected_place.lat, selected_place.lng)
         places[type_of_place].remove(selected_place)
+        return places
 
     def unavailable_choose_location(self, slot, places):
         slot.Place_id = "unavailable"
@@ -94,12 +99,10 @@ class TimeTable:
         return places
 
     def breakfast_choose_location(self, slot, places):
-        self.choose(slot, places, 'cafe')
-        return places
+        return self.choose(slot, places, 'cafe')
 
     def lunch_dinner_choose_location(self, slot, places):
-        self.choose(slot, places, 'restaurant')
-        return places
+        return self.choose(slot, places, 'restaurant')
 
     def rest_choose_location(self, slot, places):
         slot.Place_id = "rest"
@@ -107,20 +110,16 @@ class TimeTable:
         return places
 
     def museum_choose_location(self, slot, places):
-        self.choose(slot, places, 'museum')
-        return places
+        return self.choose(slot, places, 'museum')
 
     def recreational_choose_location(self, slot, places):
-        self.choose(slot, places, 'recreational_place')
-        return places
+        return self.choose(slot, places, 'recreational_place')
 
     def tourist_attraction_choose_location(self, slot, places):
-        self.choose(slot, places, 'tourist_attraction')
-        return places
+        return self.choose(slot, places, 'tourist_attraction')
 
     def shopping_mall_choose_location(self, slot, places):
-        self.choose(slot, places, 'shopping_mall')
-        return places
+        return self.choose(slot, places, 'shopping_mall')
 
     select_location = {
         Tags.Unavailable: unavailable_choose_location,
@@ -199,7 +198,7 @@ class TimeTable:
 
     def get_least_used(self, tags, chosen_so_far):
         if len(tags) == 1:
-            return tags[0]
+            return tags[0], chosen_so_far
 
         my_list = {}
         for t in tags:
@@ -207,7 +206,7 @@ class TimeTable:
 
         tag = sorted(my_list.items(), key=lambda items: items[1])[0]
 
-        return tag[0]
+        return tag[0], chosen_so_far
 
     def get_json_table(self):
         table = self.Table

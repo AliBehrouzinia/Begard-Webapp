@@ -1,16 +1,13 @@
 import datetime
 
-from rest_framework import status, generics, mixins
-from rest_framework import permissions
+from rest_framework import status, generics
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers
-from .permissions import IsOwnerOrReadOnly
-from .time_table import TimeTable
+from .managers.time_table import TimeTable
 
 from .serializers import PlanItemSerializer, PlanSerializer
 
