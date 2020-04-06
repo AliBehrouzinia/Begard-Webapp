@@ -24,8 +24,8 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginData.value)
     .subscribe(
       resData=> {
-      // this.router.navigate(["/search"])
       console.log(resData);
+      this.router.navigate(['/search']);
     },
       errorMessage => {
         console.log(errorMessage);

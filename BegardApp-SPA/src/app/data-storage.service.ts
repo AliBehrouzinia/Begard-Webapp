@@ -1,7 +1,8 @@
 import {Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { City } from './city.model';
-import { first, tap, take } from 'rxjs/operators'
+import { first, tap, take, exhaustMap } from 'rxjs/operators'
+import { AuthService } from './auth.service';
 
 
 
@@ -11,12 +12,21 @@ export class DataStorageService{
 
 
 
-    constructor(private http : HttpClient 
+    constructor(private http : HttpClient ,
+        private authservice :AuthService
         ){}
 
     getCities(){
 
-       return this.http.get<City[]>('http://127.0.0.1:8000/cities/');
+        return this.authservice.user.pipe(take(1),exhaustMap(user => {
+            // console.log(user.token);
+            return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
+            // {
+            //     headers: new HttpHeaders({ 'format' : user.token })
+            // }
+            );
+        }));
+
     }
 
 

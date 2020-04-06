@@ -19,7 +19,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** list of cities */
   protected cities: City[] =[];
-  
+
 
   /** control for the selected city */
   public cityCtrl: FormControl = new FormControl();
@@ -95,14 +95,14 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     // filter the cities
     this.filteredCities.next(
-      this.cities.filter(bank => bank.name.toLowerCase().indexOf(search) > -1)
+      this.cities.filter(city => city.name.toLowerCase().indexOf(search) > -1)
     );
   }
-  
+
   onSearch(){
     this.locationService.setId(this.cityCtrl.value?.id);
     this.locationService.setLocation();
-    var path = '/map/'+this.cityCtrl.value?.id;
+    var path = '/calender/'/*+this.cityCtrl.value?.id*/;
     this.router.navigate([path]);
   }
 
@@ -117,10 +117,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             err => {
               reject(err);
             }
-          ); 
+          );
         });
         return promise;
       }
-    
+
 
 }
