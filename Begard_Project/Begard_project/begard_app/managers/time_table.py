@@ -3,7 +3,7 @@ import datetime
 from ..models import *
 
 
-class Constants:
+class PlanningConstants:
     museum_and_tourist_attraction_start_time_limit = 16
     rest_time_interval_per_day = [(0, 8), (23, 24)]
     default_breakfast_time = 8
@@ -56,7 +56,7 @@ class TimeTable:
                 flag = flag + activity_timedelta + rest_timedelta
 
     def set_places(self, dest_city):
-        places = self.top_from_all_models(Constants.top_place_count, dest_city)
+        places = self.top_from_all_models(PlanningConstants.top_place_count, dest_city)
 
         chosen_so_far = {
             Tags.museum: 0,
@@ -156,9 +156,9 @@ class TimeTable:
         self.unavailable_tags(self.table)
         self.rest_tags(self.table)
         self.breakfast_lunch_dinner_tags(self.table,
-                                         Constants.default_breakfast_time,
-                                         Constants.default_lunch_time,
-                                         Constants.default_dinner_time)
+                                         PlanningConstants.default_breakfast_time,
+                                         PlanningConstants.default_lunch_time,
+                                         PlanningConstants.default_dinner_time)
         self.museum_touristattraction_tags(self.table)
         self.recreationalplace_shoppingmall_tags(self.table)
 
@@ -179,7 +179,7 @@ class TimeTable:
 
     def rest_tags(self, table, intervals_per_day=None):
         if intervals_per_day is None:
-            intervals_per_day = Constants.rest_time_interval_per_day
+            intervals_per_day = PlanningConstants.rest_time_interval_per_day
 
         for day in table:
             for slot in day:
@@ -207,7 +207,7 @@ class TimeTable:
         for day in table:
             for slot in day:
                 if not slot.is_lock_for_tagging:
-                    if slot.start_date.hour <= Constants.museum_and_tourist_attraction_start_time_limit:
+                    if slot.start_date.hour <= PlanningConstants.museum_and_tourist_attraction_start_time_limit:
                         slot.tags.append(Tags.museum)
                         slot.tags.append(Tags.tourist_attraction)
 
