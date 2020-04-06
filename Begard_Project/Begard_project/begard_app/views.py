@@ -1,15 +1,15 @@
 import datetime
 
-from rest_framework import status, generics, mixins
-from rest_framework import permissions
+from django.http import JsonResponse
+from rest_framework import status, generics
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from . import models, serializers
-from .permissions import IsOwnerOrReadOnly
+from .managers.time_table import TimeTable
+
 from .serializers import PlanItemSerializer, PlanSerializer
 
 
@@ -32,6 +32,29 @@ class SuggestListView(generics.ListAPIView):
         queryset += models.Museum.objects.filter(city=city).order_by('-rating')[0:3]
 
         return queryset
+
+
+class SuggestPlanView(APIView):
+    """Get a plan suggestion to user"""
+    def get(self, request, id):
+
+        dest_city = models.City.objects.get(pk=id)
+        start_day = datetime.datetime.strptime(self.request.data["start_day"], "%Y-%m-%dT%H:%MZ")
+        finish_day = datetime.datetime.strptime(self.request.data["finish_day"], "%Y-%m-%dT%H:%MZ")
+
+        result = self.get_plan(dest_city, start_day, finish_day)
+
+        return JsonResponse(data=result)
+
+    def get_plan(self, dest_city, start_date, finish_date):
+
+        time_table = TimeTable(start_date, finish_date)
+        time_table.create_table(120, 60)
+        time_table.tagging()
+        time_table.set_places(dest_city)
+        plan = time_table.get_json_table()
+
+        return plan
 
 
 class SavePlanView(generics.CreateAPIView):
