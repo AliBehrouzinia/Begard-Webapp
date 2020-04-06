@@ -1,88 +1,52 @@
-<!--
-<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+
+<div class="search-wrapper" fxLayout="row" fxLayoutAlign="center center">
 
 
 
-<button >Search</button>
+
+  <div class="search-box">
+    <mat-card-header>
+      <mat-card-title>Choose Your Destination : </mat-card-title>
+    </mat-card-header>
+
+    <p>
+      <mat-form-field class="example-half-width">
+        <mat-select [formControl]="cityCtrl" placeholder="City" #singleSelect>
+          <mat-option>
+            <ngx-mat-select-search [formControl]="cityFilterCtrl"></ngx-mat-select-search>
+          </mat-option>
+
+          <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+            {{city.name}}
+          </mat-option>
+        </mat-select>
+
+      </mat-form-field>
+
+      <mat-form-field class="example-quart-width">
+
+        <mat-label>From </mat-label>
+        <input matInput [formControl]="startdate" [matDatepicker]="startpicker">
+        <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #startpicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="example-quart-width">
+        <mat-label>To</mat-label>
+        <input matInput [formControl]="enddate" [matDatepicker]="endpicker">
+        <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #endpicker></mat-datepicker>
+      </mat-form-field>
+
+    </p>
+
+
+
+    <button mat-stroked-button color="accent" class="btn-block" type="submit" (click)="onSearch()">Search</button>
+
+
+  </div>
+
+
 </div>
-
- -->
-
-
-    <div class="search-wrapper" fxLayout="row" fxLayoutAlign="center center">
-
-
-
-
-<div class="search-box">
-  <mat-card-header>
-    <mat-card-title>Choose Your Destination : </mat-card-title>
-  </mat-card-header>
-
-      <p>
-        <mat-form-field  class="example-half-width">
-          <mat-select [formControl]="cityCtrl" placeholder="City" #singleSelect>
-            <mat-option>
-              <ngx-mat-select-search [formControl]="cityFilterCtrl"></ngx-mat-select-search>
-            </mat-option>
-
-            <mat-option *ngFor="let city of filteredCities | async" [value]="city">
-              {{city.name}}
-            </mat-option>
-          </mat-select>
-
-        </mat-form-field>
-
-        <mat-form-field class="example-quart-width">
-
-    <mat-label>From </mat-label>
-    <input matInput [matDatepicker]="picker">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker touchUi #picker></mat-datepicker>
-  </mat-form-field>
-
-  <mat-form-field class="example-quart-width">
-<mat-label>To</mat-label>
-<input matInput [matDatepicker]="picker">
-<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-<mat-datepicker touchUi #picker></mat-datepicker>
-</mat-form-field>
-
-      </p>
-
-
-
-      <button mat-stroked-button color="accent" class="btn-block"
-        type="submit"
-        (click)="onSearch()">Search</button>
-
-
-    </div>
-
-
-      <!-- <mat-card class="search-box">
-        <mat-card-header>
-          <mat-card-title>Choose Your Destination : </mat-card-title>
-        </mat-card-header>
-
-        <br />
-        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" class="example-form">
-          <mat-card-content>
-            <mat-form-field class="example-full-width">
-              <input matInput placeholder="Email"
-              type="email"
-              ngModel
-              required
-              email
-              name="email">
-            </mat-form-field>
-
-          </mat-card-content>
-          <button mat-stroked-button color="accent" class="btn-block"
-            type="submit"
-            [disabled]="!loginForm.valid">Search</button>
-
-        </form>
-      </mat-card> -->
-
-    </div>

@@ -17,6 +17,11 @@ import { DataStorageService } from '../data-storage.service';
 })
 export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  public startdate:FormControl = new FormControl();
+  public enddate:FormControl = new FormControl();
+
+
+
   /** list of cities */
   protected cities: City[] =[];
 
@@ -100,6 +105,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSearch(){
+    console.log(this.startdate.value);
     this.locationService.setId(this.cityCtrl.value?.id);
     this.locationService.setLocation();
     var path = '/calender/'/*+this.cityCtrl.value?.id*/;

@@ -1,6 +1,7 @@
 
   .search-wrapper{
     height: 100%;
+    background: #cce6ff;
   }
   .search-wrapper mat-card-header {
     text-align: center;
