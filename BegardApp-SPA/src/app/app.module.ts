@@ -1,12 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormsModule , ReactiveFormsModule} from '@angular/forms';
-import { UserService} from './user.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserService } from './user.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -27,14 +27,18 @@ import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataStorageService } from './data-storage.service';
 import { AppRoutingModule } from './app-routing.module';
-import { LocationDetailStartComponent} from './map/location-detail-start/location-detail-start.component';
+import { LocationDetailStartComponent } from './map/location-detail-start/location-detail-start.component';
 import { LocationService } from './map/location.service';
-import { ScheduleModule, RecurrenceEditorModule,DayService,WeekService,WorkWeekService,MonthService,MonthAgendaService,DragAndDropService,ResizeService } from '@syncfusion/ej2-angular-schedule';
+import { DynamicSearchService } from './dynamic-search.service';
+import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, DragAndDropService, ResizeService } from '@syncfusion/ej2-angular-schedule';
 import { CalenderComponent } from './calender/calender.component';
 
 import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { DynamicSearchComponent } from './dynamic-search/dynamic-search.component';
+
+import { environment } from '../environments/environment';
 
 
 
@@ -51,7 +55,8 @@ import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
       LocationDetailComponent,
       LocationDetailStartComponent,
       SearchComponent,
-      CalenderComponent
+      CalenderComponent,
+      DynamicSearchComponent
 
    ],
    imports: [
@@ -62,19 +67,21 @@ import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
       ReactiveFormsModule,
       HttpClientModule,
       AppRoutingModule,
-    MatSelectModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatIconModule,
-    NgxMatSelectSearchModule,
-    MatButtonModule,
-    FlexLayoutModule,
-    ScheduleModule, RecurrenceEditorModule,
-    GridModule,DropDownListModule,DateTimePickerModule
-
+      MatSelectModule,
+      MatToolbarModule,
+      MatFormFieldModule,
+      MatIconModule,
+      NgxMatSelectSearchModule,
+      MatButtonModule,
+      FlexLayoutModule,
+      ScheduleModule, 
+      RecurrenceEditorModule,
+      GridModule, 
+      DropDownListModule, 
+      DateTimePickerModule,
    ],
-   providers: [DataStorageService,UserService,LocationService,
-      DayService,WeekService,DragAndDropService,ResizeService,RowDDService, EditService],
+   providers: [DataStorageService, UserService, LocationService, DynamicSearchService,
+      DayService, WeekService, DragAndDropService, ResizeService, RowDDService, EditService],
    bootstrap: [
       AppComponent
    ],

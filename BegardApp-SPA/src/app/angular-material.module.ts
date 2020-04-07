@@ -97,7 +97,8 @@ import { MatTreeModule } from '@angular/material/tree';
       MatTooltipModule,
       MatTableModule,
       MatPaginatorModule,
-      MatCheckboxModule
+      MatCheckboxModule,
+      MatAutocompleteModule
    ],
    providers: [
       MatDatepickerModule,
