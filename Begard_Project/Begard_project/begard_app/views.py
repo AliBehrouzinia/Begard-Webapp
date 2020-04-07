@@ -73,6 +73,46 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         return None
 
 
+class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        plan_id = self.kwargs.get('id')
+        plan = models.Plan.objects.get(pk=plan_id)
+
+        plan_details = serializers.PlanSerializer(instance=plan).data
+        plan_details.pop('user')
+        plan_details['plan_items'] = []
+
+        plan_items = models.PlanItem.objects.filter(plan=plan)
+        for plan_item in plan_items:
+            plan_item_details = serializers.PlanItemSerializer(plan_item).data
+            plan_details['plan_items'].append(plan_item_details)
+
+        return Response(data=plan_details)
+
+    def patch(self, request, *args, **kwargs):
+        plan_items = self.request.data['plan_items']
+
+        plan_detail = self.request.data
+        plan_detail['pk'] = self.kwargs.get('id')
+        plan_detail.pop('plan_items')
+
+        plan_serializer = serializers.PlanSerializer(data=plan_detail)
+        if plan_serializer.is_valid():
+            plan_serializer.save()
+
+        for plan_item in plan_items:
+            plan_item_serializer = serializers.PlanItemSerializer(data=plan_item)
+            if plan_item_serializer.is_valid():
+                plan_item_serializer.save()
+
+    def delete(self, request, *args, **kwargs):
+        plan = models.Plan.objects.get(pk=self.kwargs.get('id'))
+        models.PlanItem.filter(plan=plan).delete()
+        plan.delete()
+
+
 class GlobalSearchList(generics.ListAPIView):
     serializer_class = GlobalSearchSerializer
     permission_classes = (IsAuthenticated,)
