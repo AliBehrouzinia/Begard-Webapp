@@ -1,6 +1,8 @@
 import datetime
 import enum
 from itertools import chain
+
+from django.db import transaction
 from django.db.models import Q
 
 from rest_framework import status, generics, mixins
@@ -93,24 +95,45 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         plan_items = self.request.data['plan_items']
+        plan_id = self.kwargs.get('id')
+        plan = models.Plan.objects.get(id=plan_id)
 
         plan_detail = self.request.data
-        plan_detail['pk'] = self.kwargs.get('id')
+        plan_detail['id'] = plan_id
+
         plan_detail.pop('plan_items')
 
-        plan_serializer = serializers.PlanSerializer(data=plan_detail)
+        plan_serializer = serializers.UpdatePlanSerializer(instance=plan, data=plan_detail)
         if plan_serializer.is_valid():
             plan_serializer.save()
 
+        list_of_items_id = []
         for plan_item in plan_items:
-            plan_item_serializer = serializers.PlanItemSerializer(data=plan_item)
-            if plan_item_serializer.is_valid():
-                plan_item_serializer.save()
+            if plan_item.__contains__('id'):
+                plan_item_id = plan_item.get('id')
+                list_of_items_id.append(plan_item_id)
+
+                plan_item_instance = models.PlanItem.objects.get(id=plan_item_id)
+                plan_item_serializer = serializers.PlanItemSerializer(instance=plan_item_instance, data=plan_item)
+                if plan_item_serializer.is_valid():
+                    plan_item_serializer.save()
+            else:
+                plan_new_item_serializer = serializers.PlanItemSerializer(data=plan_item)
+                if plan_new_item_serializer.is_valid():
+                    plan_new_item = plan_new_item_serializer.save()
+                    list_of_items_id.append(plan_new_item.id)
+
+        for item_id in models.PlanItem.objects.filter(plan=plan_id):
+            if not list_of_items_id.__contains__(item_id.id):
+                item_id.delete()
+
+        return Response(status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        plan = models.Plan.objects.get(pk=self.kwargs.get('id'))
-        models.PlanItem.filter(plan=plan).delete()
-        plan.delete()
+        plan = models.Plan.objects.filter(pk=self.kwargs.get('id'))
+        if plan.count() == 1:
+            plan.delete()
+        return Response(status.HTTP_200_OK)
 
 
 class GlobalSearchList(generics.ListAPIView):
