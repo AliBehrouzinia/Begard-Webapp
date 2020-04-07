@@ -39,8 +39,8 @@ class SuggestPlanView(APIView):
     def get(self, request, id):
 
         dest_city = models.City.objects.get(pk=id)
-        start_day = datetime.datetime.strptime(self.request.data["start_day"], "%Y-%m-%dT%H:%MZ")
-        finish_day = datetime.datetime.strptime(self.request.data["finish_day"], "%Y-%m-%dT%H:%MZ")
+        start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
+        finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
 
         result = self.get_plan(dest_city, start_day, finish_day)
 
