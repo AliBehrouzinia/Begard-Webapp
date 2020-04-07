@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,17 +50,24 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'rest_auth',
+    'corsheaders',
 ]
 
 SITE_ID = 1
 
 AUTH_USER_MODEL = 'begard_app.BegardUser'
 
+REST_AUTH_SERIALIZERS = {
+ 'USER_DETAILS_SERIALIZER': 'begard_app.serializers.CustomUserDetailsSerializer',
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
                'rest_framework.authentication.TokenAuthentication',
     ),
-
+    'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+    )
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -70,6 +79,7 @@ USER_MODEL_USERNAME_FIELD = 'email'
 ACCOUNT_USER_MODEL_USERNAME_FIELD=None
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
