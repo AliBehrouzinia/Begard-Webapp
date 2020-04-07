@@ -12,11 +12,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 
 from . import models, serializers
+<<<<<<< HEAD
 from .managers.time_table import TimeTable
 
 from .serializers import PlanItemSerializer, PlanSerializer
+=======
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer
+>>>>>>> origin/feature/v1.0.0/planning-search-back-wordsearch
 
 
 class CitiesListView(generics.ListAPIView):
