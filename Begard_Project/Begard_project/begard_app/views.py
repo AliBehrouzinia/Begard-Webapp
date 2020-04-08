@@ -37,6 +37,29 @@ class SuggestListView(generics.ListAPIView):
         return queryset
 
 
+class SuggestPlanView(APIView):
+    """Get a plan suggestion to user"""
+    def get(self, request, id):
+
+        dest_city = models.City.objects.get(pk=id)
+        start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
+        finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
+
+        result = self.get_plan(dest_city, start_day, finish_day)
+
+        return JsonResponse(data=result)
+
+    def get_plan(self, dest_city, start_date, finish_date):
+
+        time_table = TimeTable(start_date, finish_date)
+        time_table.create_table(120, 60)
+        time_table.tagging()
+        time_table.set_places(dest_city)
+        plan = time_table.get_json_table()
+
+        return plan
+
+
 class SavePlanView(generics.CreateAPIView):
     serializer_class = serializers.PlanSerializer
     permission_classes = (IsAuthenticated,)
