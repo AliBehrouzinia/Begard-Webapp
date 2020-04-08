@@ -89,6 +89,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         plan_items = models.PlanItem.objects.filter(plan=plan)
         for plan_item in plan_items:
             plan_item_details = serializers.PlanItemSerializer(plan_item).data
+            plan_item_details.pop('plan')
             plan_details['plan_items'].append(plan_item_details)
 
         return Response(data=plan_details)
@@ -109,6 +110,9 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
         list_of_items_id = []
         for plan_item in plan_items:
+
+            plan_item['plan'] = plan_id
+
             if plan_item.__contains__('id'):
                 plan_item_id = plan_item.get('id')
                 list_of_items_id.append(plan_item_id)
