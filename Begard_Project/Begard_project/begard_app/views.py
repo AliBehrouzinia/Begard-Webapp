@@ -1,8 +1,6 @@
 import datetime
 import enum
 from itertools import chain
-
-from django.db import transaction
 from django.db.models import Q
 
 from rest_framework import status, generics, mixins
@@ -48,15 +46,6 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
         return Response()
-
-    def get(self, request, *args, **kwargs):
-        self.get_queryset()
-        return Response()
-
-    def get_queryset(self):
-        user = self.request.user.id
-        queryset = models.Plan.objects.all().filter(user=user)
-        return queryset
 
     def create_plan_items(self, plan_items, plan_id):
         for item in plan_items:
