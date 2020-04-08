@@ -19,7 +19,7 @@ export class DynamicSearchService {
       .get<Location>(url, {
         observe: 'response',
         params: {
-          q: query,
+          query: query,
           sort: 'stars',
           order: 'desc'
         },

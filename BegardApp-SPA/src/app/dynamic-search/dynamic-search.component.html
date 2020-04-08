@@ -3,8 +3,8 @@
     <input [formControl]="autoCompleteControl" type="text" placeholder="search a place" aria-label="Number" matInput
       [matAutocomplete]="auto">
     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-      <mat-option *ngFor="let item of locationsAutoComplete$ | async; let index = index" [value]="item">
-        {{ item | titlecase}}
+      <mat-option *ngFor="let item of locationsAutoComplete$ | async; let index = index" [value]="item.name">
+        {{ item.name }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
