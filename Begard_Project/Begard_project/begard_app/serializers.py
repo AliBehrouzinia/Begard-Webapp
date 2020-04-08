@@ -88,9 +88,15 @@ class PlanSerializer(serializers.ModelSerializer):
         fields = ['user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
 
 
+class UpdatePlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['id', 'description', 'is_public', 'start_date', 'finish_date']
+
+
 class GlobalSearchSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Place
+        model = Restaurant
         fields = '__all__'
 
     def to_native(self, obj):
@@ -115,6 +121,6 @@ class GlobalSearchSerializer(serializers.ModelSerializer):
 
 class AdvancedSearchSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Place
+        model = Restaurant
         fields = '__all__'
 
