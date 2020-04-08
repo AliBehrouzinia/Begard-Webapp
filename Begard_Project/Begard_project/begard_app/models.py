@@ -3,8 +3,9 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.contrib.postgres.fields import ArrayField
 
-from .managers import BegardUserManager
+from .managers.managers import BegardUserManager
 
 
 class BegardUser(AbstractBaseUser, PermissionsMixin):
@@ -46,6 +47,31 @@ class City(models.Model):
 
     def ___str__(self):
         return self.name
+
+
+class Plan(models.Model):
+    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
+    destination_city = models.ForeignKey(City, on_delete=models.CASCADE)
+    description = models.TextField()
+    is_public = models.BooleanField(default=True)
+    like = models.IntegerField(default=0)
+    like_user = ArrayField(base_field=models.CharField(max_length=200, blank=True), null=True)
+    creation_date = models.DateTimeField()
+    start_date = models.DateTimeField()
+    finish_date = models.DateTimeField()
+
+
+class PlanItem(models.Model):
+    place_id = models.CharField(max_length=300)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    start_date = models.DateTimeField()
+    finish_date = models.DateTimeField()
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    content = models.TextField()
 
 
 class Place(models.Model):
@@ -90,3 +116,15 @@ class RecreationalPlace(Place):
 
     def __str__(self):
         return self.city.name+"-"+self.name
+
+
+class Cafe(Place):
+
+    def __str__(self):
+        return self.city.name+"-"+self.name
+
+
+class ShoppingMall(Place):
+
+    def __str__(self):
+        return self.city.name + "-" + self.name
