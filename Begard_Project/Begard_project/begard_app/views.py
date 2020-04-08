@@ -37,7 +37,7 @@ class SuggestListView(generics.ListAPIView):
         return queryset
 
 
-class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+class SavePlanView(generics.CreateAPIView):
     serializer_class = serializers.PlanSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -45,15 +45,6 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
         return Response()
-
-    def get(self, request, *args, **kwargs):
-        self.get_queryset()
-        return Response()
-
-    def get_queryset(self):
-        user = self.request.user.id
-        queryset = models.Plan.objects.all().filter(user=user)
-        return queryset
 
     def create_plan_items(self, plan_items, plan_id):
         for item in plan_items:
