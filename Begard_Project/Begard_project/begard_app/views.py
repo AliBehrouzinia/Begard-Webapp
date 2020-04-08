@@ -1,4 +1,7 @@
 import datetime
+import enum
+from itertools import chain
+from django.db.models import Q
 
 from django.http import JsonResponse
 from rest_framework import status, generics
@@ -6,11 +9,14 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
 
 from . import models, serializers
 from .managers.time_table import TimeTable
 
 from .serializers import PlanItemSerializer, PlanSerializer
+from .permissions import IsOwnerOrReadOnly
+from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -81,3 +87,65 @@ class SavePlanView(generics.CreateAPIView):
             plan = serializer.save()
             return plan
         return None
+
+
+class GlobalSearchList(generics.ListAPIView):
+    serializer_class = GlobalSearchSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        city_id = self.kwargs.get('id')
+        city = models.City.objects.get(pk=city_id)
+        query = self.request.query_params.get('query', None)
+        restaurants = models.Restaurant.objects.filter(Q(name__icontains=query) & Q(city=city))
+        museums = models.Museum.objects.filter(Q(name__icontains=query) & Q(city=city))
+        cafes = models.Cafe.objects.filter(Q(name__icontains=query) & Q(city=city))
+        recreationalplaces = models.RecreationalPlace.objects.filter(Q(name__icontains=query) & Q(city=city))
+        touristattractions = models.TouristAttraction.objects.filter(Q(name__icontains=query) & Q(city=city))
+        hotels = models.Hotel.objects.filter(Q(name__icontains=query) & Q(city=city))
+        shoppingmalls = models.ShoppingMall.objects.filter(Q(name__icontains=query) & Q(city=city))
+        all_results = list(chain(restaurants, museums, cafes, recreationalplaces,
+                                 touristattractions, hotels, shoppingmalls))
+        return all_results
+
+
+class LocationTypes(enum.Enum):
+    Restaurant = 1
+    Museum = 2
+    Cafe = 3
+    Hotel = 4
+    RecreationalPlace = 5
+    TouristAttraction = 6
+    ShoppingMall = 7
+
+
+class AdvancedSearch(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AdvancedSearchSerializer
+
+    def post(self, request, *args, **kwargs):
+        all_result = self.get_queryset(request.data)
+        print(all_result)
+        return Response()
+
+    def get_queryset(self, data):
+        city_id = self.kwargs.get('id')
+        city = models.City.objects.get(pk=city_id)
+        rate = data['rate']
+        for type_loc in data['types']:
+            if type_loc == LocationTypes.Restaurant.value:
+                all_results = list(models.Restaurant.objects.filter(Q(rating__gte=rate) & Q(city=city)))
+            elif type_loc == LocationTypes.Museum.value:
+                all_results += models.Museum.objects.filter(Q(rating__gte=rate) & Q(city=city))
+            elif type_loc == LocationTypes.Hotel.value:
+                all_results += models.Hotel.objects.filter(Q(rating__gte=rate) & Q(city=city))
+            elif type_loc == LocationTypes.Cafe.value:
+                all_results += models.Cafe.objects.filter(Q(rating__gte=rate) & Q(city=city))
+            elif type_loc == LocationTypes.RecreationalPlace.value:
+                all_results += models.RecreationalPlace.objects.filter(Q(rating__gte=rate) & Q(city=city))
+            elif type_loc == LocationTypes.TouristAttraction.value:
+                all_results += models.TouristAttraction.objects.filter(Q(rating__gte=rate) & Q(city=city))
+            elif type_loc == LocationTypes.ShoppingMall.value:
+                all_results += models.ShoppingMall.objects.filter(Q(rating__gte=rate) & Q(city=city))
+
+        return all_results
