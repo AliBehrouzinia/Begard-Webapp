@@ -17,9 +17,14 @@ import { DataStorageService } from '../data-storage.service';
 })
 export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  public startdate:FormControl = new FormControl();
+  public enddate:FormControl = new FormControl();
+
+
+
   /** list of cities */
   protected cities: City[] =[];
-  
+
 
   /** control for the selected city */
   public cityCtrl: FormControl = new FormControl();
@@ -95,14 +100,15 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     // filter the cities
     this.filteredCities.next(
-      this.cities.filter(bank => bank.name.toLowerCase().indexOf(search) > -1)
+      this.cities.filter(city => city.name.toLowerCase().indexOf(search) > -1)
     );
   }
-  
+
   onSearch(){
+    console.log(this.startdate.value);
     this.locationService.setId(this.cityCtrl.value?.id);
     this.locationService.setLocation();
-    var path = '/map/'+this.cityCtrl.value?.id;
+    var path = '/calender/'/*+this.cityCtrl.value?.id*/;
     this.router.navigate([path]);
   }
 
@@ -117,10 +123,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
             err => {
               reject(err);
             }
-          ); 
+          );
         });
         return promise;
       }
-    
+
 
 }

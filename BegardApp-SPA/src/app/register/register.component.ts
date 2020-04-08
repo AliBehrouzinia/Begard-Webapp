@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  
+
   onCreateUser(registerData : NgForm){
     if(!registerData.valid){
       return;
@@ -31,8 +31,8 @@ export class RegisterComponent implements OnInit {
     this.authService.signup(registerData.value)
     .subscribe(
       resData=> {
-      // this.router.navigate(["/search"])
       console.log(resData);
+        this.router.navigate(['/search']);
       },
       errorMessage => {
         console.log(errorMessage);
