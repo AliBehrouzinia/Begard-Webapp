@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField
 
-from .managers import BegardUserManager
+from .managers.managers import BegardUserManager
 
 
 class BegardUser(AbstractBaseUser, PermissionsMixin):
