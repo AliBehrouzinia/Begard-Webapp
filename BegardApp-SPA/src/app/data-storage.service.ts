@@ -8,8 +8,9 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 
-export class DataStorageService{
+export class DataStorageService {
 
+    constructor(private http: HttpClient) { }
 
 
     constructor(private http : HttpClient ,
