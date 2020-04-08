@@ -3,18 +3,17 @@ import enum
 from itertools import chain
 from django.db.models import Q
 
-from rest_framework import status, generics, mixins
-from rest_framework import permissions
+from django.http import JsonResponse
+from rest_framework import status, generics
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 
 from . import models, serializers
-from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer
+from .managers.time_table import TimeTable
 
 
 class CitiesListView(generics.ListAPIView):

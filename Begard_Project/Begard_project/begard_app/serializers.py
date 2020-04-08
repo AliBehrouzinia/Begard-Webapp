@@ -90,7 +90,7 @@ class PlanSerializer(serializers.ModelSerializer):
 
 class GlobalSearchSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Place
+        model = Restaurant
         fields = '__all__'
 
     def to_native(self, obj):
@@ -115,6 +115,6 @@ class GlobalSearchSerializer(serializers.ModelSerializer):
 
 class AdvancedSearchSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Place
+        model = Restaurant
         fields = '__all__'
 
