@@ -95,6 +95,71 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         return None
 
 
+class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        plan_id = self.kwargs.get('id')
+        plan = models.Plan.objects.get(pk=plan_id)
+
+        plan_details = serializers.PlanSerializer(instance=plan).data
+        plan_details.pop('user')
+        plan_details['plan_items'] = []
+
+        plan_items = models.PlanItem.objects.filter(plan=plan)
+        for plan_item in plan_items:
+            plan_item_details = serializers.PlanItemSerializer(plan_item).data
+            plan_item_details.pop('plan')
+            plan_details['plan_items'].append(plan_item_details)
+
+        return Response(data=plan_details)
+
+    def patch(self, request, *args, **kwargs):
+        plan_items = self.request.data['plan_items']
+        plan_id = self.kwargs.get('id')
+        plan = models.Plan.objects.get(id=plan_id)
+
+        plan_detail = self.request.data
+        plan_detail['id'] = plan_id
+
+        plan_detail.pop('plan_items')
+
+        plan_serializer = serializers.UpdatePlanSerializer(instance=plan, data=plan_detail)
+        if plan_serializer.is_valid():
+            plan_serializer.save()
+
+        list_of_items_id = []
+        for plan_item in plan_items:
+
+            plan_item['plan'] = plan_id
+
+            if plan_item.__contains__('id'):
+                plan_item_id = plan_item.get('id')
+                list_of_items_id.append(plan_item_id)
+
+                plan_item_instance = models.PlanItem.objects.get(id=plan_item_id)
+                plan_item_serializer = serializers.PlanItemSerializer(instance=plan_item_instance, data=plan_item)
+                if plan_item_serializer.is_valid():
+                    plan_item_serializer.save()
+            else:
+                plan_new_item_serializer = serializers.PlanItemSerializer(data=plan_item)
+                if plan_new_item_serializer.is_valid():
+                    plan_new_item = plan_new_item_serializer.save()
+                    list_of_items_id.append(plan_new_item.id)
+
+        for item_id in models.PlanItem.objects.filter(plan=plan_id):
+            if not list_of_items_id.__contains__(item_id.id):
+                item_id.delete()
+
+        return Response(status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        plan = models.Plan.objects.filter(pk=self.kwargs.get('id'))
+        if plan.count() == 1:
+            plan.delete()
+        return Response(status.HTTP_200_OK)
+
+
 class GlobalSearchList(generics.ListAPIView):
     serializer_class = GlobalSearchSerializer
     permission_classes = (IsAuthenticated,)

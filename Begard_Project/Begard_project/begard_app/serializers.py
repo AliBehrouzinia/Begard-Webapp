@@ -88,6 +88,12 @@ class PlanSerializer(serializers.ModelSerializer):
         fields = ['user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
 
 
+class UpdatePlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['id', 'description', 'is_public', 'start_date', 'finish_date']
+
+
 class GlobalSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
