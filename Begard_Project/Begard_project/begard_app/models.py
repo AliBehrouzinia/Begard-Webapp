@@ -72,7 +72,7 @@ class Post(models.Model):
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     creation_date = models.DateTimeField()
-    content = models.TextField(max_length=100)
+    content = models.TextField(max_length=100, default="no content added")
     like = models.IntegerField(default=0)
 
 
