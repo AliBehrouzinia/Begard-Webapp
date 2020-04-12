@@ -234,7 +234,7 @@ class AdvancedSearch(generics.CreateAPIView):
         return all_results
 
 
-class ShowPostVew(generics.ListAPIView):
+class ShowPostView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ShowPostSerializer
 
