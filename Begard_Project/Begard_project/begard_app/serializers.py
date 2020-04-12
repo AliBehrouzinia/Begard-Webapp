@@ -124,3 +124,8 @@ class AdvancedSearchSerializer(serializers.ModelSerializer):
         model = Restaurant
         fields = '__all__'
 
+
+class SavePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'

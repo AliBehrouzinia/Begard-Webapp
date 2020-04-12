@@ -16,7 +16,8 @@ from .managers.time_table import TimeTable
 
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
-from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer
+from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
+    SavePostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -43,7 +44,6 @@ class SuggestListView(generics.ListAPIView):
 class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
     def get(self, request, id):
-
         dest_city = models.City.objects.get(pk=id)
         start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
         finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
@@ -53,7 +53,6 @@ class SuggestPlanView(APIView):
         return JsonResponse(data=result)
 
     def get_plan(self, dest_city, start_date, finish_date):
-
         time_table = TimeTable(start_date, finish_date)
         time_table.create_table(120, 60)
         time_table.tagging()
@@ -79,6 +78,7 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
     def post(self, request, *args, **kwargs):
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
+        self.save_post(request.data, plan.id)
         return Response()
 
     def create_plan_items(self, plan_items, plan_id):
@@ -96,6 +96,14 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
             plan = serializer.save()
             return plan
         return None
+
+    def save_post(self, data, plan_id):
+        data['creation_date'] = datetime.datetime.now()
+        data['user'] = self.request.user.id
+        data['plan'] = plan_id
+        serializer = SavePostSerializer(data=data)
+        if serializer.is_valid(True):
+            serializer.save()
 
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
