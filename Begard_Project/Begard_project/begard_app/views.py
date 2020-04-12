@@ -17,7 +17,7 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer
+    SavePostSerializer, ShowPostSerializer, SearchPostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -43,6 +43,7 @@ class SuggestListView(generics.ListAPIView):
 
 class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
+
     def get(self, request, id):
         dest_city = models.City.objects.get(pk=id)
         start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
@@ -231,3 +232,31 @@ class AdvancedSearch(generics.CreateAPIView):
                 all_results += models.ShoppingMall.objects.filter(Q(rating__gte=rate) & Q(city=city))
 
         return all_results
+
+
+class ShowPostVew(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ShowPostSerializer
+
+    def get_queryset(self):
+        posts = models.Post.objects.all()
+        return posts
+
+
+class SearchPostView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = SearchPostSerializer(data=data)
+        if serializer.is_valid(True):
+            res = self.get_queryset(data)
+            print(res)
+        return Response()
+
+    def get_queryset(self, info):
+        city = info['destination_city']
+        user = info['user']
+        plans = models.Plan.objects.filter(destination_city=city)
+        queryset = models.Post.objects.filter(Q(user=user) & Q(plan=plans[0]))
+        return queryset

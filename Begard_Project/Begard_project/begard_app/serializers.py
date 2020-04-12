@@ -129,3 +129,15 @@ class SavePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
+
+
+class ShowPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'
+
+
+class SearchPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['destination_city', 'user']
