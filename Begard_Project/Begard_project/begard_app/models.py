@@ -69,18 +69,17 @@ class PlanItem(models.Model):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     creation_date = models.DateTimeField()
     content = models.TextField(max_length=100)
-    like = models.IntegerField()
+    like = models.IntegerField(default=0)
 
 
 class Comment(models.Model):
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    content = models.TextField()
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    content = models.TextField(default="no content added", max_length=200)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
 
 class Place(models.Model):
