@@ -74,6 +74,14 @@ class Comment(models.Model):
     content = models.TextField()
 
 
+class Post(models.Model):
+    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE, null=True)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField()
+    content = models.TextField(max_length=100)
+    like = models.IntegerField()
+
+
 class Place(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True,)
     place_id = models.CharField(max_length=500, primary_key=True, default="none")
