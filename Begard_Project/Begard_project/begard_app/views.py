@@ -239,7 +239,8 @@ class ShowPostVew(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
-        posts = models.Post.objects.all()
+        page_num = int(self.request.query_params.get('query', None))
+        posts = models.Post.objects.filter(Q(id__lte=page_num*5) & Q(id__gte=page_num*5-5))
         return posts
 
 
@@ -250,8 +251,7 @@ class SearchPostView(generics.CreateAPIView):
         data = request.data
         serializer = SearchPostSerializer(data=data)
         if serializer.is_valid(True):
-            res = self.get_queryset(data)
-            print(res)
+            self.get_queryset(data)
         return Response()
 
     def get_queryset(self, info):
