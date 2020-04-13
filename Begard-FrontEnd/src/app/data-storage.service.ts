@@ -10,9 +10,6 @@ import { AuthService } from './auth.service';
 
 export class DataStorageService {
 
-    constructor(private http: HttpClient) { }
-
-
     constructor(private http : HttpClient ,
         private authservice :AuthService
         ){}
@@ -20,11 +17,11 @@ export class DataStorageService {
     getCities(){
 
         return this.authservice.user.pipe(take(1),exhaustMap(user => {
-            // console.log(user.token);
+            var token = 'token ' + user.token;
             return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
-            // {
-            //     headers: new HttpHeaders({ 'format' : user.token })
-            // }
+            {
+                headers: new HttpHeaders({ 'Authorization' : token })
+            }
             );
         }));
 
