@@ -17,7 +17,7 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer
+    SavePostSerializer, ShowPostSerializer, SearchPostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -77,7 +77,6 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
 
     def post(self, request, *args, **kwargs):
         plan = self.create_plan(request.data)
-        self.create_plan_items(request.data['plan_items'], plan.id)
         self.save_post(request.data, plan.id)
         return Response()
 
@@ -96,6 +95,14 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
             plan = serializer.save()
             return plan
         return None
+
+    def save_post(self, data, plan_id):
+        data['creation_date'] = datetime.datetime.now()
+        data['user'] = self.request.user.id
+        data['plan'] = plan_id
+        serializer = SavePostSerializer(data=data)
+        if serializer.is_valid(True):
+            serializer.save()
 
     def save_post(self, data, plan_id):
         data['creation_date'] = datetime.datetime.now()
@@ -231,3 +238,31 @@ class AdvancedSearch(generics.CreateAPIView):
                 all_results += models.ShoppingMall.objects.filter(Q(rating__gte=rate) & Q(city=city))
 
         return all_results
+
+
+class ShowPostView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ShowPostSerializer
+
+    def get_queryset(self):
+        page_num = int(self.request.query_params.get('query', None))
+        posts = models.Post.objects.filter(Q(id__lte=page_num*5) & Q(id__gte=page_num*5-5))
+        return posts
+
+
+class SearchPostView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = SearchPostSerializer(data=data)
+        if serializer.is_valid(True):
+            self.get_queryset(data)
+        return Response()
+
+    def get_queryset(self, info):
+        city = info['destination_city']
+        user = info['user']
+        plans = models.Plan.objects.filter(destination_city=city)
+        queryset = models.Post.objects.filter(Q(user=user) & Q(plan=plans[0]))
+        return queryset
