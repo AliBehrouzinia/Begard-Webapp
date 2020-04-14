@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location } from './location';
 
 @Injectable({
@@ -13,8 +13,8 @@ export class DynamicSearchService {
 
   constructor(private http: HttpClient) { }
 
-  search(query: string): Observable<Location> {
-    const url = 'http://127.0.0.1:8000/cities/1/search/simple/';
+  search(query: string, cityId: number): Observable<Location> {
+    const url = 'http://127.0.0.1:8000/cities/' + cityId + '/search/simple/';
     return this.http
       .get<Location>(url, {
         observe: 'response',
@@ -23,7 +23,7 @@ export class DynamicSearchService {
           sort: 'stars',
           order: 'desc'
         },
-        headers : new HttpHeaders({'Authorization' : this.TOKEN})
+        headers: new HttpHeaders({ 'Authorization': this.TOKEN })
       })
       .pipe(
         map(res => {

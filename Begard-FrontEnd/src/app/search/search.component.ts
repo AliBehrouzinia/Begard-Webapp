@@ -6,7 +6,7 @@ import { take, takeUntil } from 'rxjs/operators';
 
 import { City } from '../city.model';
 import { LocationService } from '../map/location.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DataStorageService } from '../data-storage.service';
 
 
@@ -17,13 +17,13 @@ import { DataStorageService } from '../data-storage.service';
 })
 export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public startdate:FormControl = new FormControl();
-  public enddate:FormControl = new FormControl();
+  public startdate: FormControl = new FormControl();
+  public enddate: FormControl = new FormControl();
 
 
 
   /** list of cities */
-  protected cities: City[] =[];
+  protected cities: City[] = [];
 
 
   /** control for the selected city */
@@ -41,9 +41,10 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   protected _onDestroy = new Subject<void>();
 
 
-  constructor(private locationService:LocationService,
+  constructor(private locationService: LocationService,
     private router: Router,
-    private dataStorageService :DataStorageService) { }
+    private route: ActivatedRoute,
+    private dataStorageService: DataStorageService) { }
 
   ngOnInit() {
     this.getCities();
@@ -104,29 +105,28 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  onSearch(){
-    console.log(this.startdate.value);
-    this.locationService.setId(this.cityCtrl.value?.id);
-    this.locationService.setLocation();
-    var path = '/calender/'/*+this.cityCtrl.value?.id*/;
-    this.router.navigate([path]);
+  onSearch() {
+    // this.locationService.setId(this.cityCtrl.value?.id);
+    // this.locationService.setLocation();
+    // var path = '/calender/city=2'/*+this.cityCtrl.value?.id*/;
+    // // this.router.navigate([path]);
   }
 
-    private getCities(){
-        const promise = new Promise((resolve,reject) =>{
-          this.dataStorageService.getCities()
-          .toPromise()
-          .then((cities:City[]) => {
-            this.cities =cities;
-            resolve();
-          },
-            err => {
-              reject(err);
-            }
-          );
-        });
-        return promise;
-      }
+  private getCities() {
+    const promise = new Promise((resolve, reject) => {
+      this.dataStorageService.getCities()
+        .toPromise()
+        .then((cities: City[]) => {
+          this.cities = cities;
+          resolve();
+        },
+          err => {
+            reject(err);
+          }
+        );
+    });
+    return promise;
+  }
 
 
 }

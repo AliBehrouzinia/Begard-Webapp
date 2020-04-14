@@ -1,10 +1,11 @@
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { extend, closest } from '@syncfusion/ej2-base';
 import { EventSettingsModel, View, DayService, WeekService, DragAndDropService, ResizeService, ScheduleComponent, CellClickEventArgs ,DragEventArgs,ResizeEventArgs} from '@syncfusion/ej2-angular-schedule';
 import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { hospitalData, waitingList } from './data';
 import { L10n } from '@syncfusion/ej2-base';
+import { Router } from '@angular/router';
 
 L10n.load({
   'en-US': {
@@ -25,7 +26,7 @@ L10n.load({
     styleUrls: ['./calender.component.css'],
     providers:[DayService,WeekService]
 })
-export class CalenderComponent {
+export class CalenderComponent{
     public isSelected: Boolean = true;
     public dayInterval: number = 3;
     public weeksInterval: number = 2;
@@ -34,7 +35,6 @@ export class CalenderComponent {
     public selectedDate: Date = new Date(2018, 7, 1);
     public currentView: View = 'Week';
     public setViews : View[] = ['Day','Week','Month'];
-
 
     public dateParser(data : string){
       return new Date(data);
