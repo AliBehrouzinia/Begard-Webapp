@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DynamicSearchService } from '../dynamic-search.service';
 import { Observable, observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   startWith,
   map,
@@ -21,11 +22,17 @@ import {
 export class DynamicSearchComponent implements OnInit {
   public locationsAutoComplete$: Observable<Location> = null;
   public autoCompleteControl = new FormControl();
+  public cityId: number;
 
-  constructor(private dynamicSearchService: DynamicSearchService) { }
+  constructor(
+    private dynamicSearchService: DynamicSearchService
+    , private router: Router
+    , private route: ActivatedRoute
+  ) { }
 
-  lookup(value: string): Observable<Location> {
-    return this.dynamicSearchService.search(value.toLowerCase()).pipe(
+  lookup(value: string, cityId: number): Observable<Location> {
+    console.log("city id oo :" + this.cityId);
+    return this.dynamicSearchService.search(value.toLowerCase(), cityId).pipe(
       // map the item property of the github results as our return object
       map(results => results),
       // catch errors
@@ -38,6 +45,11 @@ export class DynamicSearchComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.cityId = +params.get('city');
+      console.log("city id :" + this.cityId);
+    });
+
     this.locationsAutoComplete$ = this.autoCompleteControl.valueChanges.pipe(
       startWith(''),
       // delay emits
@@ -46,7 +58,7 @@ export class DynamicSearchComponent implements OnInit {
       switchMap(value => {
         if (value !== '') {
           // lookup from github
-          return this.lookup(value);
+          return this.lookup(value, this.cityId);
         } else {
           // if no value is pressent, return null
           return of(null);

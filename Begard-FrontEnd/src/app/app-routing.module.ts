@@ -17,7 +17,7 @@ const appRoutes: Routes = [
         {path : '' , component : LocationDetailStartComponent  },
         {path : ':id', component :LocationDetailComponent }  
     ]},
-    {path:'calender' , component : CalenderComponent},
+    {path:'calender/:city' , component : CalenderComponent},
     { path: 'search' , component : SearchComponent}
 ]
 @NgModule({
