@@ -20,9 +20,10 @@ const appRoutes: Routes = [
             { path: ':id', component: LocationDetailComponent }
         ]
     },
-    { path: 'calender', component: CalenderComponent, resolve : { plan : CalenderResolver} },
-    { path: 'search', component: SearchComponent }
+    { path: 'search', component: SearchComponent },
+    { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } }
 ]
+
 @NgModule({
     imports: [RouterModule.forRoot(appRoutes)],
     exports: [RouterModule]

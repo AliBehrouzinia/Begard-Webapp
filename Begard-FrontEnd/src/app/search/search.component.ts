@@ -6,7 +6,7 @@ import { take, takeUntil } from 'rxjs/operators';
 
 import { City } from '../city.model';
 import { LocationService } from '../map/location.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DataStorageService } from '../data-storage.service';
 
 
@@ -43,6 +43,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private locationService: LocationService,
     private router: Router,
+    private route: ActivatedRoute,
     private dataStorageService: DataStorageService) { }
 
   ngOnInit() {
@@ -118,9 +119,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       startday + '&finish_date=' + endday;
     // this.locationService.setId(this.cityCtrl.value?.id);
     // this.locationService.setLocation();
-    var path = '/calender/'/*+this.cityCtrl.value?.id*/;
-    this.router.navigate([path]);
-  }
+  } 
+
 
   private getCities() {
     const promise = new Promise((resolve, reject) => {
