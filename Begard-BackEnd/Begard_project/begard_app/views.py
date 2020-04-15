@@ -157,10 +157,8 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         return Response(status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        plan = models.Plan.objects.filter(pk=self.kwargs.get('id'))
-        if plan.count() == 1:
-            plan.delete()
-        return Response(status.HTTP_200_OK)
+        models.Plan.objects.filter(pk=self.kwargs.get('id')).delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class GlobalSearchList(generics.ListAPIView):
