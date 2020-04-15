@@ -150,11 +150,9 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
                     plan_new_item = plan_new_item_serializer.save()
                     list_of_items_id.append(plan_new_item.id)
 
-        for item_id in models.PlanItem.objects.filter(plan=plan_id):
-            if not list_of_items_id.__contains__(item_id.id):
-                item_id.delete()
+        models.PlanItem.objects.filter(plan=plan_id).exclude(id__in=list_of_items_id).delete()
 
-        return Response(status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         models.Plan.objects.filter(pk=self.kwargs.get('id')).delete()
