@@ -50,10 +50,13 @@ class TimeTable:
 
         for day in range(total_days):
             self.table.append([])
-            flag = datetime.datetime(self.start_date_time.year, self.start_date_time.month, self.start_date_time.day, 0, 0, 0)
+            flag = datetime.datetime(self.start_date_time.year, self.start_date_time.month, self.start_date_time.day, 0, 0, 0) \
+                + datetime.timedelta(days=day)
             for s in range(slot_count_per_day):
                 self.table[day].append(Slot(flag, flag + activity_timedelta))
                 flag = flag + activity_timedelta + rest_timedelta
+
+
 
     def set_places(self, dest_city):
         places = self.top_from_all_models(PlanningConstants.top_place_count, dest_city)
