@@ -105,14 +105,6 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         if serializer.is_valid(True):
             serializer.save()
 
-    def save_post(self, data, plan_id):
-        data['creation_date'] = datetime.datetime.now()
-        data['user'] = self.request.user.id
-        data['plan'] = plan_id
-        serializer = SavePostSerializer(data=data)
-        if serializer.is_valid(True):
-            serializer.save()
-
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
