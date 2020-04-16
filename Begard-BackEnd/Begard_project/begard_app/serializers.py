@@ -82,7 +82,6 @@ class PlanItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanItem
         fields = ['place_id', 'plan', 'start_date', 'finish_date']
-        # list_serializer_class = PlanItemListSerializer
 
 
 class PlanSerializer(serializers.ModelSerializer):
