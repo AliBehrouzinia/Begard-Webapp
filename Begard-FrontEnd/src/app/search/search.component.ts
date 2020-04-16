@@ -106,11 +106,16 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSearch() {
-    // this.locationService.setId(this.cityCtrl.value?.id);
-    // this.locationService.setLocation();
-    // var path = '/calender/city=2'/*+this.cityCtrl.value?.id*/;
-    // // this.router.navigate([path]);
+    var startdate = new Date(this.startdate.value);
+    var enddate = new Date(this.enddate.value);
+    var startday: string = startdate.getFullYear() + '-' + (+startdate.getMonth() + 1) + '-' +
+      startdate.getDate() + 'T0:0Z';
+    var endday: string = enddate.getFullYear() + '-' + (+enddate.getMonth() + 1) + '-' +
+      enddate.getDate() + 'T0:0Z';
+    this.dataStorageService.planUrl = 'http://127.0.0.1:8000/cities/' + this.cityCtrl.value?.id + '/suggest-plan/?start_date=' +
+      startday + '&finish_date=' + endday;
   }
+
 
   private getCities() {
     const promise = new Promise((resolve, reject) => {
