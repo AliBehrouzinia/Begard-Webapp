@@ -1,3 +1,5 @@
+from abc import ABC
+
 from rest_framework import serializers
 from .models import *
 from .models import BegardUser
@@ -80,6 +82,7 @@ class PlanItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanItem
         fields = ['place_id', 'plan', 'start_date', 'finish_date']
+        # list_serializer_class = PlanItemListSerializer
 
 
 class PlanSerializer(serializers.ModelSerializer):
@@ -92,6 +95,25 @@ class UpdatePlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = ['id', 'description', 'is_public', 'start_date', 'finish_date']
+
+
+class PlanItemListSerializer(serializers.ListSerializer):
+    def update(self, instance, validated_data):
+        for i in range(len(instance)):
+            self.validated_data[i]['plan'] = self.validated_data[i]['plan'].id
+            serializer = PlanItemSerializer(instance[i], self.validated_data[i])
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+
+        return instance
+
+
+class PatchPlanItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PlanItem
+        fields = '__all__'
+        list_serializer_class = PlanItemListSerializer
 
 
 class GlobalSearchSerializer(serializers.ModelSerializer):
