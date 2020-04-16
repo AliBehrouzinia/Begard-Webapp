@@ -26,11 +26,12 @@ L10n.load({
   selector: 'app-calender',
   templateUrl: './calender.component.html',
   styleUrls: ['./calender.component.css'],
-  providers: [DayService, WeekService, DragAndDropService, ResizeService]
+  providers: [DayService, WeekService, DragAndDropService, ResizeService, RowDDService, EditService]
 })
 export class CalenderComponent implements OnInit {
 
   planItems: PlanningItem[] = [];
+  gridItems: PlanningItem[] = [];
 
   constructor(
     private dataStorage: DataStorageService,
@@ -47,7 +48,14 @@ export class CalenderComponent implements OnInit {
           new Date(plan.plan.plan_items[i].finish_date).toISOString(),
           plan.plan.plan_items[i].place_name,
           plan.plan.plan_items[i].place_info.id
-        ))
+        ));
+        this.gridItems.push(new PlanningItem(
+          new Date(plan.plan.plan_items[i].start_date).toISOString(),
+          new Date(plan.plan.plan_items[i].finish_date).toISOString(),
+          plan.plan.plan_items[i].place_name,
+          plan.plan.plan_items[i].place_info.id
+        ));
+
       }
       console.log(this.planItems);
 
@@ -80,9 +88,6 @@ export class CalenderComponent implements OnInit {
   @ViewChild('gridObj')
   public gridObj: GridComponent;
 
-  // Scheduler data
-  // public data: Object[] = <Object[]>extend([], hospitalData, null, true);
-  public data;
 
   public eventSettings: EventSettingsModel = {
     dataSource: this.planItems,
@@ -116,16 +121,12 @@ export class CalenderComponent implements OnInit {
       if (event.target.classList.contains('e-work-cells')) {
         const filteredData: Object = event.data;
         let cellData: CellClickEventArgs = this.scheduleObj.getCellDetails(event.target);
-        let eventData: { [key: string]: Object } = {
-          Id: filteredData[0].Id,
-          Name: filteredData[0].Name,
-          StartTime: cellData.startTime,
-          EndTime: cellData.endTime,
-          IsAllDay: cellData.isAllDay,
-          Description: filteredData[0].Description
-        };
-        this.scheduleObj.addEvent(eventData);
-        // this.scheduleObj.openEditor(eventData, 'Add', true);
+        var newPlan: PlanningItem = new PlanningItem(
+          cellData.startTime.toISOString(),
+          cellData.endTime.toISOString(),
+          filteredData[0].placeName,
+          filteredData[0].placeId + 'a');
+        this.scheduleObj.addEvent(newPlan)
         this.gridObj.deleteRecord(event.data[0]);
       }
     }

@@ -106,9 +106,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSearch() {
-    // console.log(this.startdate.value);
-    // console.log(this.enddate.value);
-    // console.log(this.cityCtrl.value);
     var startdate = new Date(this.startdate.value);
     var enddate = new Date(this.enddate.value);
     var startday: string = startdate.getFullYear() + '-' + (+startdate.getMonth() + 1) + '-' +
@@ -117,9 +114,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       enddate.getDate() + 'T0:0Z';
     this.dataStorageService.planUrl = 'http://127.0.0.1:8000/cities/' + this.cityCtrl.value?.id + '/suggest-plan/?start_date=' +
       startday + '&finish_date=' + endday;
-    // this.locationService.setId(this.cityCtrl.value?.id);
-    // this.locationService.setLocation();
-  } 
+  }
 
 
   private getCities() {
