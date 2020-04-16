@@ -131,12 +131,6 @@ class SavePostSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SavePostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = '__all__'
-
-
 class ShowPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
