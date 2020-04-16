@@ -144,5 +144,9 @@ export class CalenderComponent implements OnInit {
     args.scroll.enable = true;
     args.interval = 1;
 
-  }
+    }
+
+    addToLocationList(location){
+      console.log("here is : " + location.name);
+    }
 }
