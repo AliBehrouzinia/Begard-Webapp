@@ -114,4 +114,8 @@ export class CalenderComponent{
       args.interval=1;
 
     }
+
+    addToLocationList(location){
+      console.log("here is : " + location.name);
+    }
 }

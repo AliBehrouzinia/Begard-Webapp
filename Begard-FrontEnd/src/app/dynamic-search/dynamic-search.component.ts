@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,Output ,EventEmitter } from '@angular/core';
 import { DynamicSearchService } from '../dynamic-search.service';
 import { Observable, observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
@@ -23,6 +23,7 @@ export class DynamicSearchComponent implements OnInit {
   public locationsAutoComplete$: Observable<Location> = null;
   public autoCompleteControl = new FormControl();
   public cityId: number;
+  @Output() locationEventEmmiter: EventEmitter<Location> = new EventEmitter<Location>();
 
   constructor(
     private dynamicSearchService: DynamicSearchService
@@ -30,14 +31,12 @@ export class DynamicSearchComponent implements OnInit {
     , private route: ActivatedRoute
   ) { }
 
-  lookup(value: string, cityId: number): Observable<Location> {
-    console.log("city id oo :" + this.cityId);
+  lookup(value, cityId: number): Observable<Location> {
+    console.log("cal : " + (typeof value));
     return this.dynamicSearchService.search(value.toLowerCase(), cityId).pipe(
       // map the item property of the github results as our return object
       map(results => results),
       // catch errors
-      tap(results => console.log("this is " + results))
-      ,
       catchError(_ => {
         return of(null);
       })
@@ -56,7 +55,7 @@ export class DynamicSearchComponent implements OnInit {
       debounceTime(300),
       // use switch map so as to cancel previous subscribed events, before creating new once
       switchMap(value => {
-        if (value !== '') {
+        if (value !== '' && typeof value == 'string') {
           // lookup from github
           return this.lookup(value, this.cityId);
         } else {
@@ -65,6 +64,15 @@ export class DynamicSearchComponent implements OnInit {
         }
       })
     );
+  }
+
+  onSelectionChanged(selectedLocation) { 
+    console.log(" location : " + selectedLocation.option.value.name);
+    this.locationEventEmmiter.emit(selectedLocation.option.value);
+   }
+
+   displayNull(value) {
+    return "";
   }
 
 }
