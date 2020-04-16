@@ -27,12 +27,10 @@ export class DynamicSearchComponent implements OnInit {
 
   constructor(
     private dynamicSearchService: DynamicSearchService
-    , private router: Router
     , private route: ActivatedRoute
   ) { }
 
   lookup(value, cityId: number): Observable<Location> {
-    console.log("cal : " + (typeof value));
     return this.dynamicSearchService.search(value.toLowerCase(), cityId).pipe(
       // map the item property of the github results as our return object
       map(results => results),
@@ -66,11 +64,12 @@ export class DynamicSearchComponent implements OnInit {
     );
   }
 
+  //send selected location to calender component
   onSelectionChanged(selectedLocation) { 
-    console.log(" location : " + selectedLocation.option.value.name);
     this.locationEventEmmiter.emit(selectedLocation.option.value);
    }
 
+   //clean autocomplete input
    displayNull(value) {
     return "";
   }

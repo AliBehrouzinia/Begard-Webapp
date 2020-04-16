@@ -20,6 +20,12 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   public startdate: FormControl = new FormControl();
   public enddate: FormControl = new FormControl();
 
+  endDateDisable = true;
+  endDateMin: Date;
+  startDateMin: Date;
+  startDate: Date;
+  endDate: Date;
+
 
 
   /** list of cities */
@@ -44,7 +50,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private locationService: LocationService,
     private router: Router,
     private route: ActivatedRoute,
-    private dataStorageService: DataStorageService) { }
+    private dataStorageService: DataStorageService) {
+  }
 
   ngOnInit() {
     this.getCities();
@@ -60,6 +67,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => {
         this.filterCities();
       });
+
+    //set start min date to current date
+    this.startDateMin = new Date();
   }
 
   ngAfterViewInit() {
@@ -133,5 +143,21 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     return promise;
   }
 
+  onStartDateChanged(startDate) {
+    this.startDate = startDate;
+    if (startDate == null) {
+      this.endDateDisable = true;
+      this.endDateMin = null;
+    }
+    else {
+      this.startDate = startDate;
+      this.endDateDisable = false;
+      this.endDateMin = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getUTCDate() + 2);
+    }
+  }
+
+  onEndDateChanged(endDate) {
+    this.endDate = endDate;
+  }
 
 }
