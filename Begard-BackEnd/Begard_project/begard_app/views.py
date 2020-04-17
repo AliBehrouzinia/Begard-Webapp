@@ -238,7 +238,7 @@ class ShowPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
-        page_num = int(self.request.query_params.get('query', None))
+        page_num = int(self.request.query_params.get('page', None))
         num_of_posts = models.Post.objects.all().count()
         if num_of_posts > page_num * 20:
             posts = models.Post.objects.filter(
@@ -256,5 +256,5 @@ class SearchPostView(generics.ListAPIView):
     def get_queryset(self):
         city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
-        queryset = models.Post.objects.filter(Q(plan=plans[0]))
+        queryset = models.Post.objects.filter(Q(plan__in=plans))
         return queryset
