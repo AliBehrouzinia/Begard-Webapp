@@ -8,6 +8,9 @@ import { L10n } from '@syncfusion/ej2-base';
 import { DataStorageService, PlanItem, Plan } from '../data-storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { PlanningItem } from '../plan-item.model';
+import { Location } from '../location'
+import { last } from 'rxjs/operators';
+
 
 L10n.load({
   'en-US': {
@@ -44,21 +47,19 @@ export class CalenderComponent implements OnInit {
 
       for (var i = 0; i < plan.plan.plan_items.length; i++) {
         this.planItems.push(new PlanningItem(
-          new Date(plan.plan.plan_items[i].start_date).toISOString(),
-          new Date(plan.plan.plan_items[i].finish_date).toISOString(),
-          plan.plan.plan_items[i].place_name,
-          plan.plan.plan_items[i].place_info.id
+          new Date(plan.plan.plan_items[i].start_date).toISOString()
+          , new Date(plan.plan.plan_items[i].finish_date).toISOString()
+          , plan.plan.plan_items[i].place_name
+          , plan.plan.plan_items[i].place_info.id
         ));
         this.gridItems.push(new PlanningItem(
-          new Date(plan.plan.plan_items[i].start_date).toISOString(),
-          new Date(plan.plan.plan_items[i].finish_date).toISOString(),
-          plan.plan.plan_items[i].place_name,
-          plan.plan.plan_items[i].place_info.id
+          new Date(plan.plan.plan_items[i].start_date).toISOString()
+          , new Date(plan.plan.plan_items[i].finish_date).toISOString()
+          , plan.plan.plan_items[i].place_name
+          , plan.plan.plan_items[i].place_info.id
         ));
 
       }
-      console.log(this.planItems);
-
     });
 
   }
@@ -122,10 +123,11 @@ export class CalenderComponent implements OnInit {
         const filteredData: Object = event.data;
         let cellData: CellClickEventArgs = this.scheduleObj.getCellDetails(event.target);
         var newPlan: PlanningItem = new PlanningItem(
-          cellData.startTime.toISOString(),
-          cellData.endTime.toISOString(),
-          filteredData[0].placeName,
-          filteredData[0].placeId + 'a');
+          cellData.startTime.toISOString()
+          , cellData.endTime.toISOString()
+          , filteredData[0].placeName
+          , filteredData[0].placeId + 'a'
+        );
         this.scheduleObj.addEvent(newPlan)
         this.gridObj.deleteRecord(event.data[0]);
       }
@@ -144,9 +146,14 @@ export class CalenderComponent implements OnInit {
     args.scroll.enable = true;
     args.interval = 1;
 
-    }
+  }
 
-    addToLocationList(location){
-      console.log("here is : " + location.name);
-    }
+  addToLocationList(location) {
+    this.gridObj.addRecord( new PlanningItem(
+      this.gridItems[0].startDate
+      , this.gridItems[0].finishDate
+      , location.name
+      , location.id
+    ));
+  }
 }

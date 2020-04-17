@@ -3,6 +3,7 @@ import { DynamicSearchService } from '../dynamic-search.service';
 import { Observable, observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '../location'
 import {
   startWith,
   map,
