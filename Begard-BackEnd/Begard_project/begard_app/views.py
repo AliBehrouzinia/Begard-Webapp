@@ -17,7 +17,7 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, SearchPostSerializer
+    SavePostSerializer, ShowPostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -245,24 +245,16 @@ class ShowPostView(generics.ListAPIView):
                 Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20)).order_by('-id')
         else:
             posts = models.Post.objects.filter(
-                Q(id__lte=num_of_posts+1) & Q(id__gte=1)).order_by('-id')
+                Q(id__lte=num_of_posts + 1) & Q(id__gte=1)).order_by('-id')
         return posts
 
 
-class SearchPostView(generics.CreateAPIView):
+class SearchPostView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = ShowPostSerializer
 
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = SearchPostSerializer(data=data)
-        if serializer.is_valid(True):
-            self.get_queryset(data)
-
-        return Response()
-
-    def get_queryset(self, info):
-        city = info['destination_city']
-        user = info['user']
+    def get_queryset(self):
+        city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
-        queryset = models.Post.objects.filter(Q(user=user) & Q(plan=plans[0]))
+        queryset = models.Post.objects.filter(Q(plan=plans[0]))
         return queryset
