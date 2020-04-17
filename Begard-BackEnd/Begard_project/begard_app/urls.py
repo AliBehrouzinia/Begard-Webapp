@@ -12,4 +12,5 @@ urlpatterns = [
     path('cities/<int:id>/search/advanced/', views.AdvancedSearch.as_view()),
     path('posts/', views.ShowPostView.as_view()),
     path('posts/search/', views.SearchPostView.as_view()),
+    path('posts/<int:id>/comments/', views.CommentsOnPostView.as_view()),
 ]
