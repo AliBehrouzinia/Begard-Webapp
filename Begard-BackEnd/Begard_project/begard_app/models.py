@@ -79,6 +79,10 @@ class UserFollowing(models.Model):
     following_user_id = models.ForeignKey("BegardUser", related_name="followers", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ("user_id", "following_user_id")
+        ordering = ["-created"]
+
 
 class Place(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True,)

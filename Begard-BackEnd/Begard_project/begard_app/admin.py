@@ -15,7 +15,7 @@ class BegardUserAdmin(UserAdmin):
     list_filter = ('email', 'date_joined')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Permissions', {'fields': ('date_joined', 'is_staff')}),
+        ('Permissions', {'fields': ('date_joined', )}),
     )
     add_fieldsets = (
         (None, {

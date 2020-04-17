@@ -225,12 +225,25 @@ class AdvancedSearch(generics.CreateAPIView):
         return all_results
 
 
-class FollowingsView(generics.CreateAPIView):
+class FollowingsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
+    serializer_class = FollowingsSerializer
 
     def post(self, request, *args, **kwargs):
         data = request.data
         self.add_following(data)
+        return Response()
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user.id
+        models.UserFollowing.objects.filter(user_id=user)
+        return Response()
+
+    def delete(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        data = request.data
+        following_id = data['following_id']
+        models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
         return Response()
 
     def add_following(self, data):
@@ -238,3 +251,13 @@ class FollowingsView(generics.CreateAPIView):
         serializer = FollowingsSerializer(data=data)
         if serializer.is_valid(True):
             serializer.save()
+
+
+class FollowersView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = FollowingsSerializer
+
+    def get_queryset(self):
+        user = self.request.user.id
+        queryset = models.UserFollowing.objects.filter(Q(following_user_id=user))
+        return queryset
