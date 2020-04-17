@@ -123,3 +123,11 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Comment, CommentAdmin)
+
+
+class LikeAdmin(admin.ModelAdmin):
+    model = Like
+    list_display = ('user', 'post', 'date')
+
+
+admin.site.register(Like, LikeAdmin)
