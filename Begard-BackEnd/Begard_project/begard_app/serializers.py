@@ -138,6 +138,7 @@ class ShowPostSerializer(serializers.ModelSerializer):
 
 
 class SearchPostSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Plan
         fields = ['destination_city', 'user']

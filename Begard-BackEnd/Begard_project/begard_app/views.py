@@ -257,6 +257,7 @@ class SearchPostView(generics.CreateAPIView):
         serializer = SearchPostSerializer(data=data)
         if serializer.is_valid(True):
             self.get_queryset(data)
+
         return Response()
 
     def get_queryset(self, info):
