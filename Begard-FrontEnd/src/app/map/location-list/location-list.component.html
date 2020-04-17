@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-success">New Location</button>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-xs-12">
+        <app-location-item 
+         *ngFor="let locationEl of locations; let i = index"
+         [location]="locationEl"
+         [index]="i" ></app-location-item>
+    </div>
+</div>
