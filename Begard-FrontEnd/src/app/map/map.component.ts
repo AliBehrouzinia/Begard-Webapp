@@ -51,9 +51,9 @@ export class MapComponent implements AfterViewInit {
     var content = document.getElementById('popup-content');
     var closer = document.getElementById('popup-closer');
 
-    // 
+    //
     // Create an overlay to anchor the popup to the map.
-    // 
+    //
     var overlay = new Overlay({
       element: container,
       autoPan: true,
@@ -62,19 +62,19 @@ export class MapComponent implements AfterViewInit {
       }
     });
 
-    // 
+    //
     // Add a click handler to hide the popup.
     // Don't follow the href.
-    // 
-    closer.onclick = function () {
+    //
+    closer.onclick = function() {
       overlay.setPosition(undefined);
       closer.blur();
       return false;
     };
 
-    // 
+    //
     // Create the map.
-    // 
+    //
 
     var map = new Map({
       target: 'map',
@@ -101,9 +101,9 @@ export class MapComponent implements AfterViewInit {
     });
 
 
-    // 
+    //
     // Add the marker layers to map
-    // 
+    //
 
     for (var i = 0; i < this.markerLocations.length; i++) {
       var layer = new Vector({
@@ -120,10 +120,12 @@ export class MapComponent implements AfterViewInit {
       var img = undefined;
       layer.setStyle(new Style({
         image: new Icon({
-          color: '#8959A8',
+          anchor: [0.5, 0.96],
           crossOrigin: 'anonymous',
-          imgSize: [20, 20],
-          src: 'assets/images/loc.png'
+          src: 'assets/images/icon.png',
+          img: img,
+          imgSize: img ? [img.width, img.height] : undefined
+
         })
       }));
       map.addLayer(layer);
@@ -133,10 +135,10 @@ export class MapComponent implements AfterViewInit {
 
 
 
-    // 
+    //
     // Add a click handler to the map to render the popup.
-    // 
-    map.on('singleclick', function (evt) {
+    //
+    map.on('singleclick', function(evt) {
       if (map.hasFeatureAtPixel(evt.pixel) == true) {
         var coordinate = evt.coordinate;
         var hdms = coordinate;
@@ -151,4 +153,3 @@ export class MapComponent implements AfterViewInit {
 
 
 }
-
