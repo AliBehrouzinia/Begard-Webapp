@@ -17,7 +17,7 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, SearchPostSerializer
+    SavePostSerializer, ShowPostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -96,14 +96,6 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
             plan = serializer.save()
             return plan
         return None
-
-    def save_post(self, data, plan_id):
-        data['creation_date'] = datetime.datetime.now()
-        data['user'] = self.request.user.id
-        data['plan'] = plan_id
-        serializer = SavePostSerializer(data=data)
-        if serializer.is_valid(True):
-            serializer.save()
 
     def save_post(self, data, plan_id):
         data['creation_date'] = datetime.datetime.now()
@@ -246,30 +238,42 @@ class ShowPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
-        page_num = int(self.request.query_params.get('query', None))
+        page_num = int(self.request.query_params.get('page', None))
         num_of_posts = models.Post.objects.all().count()
         if num_of_posts > page_num * 20:
             posts = models.Post.objects.filter(
                 Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20)).order_by('-id')
         else:
             posts = models.Post.objects.filter(
-                Q(id__lte=num_of_posts+1) & Q(id__gte=1)).order_by('-id')
+                Q(id__lte=num_of_posts + 1) & Q(id__gte=1)).order_by('-id')
         return posts
 
 
-class SearchPostView(generics.CreateAPIView):
+class SearchPostView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = ShowPostSerializer
+
+    def get_queryset(self):
+        city = self.request.query_params.get('city', None)
+        plans = models.Plan.objects.filter(destination_city=city)
+        queryset = models.Post.objects.filter(Q(plan__in=plans))
+        return queryset
+
+
+class CommentsOnPostView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.CreateCommentSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs.get('id')
+        return models.Comment.objects.filter(post=post_id)
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = SearchPostSerializer(data=data)
-        if serializer.is_valid(True):
-            self.get_queryset(data)
-        return Response()
+        data = self.request.data
+        data['post'] = self.kwargs.get('id')
+        data['user'] = self.request.user.id
+        comment_serializer = serializers.CreateCommentSerializer(data=data)
+        if comment_serializer.is_valid():
+            comment_serializer.save()
 
-    def get_queryset(self, info):
-        city = info['destination_city']
-        user = info['user']
-        plans = models.Plan.objects.filter(destination_city=city)
-        queryset = models.Post.objects.filter(Q(user=user) & Q(plan=plans[0]))
-        return queryset
+        return Response(status=status.HTTP_201_CREATED)
