@@ -258,3 +258,22 @@ class SearchPostView(generics.ListAPIView):
         plans = models.Plan.objects.filter(destination_city=city)
         queryset = models.Post.objects.filter(Q(plan__in=plans))
         return queryset
+
+
+class CommentsOnPostView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.CreateCommentSerializer
+
+    def get_queryset(self):
+        post_id = self.kwargs.get('id')
+        return models.Comment.objects.filter(post=post_id)
+
+    def post(self, request, *args, **kwargs):
+        data = self.request.data
+        data['post'] = self.kwargs.get('id')
+        data['user'] = self.request.user.id
+        comment_serializer = serializers.CreateCommentSerializer(data=data)
+        if comment_serializer.is_valid():
+            comment_serializer.save()
+
+        return Response(status=status.HTTP_201_CREATED)

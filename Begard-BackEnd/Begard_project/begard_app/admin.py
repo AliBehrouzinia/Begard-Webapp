@@ -3,8 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import BegardUserCreationForm, BegardUserChangeForm
-from .models import BegardUser, City, Restaurant, Plan, PlanItem, Hotel, ShoppingMall, Cafe, RecreationalPlace \
-    , TouristAttraction, Museum, Post
+from .models import *
 
 
 class BegardUserAdmin(UserAdmin):
@@ -116,3 +115,11 @@ class PostAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Post, PostAdmin)
+
+
+class CommentAdmin(admin.ModelAdmin):
+    model = Comment
+    list_display = ('user', 'post', 'content')
+
+
+admin.site.register(Comment, CommentAdmin)
