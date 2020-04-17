@@ -141,3 +141,9 @@ class SearchPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = ['destination_city', 'user']
+
+
+class CreateCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
