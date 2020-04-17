@@ -106,7 +106,6 @@ class PlanItemListSerializer(serializers.ListSerializer):
 
 
 class PatchPlanItemSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = PlanItem
         fields = '__all__'
@@ -143,3 +142,8 @@ class AdvancedSearchSerializer(serializers.ModelSerializer):
         model = Restaurant
         fields = '__all__'
 
+
+class FollowingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
+        fields = '__all__'

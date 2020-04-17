@@ -16,7 +16,8 @@ from .managers.time_table import TimeTable
 
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
-from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer
+from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
+    FollowingsSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -42,8 +43,8 @@ class SuggestListView(generics.ListAPIView):
 
 class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
-    def get(self, request, id):
 
+    def get(self, request, id):
         dest_city = models.City.objects.get(pk=id)
         start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
         finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
@@ -53,7 +54,6 @@ class SuggestPlanView(APIView):
         return JsonResponse(data=result)
 
     def get_plan(self, dest_city, start_date, finish_date):
-
         time_table = TimeTable(start_date, finish_date)
         time_table.create_table(120, 60)
         time_table.tagging()
@@ -223,3 +223,18 @@ class AdvancedSearch(generics.CreateAPIView):
                 all_results += models.ShoppingMall.objects.filter(Q(rating__gte=rate) & Q(city=city))
 
         return all_results
+
+
+class FollowingsView(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        self.add_following(data)
+        return Response()
+
+    def add_following(self, data):
+        data['user_id'] = self.request.user.id
+        serializer = FollowingsSerializer(data=data)
+        if serializer.is_valid(True):
+            serializer.save()
