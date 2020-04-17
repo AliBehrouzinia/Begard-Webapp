@@ -3,8 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import BegardUserCreationForm, BegardUserChangeForm
-from .models import BegardUser, City, Restaurant, Plan, PlanItem, Hotel, ShoppingMall, Cafe, RecreationalPlace\
-    , TouristAttraction, Museum
+from .models import BegardUser, City, Restaurant, Plan, PlanItem, Hotel, ShoppingMall, Cafe, RecreationalPlace \
+    , TouristAttraction, Museum, Post
 
 
 class BegardUserAdmin(UserAdmin):
@@ -32,7 +32,7 @@ admin.site.register(BegardUser, BegardUserAdmin)
 
 class CityAdmin(admin.ModelAdmin):
     model = City
-    list_display = ('name', )
+    list_display = ('name',)
 
 
 admin.site.register(City, CityAdmin)
@@ -108,3 +108,11 @@ class MuseumAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Museum, MuseumAdmin)
+
+
+class PostAdmin(admin.ModelAdmin):
+    model = Post
+    list_display = ('user', 'plan')
+
+
+admin.site.register(Post, PostAdmin)
