@@ -147,36 +147,36 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         if plan_serializer.is_valid():
             plan_serializer.save()
 
-        list_of_items_id = []
+        plan_items_create_data = []
+        plan_items_update_data = []
+        plan_items_update_id = []
+        instances = []
         for plan_item in plan_items:
-
             plan_item['plan'] = plan_id
-
-            if plan_item.__contains__('id'):
-                plan_item_id = plan_item.get('id')
-                list_of_items_id.append(plan_item_id)
-
-                plan_item_instance = models.PlanItem.objects.get(id=plan_item_id)
-                plan_item_serializer = serializers.PlanItemSerializer(instance=plan_item_instance, data=plan_item)
-                if plan_item_serializer.is_valid():
-                    plan_item_serializer.save()
+            plan_item_id = plan_item.get('id')
+            if plan_item_id is None:
+                plan_items_create_data.append(plan_item)
             else:
-                plan_new_item_serializer = serializers.PlanItemSerializer(data=plan_item)
-                if plan_new_item_serializer.is_valid():
-                    plan_new_item = plan_new_item_serializer.save()
-                    list_of_items_id.append(plan_new_item.id)
+                plan_items_update_data.append(plan_item)
+                plan_items_update_id.append(plan_item_id)
+                instances.append(models.PlanItem.objects.get(pk=plan_item_id))
 
-        for item_id in models.PlanItem.objects.filter(plan=plan_id):
-            if not list_of_items_id.__contains__(item_id.id):
-                item_id.delete()
+        serializer = serializers.PatchPlanItemSerializer(instance=instances,
+                                                         data=plan_items_update_data, many=True)
+        if serializer.is_valid():
+            serializer.save()
 
-        return Response(status.HTTP_200_OK)
+        models.PlanItem.objects.filter(plan=plan_id).exclude(id__in=plan_items_update_id).delete()
+
+        serializer = serializers.PatchPlanItemSerializer(data=plan_items_create_data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        plan = models.Plan.objects.filter(pk=self.kwargs.get('id'))
-        if plan.count() == 1:
-            plan.delete()
-        return Response(status.HTTP_200_OK)
+        models.Plan.objects.filter(pk=self.kwargs.get('id')).delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class GlobalSearchList(generics.ListAPIView):

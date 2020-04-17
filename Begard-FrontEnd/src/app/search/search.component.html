@@ -4,7 +4,6 @@
 
 
 
-
   <div class="search-box">
     <mat-card-header>
       <mat-card-title>Choose Your Destination : </mat-card-title>
@@ -12,6 +11,7 @@
 
     <p>
       <mat-form-field class="example-half-width">
+          
         <mat-select [formControl]="cityCtrl" placeholder="City" #singleSelect>
           <mat-option>
             <ngx-mat-select-search [formControl]="cityFilterCtrl"></ngx-mat-select-search>
@@ -25,16 +25,15 @@
       </mat-form-field>
 
       <mat-form-field class="example-quart-width">
-
         <mat-label>From </mat-label>
-        <input matInput [formControl]="startdate" [matDatepicker]="startpicker">
-        <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+        <input matInput [formControl]="startdate" [min]="startDateMin" [matDatepicker]="startpicker" (dateInput)="onStartDateChanged($event.value)">
+        <mat-datepicker-toggle matSuffix [for]="startpicker" ></mat-datepicker-toggle>
         <mat-datepicker touchUi #startpicker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field class="example-quart-width">
         <mat-label>To</mat-label>
-        <input matInput [formControl]="enddate" [matDatepicker]="endpicker">
+        <input matInput [formControl]="enddate" [min]="endDateMin" [matDatepicker]="endpicker" [disabled]="endDateDisable" (dateInput)="onEndDateChanged($event.value)">
         <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
         <mat-datepicker touchUi #endpicker></mat-datepicker>
       </mat-form-field>
@@ -43,9 +42,8 @@
 
 
 
-    <button mat-stroked-button color="accent" class="btn-block" type="submit" (click)="onSearch()">Search</button>
-
-
+    <button mat-stroked-button color="accent" class="btn-block" type="submit" (click)="onSearch()" [routerLink]="['/calender', cityCtrl.value?.id]">
+    Search</button>
   </div>
 
 

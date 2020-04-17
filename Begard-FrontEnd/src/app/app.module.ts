@@ -39,6 +39,7 @@ import { DateTimePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { DynamicSearchComponent } from './dynamic-search/dynamic-search.component';
 
 import { environment } from '../environments/environment';
+import { CalenderResolver } from './calender-resolver.service';
 
 
 
@@ -74,14 +75,13 @@ import { environment } from '../environments/environment';
       NgxMatSelectSearchModule,
       MatButtonModule,
       FlexLayoutModule,
-      ScheduleModule, 
+      ScheduleModule,
       RecurrenceEditorModule,
-      GridModule, 
-      DropDownListModule, 
+      GridModule,
+      DropDownListModule,
       DateTimePickerModule,
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService,
-      DayService, WeekService, DragAndDropService, ResizeService, RowDDService, EditService],
+   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver],
    bootstrap: [
       AppComponent
    ],

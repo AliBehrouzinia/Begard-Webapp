@@ -1,34 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { map, tap, take, exhaustMap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location } from './location';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DynamicSearchService {
 
-  TOKEN = 'token 88ba25d2d8ad9065f8169f0908f6a9272fff39c1';
+  TOKEN = 'token 4bb36e54a6b609331ece4205ae436027f92652f3';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authservice: AuthService
+  ) { }
 
-  search(query: string): Observable<Location> {
-    const url = 'http://127.0.0.1:8000/cities/1/search/simple/';
-    return this.http
-      .get<Location>(url, {
-        observe: 'response',
-        params: {
-          query: query,
-          sort: 'stars',
-          order: 'desc'
-        },
-        headers : new HttpHeaders({'Authorization' : this.TOKEN})
-      })
-      .pipe(
-        map(res => {
-          return res.body;
+  search(query: string, cityId: number): Observable<Location> {
+    const url = 'http://127.0.0.1:8000/cities/' + cityId + '/search/simple/';
+
+    return this.authservice.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      return this.http
+        .get<Location>(url, {
+          observe: 'response',
+          params: {
+            query: query,
+            sort: 'stars',
+            order: 'desc'
+          },
+          headers: new HttpHeaders({ 'Authorization': token })
         })
-      );
+        .pipe(
+          map(res => {
+            return res.body;
+          })
+        );
+    }));
   }
 }

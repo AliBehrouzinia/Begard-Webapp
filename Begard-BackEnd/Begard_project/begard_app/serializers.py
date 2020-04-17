@@ -94,6 +94,25 @@ class UpdatePlanSerializer(serializers.ModelSerializer):
         fields = ['id', 'description', 'is_public', 'start_date', 'finish_date']
 
 
+class PlanItemListSerializer(serializers.ListSerializer):
+    def update(self, instance, validated_data):
+        for i in range(len(instance)):
+            self.validated_data[i]['plan'] = self.validated_data[i]['plan'].id
+            serializer = PlanItemSerializer(instance[i], self.validated_data[i])
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+
+        return instance
+
+
+class PatchPlanItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PlanItem
+        fields = '__all__'
+        list_serializer_class = PlanItemListSerializer
+
+
 class GlobalSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
