@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { defaults as defaultControls } from 'ol/control';
-
 import { Location } from './location.model';
 
 import Map from 'ol/Map';
@@ -17,6 +16,8 @@ import { fromLonLat } from 'ol/proj';
 import { LocationService } from './location.service';
 import { MapMarker } from './mapmarker.model';
 import { MapLocationService } from '../map-locations.service';
+import { Style } from 'ol/style';
+import { Icon } from 'ol/style';
 
 
 
@@ -85,8 +86,8 @@ export class MapComponent implements AfterViewInit {
         })
       ],
       view: new View({
-        center: [813079.7791264898, 5929220.284081122],
-        zoom: 10
+        center: fromLonLat([+this.markerLocations[0].lan, +this.markerLocations[0].lat]),
+        zoom: 12
       }),
       overlays: [overlay],
       controls: defaultControls().extend([
@@ -103,7 +104,7 @@ export class MapComponent implements AfterViewInit {
     // 
     // Add the marker layers to map
     // 
-    
+
     for (var i = 0; i < this.markerLocations.length; i++) {
       var layer = new Vector({
         source: new vector({
@@ -116,6 +117,15 @@ export class MapComponent implements AfterViewInit {
           ]
         })
       });
+      var img = undefined;
+      layer.setStyle(new Style({
+        image: new Icon({
+          color: '#8959A8',
+          crossOrigin: 'anonymous',
+          imgSize: [20, 20],
+          src: 'assets/images/loc.png'
+        })
+      }));
       map.addLayer(layer);
     }
 

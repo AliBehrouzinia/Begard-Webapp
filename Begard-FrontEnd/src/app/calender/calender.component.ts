@@ -64,6 +64,7 @@ export class CalenderComponent implements OnInit {
         ));
 
       }
+      this.selectedDate= new Date(plan.plan.plan_items[0].start_date);
     });
 
   }
@@ -73,7 +74,7 @@ export class CalenderComponent implements OnInit {
   public weeksInterval: number = 2;
   public weekInterval: number = 1;
   title = 'drag-resize-actions';
-  public selectedDate: Date = new Date(2020,3,15);
+  public selectedDate: Date ;
   public currentView: View = 'Week';
   public setViews: View[] = ['Day', 'Week', 'Month'];
 
