@@ -10,4 +10,6 @@ urlpatterns = [
     path('plans/<int:id>/', views.GetUpdateDeletePlanView.as_view()),
     path('cities/<int:id>/search/simple/', views.GlobalSearchList.as_view()),
     path('cities/<int:id>/search/advanced/', views.AdvancedSearch.as_view()),
+    path('followings/', views.FollowingsView.as_view()),
+    path('followers/', views.FollowersView.as_view())
 ]

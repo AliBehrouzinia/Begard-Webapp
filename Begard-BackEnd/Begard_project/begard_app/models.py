@@ -74,6 +74,16 @@ class Comment(models.Model):
     content = models.TextField()
 
 
+class UserFollowing(models.Model):
+    user_id = models.ForeignKey("BegardUser", related_name="following", on_delete=models.CASCADE)
+    following_user_id = models.ForeignKey("BegardUser", related_name="followers", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user_id", "following_user_id")
+        ordering = ["-created"]
+
+
 class Place(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True,)
     place_id = models.CharField(max_length=500, primary_key=True, default="none")
