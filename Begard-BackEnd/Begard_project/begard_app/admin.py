@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .forms import BegardUserCreationForm, BegardUserChangeForm
 from .models import BegardUser, City, Restaurant, Plan, PlanItem, Hotel, ShoppingMall, Cafe, RecreationalPlace\
-    , TouristAttraction, Museum
+    , TouristAttraction, Museum, UserFollowing
 
 
 class BegardUserAdmin(UserAdmin):
@@ -15,7 +15,7 @@ class BegardUserAdmin(UserAdmin):
     list_filter = ('email', 'date_joined')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Permissions', {'fields': ('date_joined', 'is_staff')}),
+        ('Permissions', {'fields': ('date_joined', )}),
     )
     add_fieldsets = (
         (None, {
@@ -108,3 +108,11 @@ class MuseumAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Museum, MuseumAdmin)
+
+
+class UserFollowingAdmin(admin.ModelAdmin):
+    model = UserFollowing
+    list_display = ('user_id', 'following_user_id', 'created')
+
+
+admin.site.register(UserFollowing, UserFollowingAdmin)
