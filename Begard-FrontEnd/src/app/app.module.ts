@@ -32,6 +32,7 @@ import { LocationService } from './map/location.service';
 import { DynamicSearchService } from './dynamic-search.service';
 import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, DragAndDropService, ResizeService } from '@syncfusion/ej2-angular-schedule';
 import { CalenderComponent } from './calender/calender.component';
+import { NavBarService } from './nav-bar.service'
 
 import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
@@ -40,6 +41,9 @@ import { DynamicSearchComponent } from './dynamic-search/dynamic-search.componen
 
 import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
+import { HomePageComponent } from './home-page/home-page.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+
 
 
 
@@ -57,7 +61,9 @@ import { CalenderResolver } from './calender-resolver.service';
       LocationDetailStartComponent,
       SearchComponent,
       CalenderComponent,
-      DynamicSearchComponent
+      DynamicSearchComponent,
+      HomePageComponent,
+      NavBarComponent
 
    ],
    imports: [
@@ -81,7 +87,7 @@ import { CalenderResolver } from './calender-resolver.service';
       DropDownListModule,
       DateTimePickerModule,
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver],
+   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver ,NavBarService],
    bootstrap: [
       AppComponent
    ],

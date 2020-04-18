@@ -1,0 +1,29 @@
+.spacer{
+    flex: 1 1 auto;
+}
+
+.white-icon {
+    color: white;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.white-icon svg {
+    fill: white;                                                                                                                                                                                                                                                                                                                                                                                            
+}
+
+.logout{
+    padding-left: 25px;
+    min-width: 70px;
+}
+
+.logout-icon{
+    position: relative;
+    padding-left: 25px;
+    min-width: 70px;
+}
+
+.font{
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    margin-right: 10;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ;
+}

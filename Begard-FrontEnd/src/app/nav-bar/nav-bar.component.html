@@ -1,0 +1,27 @@
+<!-- Toolbar -->
+
+<mat-toolbar color="primary">
+    <span><a routerLink="homepage" routerLinkActive="active">
+            <mat-icon class="white-icon">home</mat-icon>
+        </a></span>
+
+    <div class="spacer"></div>
+
+    <div *ngIf="!(loginStatus$ | async)">
+        <a mat-raised-button color="basic" routerLink="login" routerLinkActive="active">Login</a>
+        <a mat-button mat-raised-button color="accent" routerLink="register" routerLinkActive="active">Register</a>
+    </div>
+
+    <div *ngIf="(loginStatus$ | async)" >
+        <button mat-button color="primary" *ngIf="(userEmail$ | async) as userEmail" class="font" [matMenuTriggerFor]="accountOptions">{{userEmail}}<mat-icon class="white-icon">account_circle</mat-icon></button>
+
+        <mat-menu #accountOptions >
+            <button mat-menu-item routerLink="homepage" routerLinkActive="active" (click)="logout()" class="logout">Logout<mat-icon class="logout-icon">exit_to_app</mat-icon></button>
+        </mat-menu>
+    </div>
+
+
+
+</mat-toolbar>
+
+<router-outlet></router-outlet>
