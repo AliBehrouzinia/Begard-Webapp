@@ -106,7 +106,6 @@ class PlanItemListSerializer(serializers.ListSerializer):
 
 
 class PatchPlanItemSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = PlanItem
         fields = '__all__'
@@ -159,4 +158,9 @@ class ShowPostSerializer(serializers.ModelSerializer):
 class CreateCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
+
+
+class FollowingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserFollowing
         fields = '__all__'

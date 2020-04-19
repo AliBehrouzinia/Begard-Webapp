@@ -17,7 +17,8 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer
+    SavePostSerializer, ShowPostSerializer, FollowingsSerializer
+
 
 
 class CitiesListView(generics.ListAPIView):
@@ -277,3 +278,41 @@ class CommentsOnPostView(generics.ListCreateAPIView):
             comment_serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class FollowingsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = FollowingsSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        self.add_following(data)
+        return Response()
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user.id
+        models.UserFollowing.objects.filter(user_id=user)
+        return Response()
+
+    def delete(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        data = request.data
+        following_id = data['following_id']
+        models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
+        return Response()
+
+    def add_following(self, data):
+        data['user_id'] = self.request.user.id
+        serializer = FollowingsSerializer(data=data)
+        if serializer.is_valid(True):
+            serializer.save()
+
+
+class FollowersView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = FollowingsSerializer
+
+    def get_queryset(self):
+        user = self.request.user.id
+        queryset = models.UserFollowing.objects.filter(Q(following_user_id=user))
+        return queryset
