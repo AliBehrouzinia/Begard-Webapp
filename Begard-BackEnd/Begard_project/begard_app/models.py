@@ -17,7 +17,7 @@ class BegardUser(AbstractBaseUser, PermissionsMixin):
     is_admin = True
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['is_public']
+    REQUIRED_FIELDS = []
 
     objects = BegardUserManager()
 
