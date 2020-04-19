@@ -1,3 +1,10 @@
 
-<p>This is homepage</p>
-<router-outlet></router-outlet>
+<mat-grid-list cols="2" rowHeight="2:1" class="grid-parent" guttersize=10px>
+    <mat-grid-tile class="tile" colspan=2 >
+        <div ><app-search class="search" ></app-search>
+        </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+  
+  <router-outlet></router-outlet>
+
