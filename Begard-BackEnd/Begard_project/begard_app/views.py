@@ -316,3 +316,28 @@ class FollowersView(generics.ListAPIView):
         user = self.request.user.id
         queryset = models.UserFollowing.objects.filter(Q(following_user_id=user))
         return queryset
+
+    
+class LikeOnPostView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = models.Like
+
+    def get(self, request, *args, **kwargs):
+        post_id = self.kwargs.get('id')
+        like_numbers = models.Like.objects.filter(post=post_id).count()
+        return Response(data={'like_numbers': like_numbers}, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = self.request.data
+        data['user'] = self.request.user.id
+        data['post'] = self.kwargs.get('id')
+
+        exist_like = models.Like.objects.get(Q(user=data['user']) & Q(post=data['post']))
+        if exist_like is not None:
+            return Response(status=status.HTTP_200_OK)
+
+        serializer = serializers.CreateLikeSerializer(data=data)
+        if serializer.is_valid(True):
+            serializer.save()
+
+        return Response(status=status.HTTP_201_CREATED)

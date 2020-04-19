@@ -133,3 +133,10 @@ class UserFollowingAdmin(admin.ModelAdmin):
 
 admin.site.register(UserFollowing, UserFollowingAdmin)
 
+
+class LikeAdmin(admin.ModelAdmin):
+    model = Like
+    list_display = ('user', 'post', 'date')
+
+
+admin.site.register(Like, LikeAdmin)

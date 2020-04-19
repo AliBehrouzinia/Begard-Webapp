@@ -164,3 +164,9 @@ class FollowingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFollowing
         fields = '__all__'
+
+
+class CreateLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'

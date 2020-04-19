@@ -54,8 +54,6 @@ class Plan(models.Model):
     destination_city = models.ForeignKey(City, on_delete=models.CASCADE)
     description = models.TextField()
     is_public = models.BooleanField(default=True)
-    like = models.IntegerField(default=0)
-    like_user = ArrayField(base_field=models.CharField(max_length=200, blank=True), null=True)
     creation_date = models.DateTimeField()
     start_date = models.DateTimeField()
     finish_date = models.DateTimeField()
@@ -73,7 +71,6 @@ class Post(models.Model):
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     creation_date = models.DateTimeField()
     content = models.TextField(max_length=100, default="no content added")
-    like = models.IntegerField(default=0)
 
 
 class Comment(models.Model):
@@ -90,6 +87,12 @@ class UserFollowing(models.Model):
     class Meta:
         unique_together = ("user_id", "following_user_id")
         ordering = ["-created"]
+
+
+class Like(models.Model):
+    user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    date = models.DateTimeField()
 
 
 class Place(models.Model):
