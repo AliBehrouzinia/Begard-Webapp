@@ -13,6 +13,7 @@ class BegardUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
+    # is_public = models.BooleanField(default=True)
     is_admin = True
 
     USERNAME_FIELD = 'email'

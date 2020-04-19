@@ -239,11 +239,14 @@ class ShowPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
+        user = self.request.user.id
+        user_following = models.UserFollowing.objects.filter(user_id=user)
         page_num = int(self.request.query_params.get('page', None))
         num_of_posts = models.Post.objects.all().count()
         if num_of_posts > page_num * 20:
             posts = models.Post.objects.filter(
-                Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20)).order_by('-id')
+                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__in=user_following)) |
+                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__is_public=True))).order_by('-id')
         else:
             posts = models.Post.objects.filter(
                 Q(id__lte=num_of_posts + 1) & Q(id__gte=1)).order_by('-id')
