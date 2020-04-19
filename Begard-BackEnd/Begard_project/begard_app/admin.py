@@ -6,7 +6,6 @@ from .forms import BegardUserCreationForm, BegardUserChangeForm
 from .models import *
 
 
-
 class BegardUserAdmin(UserAdmin):
     add_form = BegardUserCreationForm
     form = BegardUserChangeForm
@@ -15,12 +14,12 @@ class BegardUserAdmin(UserAdmin):
     list_filter = ('email', 'date_joined')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Permissions', {'fields': ('date_joined', )}),
+        ('Permissions', {'fields': ('date_joined', 'is_public')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')}
+            'fields': ('email', 'password1', 'password2', 'is_public')}
          ),
     )
     search_fields = ('email',)
