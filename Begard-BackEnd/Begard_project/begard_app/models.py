@@ -68,10 +68,19 @@ class PlanItem(models.Model):
 
 
 class Post(models.Model):
+    POST_TYPES = [
+        ('plan_post', 'plan_post'),
+        ('location_post', 'location_post')
+    ]
+
+    type = models.CharField(max_length=30, choices=POST_TYPES)
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
     creation_date = models.DateTimeField()
-    content = models.TextField(max_length=100, default="no content added")
+    content = models.TextField(max_length=500)
+    image = models.ImageField(upload_to='images')
+    place_id = models.CharField(null=True, max_length=100)
+    place_name = models.CharField(null=True, max_length=200)
 
 
 class Comment(models.Model):
