@@ -96,6 +96,15 @@ class Like(models.Model):
     date = models.DateTimeField()
 
 
+class FollowRequest(models.Model):
+    request_from = models.ForeignKey(BegardUser, related_name="request_from", on_delete=models.CASCADE)
+    request_to = models.ForeignKey(BegardUser, related_name="request_to", on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date']
+
+
 class Place(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True,)
     place_id = models.CharField(max_length=500, primary_key=True, default="none")
