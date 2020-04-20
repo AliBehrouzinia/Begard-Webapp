@@ -16,4 +16,5 @@ urlpatterns = [
     path('followings/', views.FollowingsView.as_view()),
     path('followers/', views.FollowersView.as_view()),
     path('posts/<int:id>/likes/', views.LikeOnPostView.as_view()),
+    path('follow-request/', views.FollowRequestView.as_view()),
 ]

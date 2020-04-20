@@ -20,7 +20,6 @@ from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSeriali
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer
 
 
-
 class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
@@ -324,7 +323,7 @@ class FollowersView(generics.ListAPIView):
         queryset = models.UserFollowing.objects.filter(Q(following_user_id=user))
         return queryset
 
-    
+
 class LikeOnPostView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = models.Like
@@ -348,3 +347,26 @@ class LikeOnPostView(generics.ListCreateAPIView):
             serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.FollowRequestSerializer
+
+    def get_queryset(self):
+        return models.FollowRequest.objects.filter(request_to=self.request.user)
+
+    def post(self, request, *args, **kwargs):
+        data = self.request.data
+        data['request_from'] = self.request.user.id
+        serializer = serializers.FollowRequestSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    def delete(self, request, *args, **kwargs):
+        follow_request_id = self.request.data['follow_request_id']
+        models.FollowRequest.objects.get(id=follow_request_id).delete()
+
+        return Response(status=status.HTTP_200_OK)
