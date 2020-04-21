@@ -79,8 +79,8 @@ class Post(models.Model):
     creation_date = models.DateTimeField()
     content = models.TextField(max_length=500)
     image = models.ImageField(upload_to='images')
-    place_id = models.CharField(null=True, max_length=100)
-    place_name = models.CharField(null=True, max_length=200)
+    place_id = models.CharField(null=True, max_length=100, blank=True)
+    place_name = models.CharField(null=True, max_length=200, blank=True)
 
 
 class Comment(models.Model):
