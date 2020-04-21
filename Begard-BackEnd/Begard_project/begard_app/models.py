@@ -13,6 +13,7 @@ class BegardUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
+    is_public = models.BooleanField(default=True)
     is_admin = True
 
     USERNAME_FIELD = 'email'
@@ -67,10 +68,19 @@ class PlanItem(models.Model):
 
 
 class Post(models.Model):
+    POST_TYPES = [
+        ('plan_post', 'plan_post'),
+        ('location_post', 'location_post')
+    ]
+
+    type = models.CharField(max_length=30, choices=POST_TYPES)
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
     creation_date = models.DateTimeField()
-    content = models.TextField(max_length=100, default="no content added")
+    content = models.TextField(max_length=500)
+    image = models.ImageField(upload_to='images')
+    place_id = models.CharField(null=True, max_length=100, blank=True)
+    place_name = models.CharField(null=True, max_length=200, blank=True)
 
 
 class Comment(models.Model):
@@ -93,6 +103,15 @@ class Like(models.Model):
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     date = models.DateTimeField()
+
+
+class FollowRequest(models.Model):
+    request_from = models.ForeignKey(BegardUser, related_name="request_from", on_delete=models.CASCADE)
+    request_to = models.ForeignKey(BegardUser, related_name="request_to", on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date']
 
 
 class Place(models.Model):

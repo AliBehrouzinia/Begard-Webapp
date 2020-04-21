@@ -20,7 +20,6 @@ from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSeriali
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer
 
 
-
 class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
@@ -174,7 +173,6 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
 class GlobalSearchList(generics.ListAPIView):
     serializer_class = GlobalSearchSerializer
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
@@ -203,7 +201,6 @@ class LocationTypes(enum.Enum):
 
 
 class AdvancedSearch(generics.CreateAPIView):
-    permission_classes = (IsAuthenticated,)
     serializer_class = AdvancedSearchSerializer
 
     def post(self, request, *args, **kwargs):
@@ -239,14 +236,20 @@ class ShowPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
+        user = self.request.user.id
+        user_following = models.UserFollowing.objects.filter(user_id=user)
         page_num = int(self.request.query_params.get('page', None))
         num_of_posts = models.Post.objects.all().count()
         if num_of_posts > page_num * 20:
             posts = models.Post.objects.filter(
-                Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20)).order_by('-id')
+                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__id__in=user_following)) |
+                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__is_public=True)) |
+                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__id=user))).order_by('-id')
         else:
             posts = models.Post.objects.filter(
-                Q(id__lte=num_of_posts + 1) & Q(id__gte=1)).order_by('-id')
+                (Q(id__lte=num_of_posts + 1) & Q(id__gte=1) & Q(user__id__in=user_following)) |
+                (Q(id__lte=num_of_posts + 1) & Q(id__gte=1) & Q(user__is_public=True)) |
+                (Q(id__lte=num_of_posts + 1) & Q(id__gte=1) & Q(user__id=user))).order_by('-id')
         return posts
 
 
@@ -255,9 +258,12 @@ class SearchPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
+        user = self.request.user.id
+        user_following = models.UserFollowing.objects.filter(user_id=user)
         city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
-        queryset = models.Post.objects.filter(Q(plan__in=plans))
+        queryset = models.Post.objects.filter((Q(plan__in=plans) & Q(user__id__in=user_following)) |
+                                              (Q(plan__in=plans) & Q(user__is_public=True)))
         return queryset
 
 
@@ -317,7 +323,7 @@ class FollowersView(generics.ListAPIView):
         queryset = models.UserFollowing.objects.filter(Q(following_user_id=user))
         return queryset
 
-    
+
 class LikeOnPostView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = models.Like
@@ -341,3 +347,26 @@ class LikeOnPostView(generics.ListCreateAPIView):
             serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.FollowRequestSerializer
+
+    def get_queryset(self):
+        return models.FollowRequest.objects.filter(request_to=self.request.user)
+
+    def post(self, request, *args, **kwargs):
+        data = self.request.data
+        data['request_from'] = self.request.user.id
+        serializer = serializers.FollowRequestSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    def delete(self, request, *args, **kwargs):
+        follow_request_id = self.request.data['follow_request_id']
+        models.FollowRequest.objects.get(id=follow_request_id).delete()
+
+        return Response(status=status.HTTP_200_OK)
