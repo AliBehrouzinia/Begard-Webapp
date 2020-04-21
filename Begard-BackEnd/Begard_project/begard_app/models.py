@@ -14,6 +14,7 @@ class BegardUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
     is_public = models.BooleanField(default=True)
+    profile_img = models.ImageField(upload_to='profiles')
     is_admin = True
 
     USERNAME_FIELD = 'email'
@@ -75,12 +76,13 @@ class Post(models.Model):
 
     type = models.CharField(max_length=30, choices=POST_TYPES)
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
+    plan_id = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
     creation_date = models.DateTimeField()
     content = models.TextField(max_length=500)
     image = models.ImageField(upload_to='images')
     place_id = models.CharField(null=True, max_length=100, blank=True)
     place_name = models.CharField(null=True, max_length=200, blank=True)
+    rate = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
 
 
 class Comment(models.Model):

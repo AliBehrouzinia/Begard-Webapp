@@ -176,3 +176,9 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowRequest
         fields = '__all__'
+
+
+class TopPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'

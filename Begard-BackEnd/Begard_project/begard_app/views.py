@@ -17,7 +17,7 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, FollowingsSerializer
+    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -370,3 +370,10 @@ class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
         models.FollowRequest.objects.get(id=follow_request_id).delete()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class TopPostsView(generics.ListAPIView):
+    serializer_class = TopPostSerializer
+
+    def get_queryset(self):
+        pass

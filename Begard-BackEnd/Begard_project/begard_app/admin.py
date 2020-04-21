@@ -111,7 +111,7 @@ admin.site.register(Museum, MuseumAdmin)
 
 class PostAdmin(admin.ModelAdmin):
     model = Post
-    list_display = ('user', 'plan')
+    list_display = ('user', 'plan_id')
 
 
 admin.site.register(Post, PostAdmin)
