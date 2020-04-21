@@ -1,10 +1,30 @@
 
-<mat-grid-list cols="2" rowHeight="2:1" class="grid-parent" guttersize=10px>
-    <mat-grid-tile class="tile" colspan=2 >
-        <div ><app-search class="search" ></app-search>
-        </div>
+<mat-grid-list cols="5" rowHeight="500px" class="grid-parent" guttersize=10px>
+    <mat-grid-tile class="tile" colspan=5 >
+        <app-search class="search" ></app-search>
+    </mat-grid-tile >
+    <mat-grid-tile class="left-tile" ><mat-card class="left-parent-card"></mat-card> </mat-grid-tile>
+    <mat-grid-tile class="middle-tile" rowspan=3 colspan=3>
+        <mat-card class="parent-card">
+            <div class="lists">
+                <mat-card class="child-card">
+                    <mat-card-title>Top Posts</mat-card-title>            
+                    <app-horizontl-list></app-horizontl-list>
+                </mat-card>
+                <mat-card class="child-card">
+                    <mat-card-title>Top Posts</mat-card-title>            
+                    <app-horizontl-list></app-horizontl-list>
+                </mat-card>
+                <mat-card class="child-card">
+                    <mat-card-title>Top Posts</mat-card-title>            
+                    <app-horizontl-list></app-horizontl-list>
+                </mat-card>
+            </div>
+        </mat-card>
     </mat-grid-tile>
-  </mat-grid-list>
+    <mat-grid-tile class="left-tile" rowspan=2><mat-card class="right-parent-card"> </mat-card> </mat-grid-tile>
+</mat-grid-list>
+
   
   <router-outlet></router-outlet>
 
