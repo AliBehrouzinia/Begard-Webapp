@@ -98,9 +98,10 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         return None
 
     def save_post(self, data, plan_id):
+        data['type'] = 'plan_post'
         data['creation_date'] = datetime.datetime.now()
         data['user'] = self.request.user.id
-        data['plan'] = plan_id
+        data['plan_id'] = plan_id
         serializer = SavePostSerializer(data=data)
         if serializer.is_valid(True):
             serializer.save()
@@ -376,4 +377,7 @@ class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
 
     def get_queryset(self):
-        pass
+        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('rate')
+        plan_posts = posts[0]
+        for item in posts in range(1, 5):
+            plan_posts += item
