@@ -350,7 +350,7 @@ class LikeOnPostView(generics.ListCreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class ListCreateFollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
+class ListCreateFollowRequestView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.FollowRequestSerializer
 
@@ -379,17 +379,11 @@ class ListCreateFollowRequestView(generics.ListCreateAPIView, generics.DestroyAP
 
         return Response(status=status.HTTP_201_CREATED)
 
-    def delete(self, request, *args, **kwargs):
-        follow_request_id = self.request.data['follow_request_id']
-        models.FollowRequest.objects.get(id=follow_request_id).delete()
 
-        return Response(status=status.HTTP_200_OK)
-
-
-class ActionOnFollowRequestView(generics.ListAPIView):
+class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
     """Accept or Reject a follow request"""
     permission_classes = (IsAuthenticated,)
-    
+
     def get(self, request, *args, **kwargs):
         follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
         action = self.request.query_params.get('action')
@@ -405,6 +399,14 @@ class ActionOnFollowRequestView(generics.ListAPIView):
 
         follow_request.delete()
 
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
+        if not (follow_request.request_from_id == self.request.user.id):
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        follow_request.delete()
         return Response(status=status.HTTP_200_OK)
 
 
