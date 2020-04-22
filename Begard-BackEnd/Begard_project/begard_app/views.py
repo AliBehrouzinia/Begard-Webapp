@@ -240,10 +240,11 @@ class ShowPostView(generics.ListAPIView):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user.id
-        following_users = [item['following_user_id'] for item in models.UserFollowing.objects.filter(user_id=user).values('following_user_id')]
+        following_users = [item['following_user_id'] for item in
+                           models.UserFollowing.objects.filter(user_id=user).values('following_user_id')]
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__in=following_users) | Q(user__is_public=True)) \
-                           .order_by('-creation_date')[(page_number - 1) * 20:page_number * 20]
+                    .order_by('-creation_date')[(page_number - 1) * 20:page_number * 20]
 
         posts_data = serializers.ShowPostSerializer(instance=posts, many=True).data
         for data in posts_data:
@@ -382,14 +383,7 @@ class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
 
     def get_queryset(self):
-        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('rate')
-        posts.reverse()
-        i = 0
-        plan_posts = []
-        for item in posts:
-            plan_posts.append(item)
-            i = i+1
-            if i > 5:
-                break
-        return plan_posts
-
+        page_number = int(self.request.query_params.get('page'))
+        posts = models.Post.objects.filter(Q(user__is_public=True)).order_by('-rate')[(page_number - 1) * 5
+                                                                                      :page_number * 5]
+        return posts
