@@ -287,14 +287,9 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class FollowingsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = FollowingsSerializer
-
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        self.add_following(data)
-        return Response()
 
     def get(self, request, *args, **kwargs):
         user = self.request.user.id
@@ -307,12 +302,6 @@ class FollowingsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIVi
         following_id = data['following_id']
         models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
         return Response()
-
-    def add_following(self, data):
-        data['user_id'] = self.request.user.id
-        serializer = FollowingsSerializer(data=data)
-        if serializer.is_valid(True):
-            serializer.save()
 
 
 class FollowersView(generics.ListAPIView):
