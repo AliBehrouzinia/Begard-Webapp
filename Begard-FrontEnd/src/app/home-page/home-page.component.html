@@ -1,28 +1,34 @@
 
 <mat-grid-list cols="5" rowHeight="500px" class="grid-parent" guttersize=10px>
+   
     <mat-grid-tile class="tile" colspan=5 >
         <app-search class="search" ></app-search>
     </mat-grid-tile >
-    <mat-grid-tile class="left-tile" ><mat-card class="left-parent-card"></mat-card> </mat-grid-tile>
-    <mat-grid-tile class="middle-tile" rowspan=3 colspan=3>
+   
+    <mat-grid-tile class="left-tile" rowspan=2><mat-card class="left-parent-card"></mat-card> </mat-grid-tile>
+   
+    <mat-grid-tile class="middle-tile" rowspan=2 colspan=3>
         <mat-card class="parent-card">
             <div class="lists">
                 <mat-card class="child-card">
-                    <mat-card-title>Top Posts</mat-card-title>            
-                    <app-horizontl-list></app-horizontl-list>
+                    <mat-card-title>Recent Posts</mat-card-title>            
+                    <app-horizontl-list [planOverviews]="planOverviews"></app-horizontl-list>
                 </mat-card>
+
                 <mat-card class="child-card">
-                    <mat-card-title>Top Posts</mat-card-title>            
-                    <app-horizontl-list></app-horizontl-list>
+                    <mat-list dense>
+                        <mat-list-item *ngFor="let plan of plans"> 
+                            Post
+                        </mat-list-item>
+                       </mat-list>                               
                 </mat-card>
-                <mat-card class="child-card">
-                    <mat-card-title>Top Posts</mat-card-title>            
-                    <app-horizontl-list></app-horizontl-list>
-                </mat-card>
+
             </div>
         </mat-card>
     </mat-grid-tile>
+   
     <mat-grid-tile class="left-tile" rowspan=2><mat-card class="right-parent-card"> </mat-card> </mat-grid-tile>
+   
 </mat-grid-list>
 
   

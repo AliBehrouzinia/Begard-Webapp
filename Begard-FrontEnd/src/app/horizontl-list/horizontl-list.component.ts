@@ -5,6 +5,7 @@ import { NguCarouselConfig } from '@ngu/carousel';
 import { slider } from './animation'
 
 import 'hammerjs';
+import { PlanOverView } from '../plan-overview';
 
 
 @Component({
@@ -13,12 +14,16 @@ import 'hammerjs';
   styleUrls: ['./horizontl-list.component.css']
 })
 export class HorizontlListComponent implements OnInit {
-  @Input() name: string;
+  @Input() planOverviews: PlanOverView[];
+  img =  "https://material.angular.io/assets/img/examples/shiba2.jpg";
+  name = "john malcovich";
+  date = "Today";
+  city = "London";
+  profileCover = '../../assets/prr.png';
 
   imgags = [
     'assets/begrd_icon.svg',
   ];
-  public carouselTileItems$: Observable<number[]>;
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
     speed: 250,
@@ -35,18 +40,7 @@ export class HorizontlListComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.tempData = [];
-    this.carouselTileItems$ = interval(0).pipe(
-      startWith(-1),
-      take(30),
-      map(val => {
-        const data = (this.tempData = [
-          ...this.tempData,
-          this.imgags[Math.floor(Math.random() * this.imgags.length)]
-        ]);
-        return data;
-      })
-    );
+    document.querySelector("body").style.cssText = "--profile-cover-url: url("+this.profileCover+")";
   }
 
 }

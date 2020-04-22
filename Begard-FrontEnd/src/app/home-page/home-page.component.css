@@ -38,7 +38,11 @@
 }
 
 .middle-tile{
-    margin-top: -50px !important;
+    margin-top: 100px !important;
+}
+
+.middle-tile{
+    margin-top: 0px !important;
 }
 
 .left-parent-card{
@@ -58,5 +62,4 @@
 .lists{
     display: block;
 }
-
 
