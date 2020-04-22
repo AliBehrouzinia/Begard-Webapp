@@ -10,11 +10,11 @@ class BegardUserAdmin(UserAdmin):
     add_form = BegardUserCreationForm
     form = BegardUserChangeForm
     model = BegardUser
-    list_display = ('email', 'date_joined')
+    list_display = ('email', 'date_joined', 'profile_img')
     list_filter = ('email', 'date_joined')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Permissions', {'fields': ('date_joined', 'is_public')}),
+        ('Permissions', {'fields': ('date_joined', 'is_public', 'profile_img')}),
     )
     add_fieldsets = (
         (None, {
