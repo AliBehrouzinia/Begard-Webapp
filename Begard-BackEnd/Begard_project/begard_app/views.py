@@ -388,6 +388,8 @@ class ListCreateFollowRequestView(generics.ListCreateAPIView, generics.DestroyAP
 
 class ActionOnFollowRequestView(generics.ListAPIView):
     """Accept or Reject a follow request"""
+    permission_classes = (IsAuthenticated,)
+    
     def get(self, request, *args, **kwargs):
         follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
         action = self.request.query_params.get('action')
