@@ -350,7 +350,7 @@ class LikeOnPostView(generics.ListCreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
+class ListCreateFollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.FollowRequestSerializer
 
@@ -382,6 +382,26 @@ class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         follow_request_id = self.request.data['follow_request_id']
         models.FollowRequest.objects.get(id=follow_request_id).delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+
+class ActionOnFollowRequestView(generics.ListAPIView):
+    """Accept or Reject a follow request"""
+    def get(self, request, *args, **kwargs):
+        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
+        action = self.request.query_params.get('action')
+
+        if not ((action == 'accept') or (action == 'reject')):
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        if action == 'accept':
+            data = {'user_id': follow_request.request_from_id, 'following_user_id': follow_request.request_to_id}
+            serializer = serializers.FollowingsSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+
+        follow_request.delete()
 
         return Response(status=status.HTTP_200_OK)
 
