@@ -43,6 +43,10 @@ import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
+import { NguCarouselModule } from '@ngu/carousel';
+import { PlanPostComponent } from './plan-post/plan-post.component';
+import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
 
 
 
@@ -63,7 +67,10 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
       CalenderComponent,
       DynamicSearchComponent,
       HomePageComponent,
-      NavBarComponent
+      NavBarComponent,
+      HorizontlListComponent,
+      PlanPostComponent,
+      PlanOverviewComponent
 
    ],
    imports: [
@@ -86,6 +93,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
       GridModule,
       DropDownListModule,
       DateTimePickerModule,
+      NguCarouselModule
    ],
    providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver ,NavBarService],
    bootstrap: [

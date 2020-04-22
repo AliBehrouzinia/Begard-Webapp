@@ -1,14 +1,12 @@
 
+<router-outlet></router-outlet>
 
 <div class="search-wrapper" fxLayout="row" fxLayoutAlign="center center">
 
-
-
   <div class="search-box">
     <mat-card-header>
-      <mat-card-title>Choose Your Destination : </mat-card-title>
+      <mat-card-title>Choose Your Destination </mat-card-title>
     </mat-card-header>
-
     <p>
       <mat-form-field class="example-half-width">
           
@@ -38,12 +36,12 @@
         <mat-datepicker touchUi #endpicker></mat-datepicker>
       </mat-form-field>
 
-    </p>
-
-
 
     <button mat-stroked-button color="accent" class="btn-block" type="submit" (click)="onSearch()" [routerLink]="['/calender', cityCtrl.value?.id]">
     Search</button>
+
+    </p>
+
   </div>
 
 

@@ -1,0 +1,65 @@
+
+.grid-parent{
+    padding-top: 60px;
+    position: relative;
+    z-index: 50;
+}
+
+.search{
+    z-index: 10;
+    position: relative;
+    margin-top: -30px;
+
+}
+
+.img{
+    z-index: 5;
+    display:inline-block;
+    position: relative;
+}
+
+.tile{
+    position: relative;
+    width: auto;
+    height: auto;
+    background-image: url('../../assets/back.jpg');
+}
+
+.parent-card{
+    max-width: 95%;
+}
+
+.left-tile{
+    margin-top: 160px !important;
+}
+
+.right-tile{
+    margin-top: 160px !important;
+}
+
+.middle-tile{
+    margin-top: 100px !important;
+}
+
+.middle-tile{
+    margin-top: 0px !important;
+}
+
+.left-parent-card{
+    width: 100%;
+    height: 100%;
+}
+
+.right-parent-card{
+    width: 100%;
+    height: 100%;
+}
+
+.child-card{
+    margin: 20px;
+}
+
+.lists{
+    display: block;
+}
+

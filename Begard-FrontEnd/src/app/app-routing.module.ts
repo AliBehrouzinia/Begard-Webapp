@@ -23,7 +23,6 @@ const appRoutes: Routes = [
             { path: ':id', component: LocationDetailComponent }
         ]
     },
-    { path: 'search', component: SearchComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } }
 ]
 

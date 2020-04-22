@@ -27,3 +27,28 @@
     text-align: center;
     margin-right: 10;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ;
 }
+
+.nav-bar{
+    position: fixed;
+    z-index: 100;
+}
+
+.logo{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.name{
+    color: white;
+    position: relative;
+    margin-left: 10px;
+}
+
+.btn:focus {
+    outline: none;
+  }
+
+.mat-button-focus-overlay {
+    background-color: transparent!important;
+}
