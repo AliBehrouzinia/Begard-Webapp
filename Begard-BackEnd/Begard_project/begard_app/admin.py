@@ -19,7 +19,7 @@ class BegardUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_public')}
+            'fields': ('email', 'password1', 'password2')}
          ),
     )
     search_fields = ('email',)
@@ -111,7 +111,7 @@ admin.site.register(Museum, MuseumAdmin)
 
 class PostAdmin(admin.ModelAdmin):
     model = Post
-    list_display = ('user', 'plan')
+    list_display = ('user', 'plan_id')
 
 
 admin.site.register(Post, PostAdmin)
