@@ -113,6 +113,7 @@ class FollowRequest(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        unique_together = ("request_from", "request_to")
         ordering = ['-date']
 
 
