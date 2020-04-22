@@ -17,7 +17,7 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, FollowingsSerializer
+    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -98,9 +98,10 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         return None
 
     def save_post(self, data, plan_id):
+        data['type'] = 'plan_post'
         data['creation_date'] = datetime.datetime.now()
         data['user'] = self.request.user.id
-        data['plan'] = plan_id
+        data['plan_id'] = plan_id
         serializer = SavePostSerializer(data=data)
         if serializer.is_valid(True):
             serializer.save()
@@ -370,3 +371,13 @@ class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
         models.FollowRequest.objects.get(id=follow_request_id).delete()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class TopPostsView(generics.ListAPIView):
+    serializer_class = TopPostSerializer
+
+    def get_queryset(self):
+        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('rate')
+        plan_posts = posts[0]
+        for item in posts in range(1, 5):
+            plan_posts += item
