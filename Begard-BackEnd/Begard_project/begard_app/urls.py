@@ -18,4 +18,5 @@ urlpatterns = [
     path('posts/<int:id>/likes/', views.LikeOnPostView.as_view()),
     path('follow-request/', views.FollowRequestView.as_view()),
     path('top-posts/', views.TopPostsView.as_view()),
+    path('location-post/', views.LocationPostView.as_view()),
 ]

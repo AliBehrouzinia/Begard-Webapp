@@ -17,7 +17,7 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer
 from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer
+    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -388,3 +388,23 @@ class TopPostsView(generics.ListAPIView):
         posts = models.Post.objects.filter(Q(user__is_public=True)).order_by('-rate')[(page_number - 1) * 5
                                                                                       :page_number * 5]
         return posts
+
+
+class LocationPostView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LocationPostSerializer
+
+    def post(self, request, *args, **kwargs):
+        self.get_queryset(request.data)
+        return Response()
+
+    def get_queryset(self, data):
+        data['creation_date'] = datetime.datetime.now()
+        data['user'] = self.request.user.id
+        serializer = LocationPostSerializer(data=data)
+        if serializer.is_valid(True):
+            serializer.save()
+            print(serializer)
+
+
+
