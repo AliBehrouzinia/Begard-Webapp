@@ -360,6 +360,19 @@ class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
     def post(self, request, *args, **kwargs):
         data = self.request.data
         data['request_from'] = self.request.user.id
+
+        following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
+        if following_users.filter(following_user_id=data['request_to']).exists():
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        if models.BegardUser.objects.get(id=data['request_to']).is_public:
+            follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
+            serializer = serializers.FollowingsSerializer(data=follow_user_data)
+            if serializer.is_valid():
+                serializer.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
         serializer = serializers.FollowRequestSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
