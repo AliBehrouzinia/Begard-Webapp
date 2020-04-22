@@ -17,6 +17,6 @@ urlpatterns = [
     path('followers/', views.FollowersView.as_view()),
     path('posts/<int:id>/likes/', views.LikeOnPostView.as_view()),
     path('follow-request/', views.ListCreateFollowRequestView.as_view()),
-    path('follow-request/<int:id>/', views.ActionOnFollowRequestView.as_view())
+    path('follow-request/<int:id>/', views.ActionOnFollowRequestView.as_view()),
     path('top-posts/', views.TopPostsView.as_view()),
 ]

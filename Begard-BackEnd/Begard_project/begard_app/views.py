@@ -335,8 +335,8 @@ class LikeOnPostView(generics.ListCreateAPIView):
         data['user'] = self.request.user.id
         data['post'] = self.kwargs.get('id')
 
-        exist_like = models.Like.objects.get(Q(user=data['user']) & Q(post=data['post']))
-        if exist_like is not None:
+        exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
+        if exist_like is True:
             return Response(status=status.HTTP_200_OK)
 
         serializer = serializers.CreateLikeSerializer(data=data)
