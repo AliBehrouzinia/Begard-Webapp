@@ -14,7 +14,7 @@ class BegardUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
     is_public = models.BooleanField(default=True)
-    profile_img = models.ImageField(upload_to='profiles')
+    profile_img = models.ImageField(upload_to='profiles', null=True)
     is_admin = True
 
     USERNAME_FIELD = 'email'
