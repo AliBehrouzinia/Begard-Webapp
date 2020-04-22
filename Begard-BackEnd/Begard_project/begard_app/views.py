@@ -102,8 +102,10 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         data['creation_date'] = datetime.datetime.now()
         data['user'] = self.request.user.id
         data['plan_id'] = plan_id
+        print(1)
         serializer = SavePostSerializer(data=data)
         if serializer.is_valid(True):
+            print(2)
             serializer.save()
 
 
@@ -236,22 +238,27 @@ class ShowPostView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ShowPostSerializer
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         user = self.request.user.id
-        user_following = models.UserFollowing.objects.filter(user_id=user)
-        page_num = int(self.request.query_params.get('page', None))
-        num_of_posts = models.Post.objects.all().count()
-        if num_of_posts > page_num * 20:
-            posts = models.Post.objects.filter(
-                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__id__in=user_following)) |
-                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__is_public=True)) |
-                (Q(id__lte=page_num * 20) & Q(id__gte=page_num * 20 - 20) & Q(user__id=user))).order_by('-id')
-        else:
-            posts = models.Post.objects.filter(
-                (Q(id__lte=num_of_posts + 1) & Q(id__gte=1) & Q(user__id__in=user_following)) |
-                (Q(id__lte=num_of_posts + 1) & Q(id__gte=1) & Q(user__is_public=True)) |
-                (Q(id__lte=num_of_posts + 1) & Q(id__gte=1) & Q(user__id=user))).order_by('-id')
-        return posts
+        following_users = [item['following_user_id'] for item in
+                           models.UserFollowing.objects.filter(user_id=user).values('following_user_id')]
+        page_number = int(self.request.query_params.get('page'))
+        posts = models.Post.objects.filter(Q(user__in=following_users) |
+                                           Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
+                                                                                               * 20:page_number * 20]
+
+        posts_data = serializers.ShowPostSerializer(instance=posts, many=True).data
+        for data in posts_data:
+            data['destination_city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
+            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
+            data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+
+            if following_users.__contains__(data['user']):
+                data['following_state'] = 'following'
+            else:
+                data['following_state'] = 'follow'
+
+        return Response(posts_data, status=status.HTTP_200_OK)
 
 
 class SearchPostView(generics.ListAPIView):
@@ -403,7 +410,7 @@ class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
 
     def get_queryset(self):
-        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('rate')
-        plan_posts = posts[0]
-        for item in posts in range(1, 5):
-            plan_posts += item
+        page_number = int(self.request.query_params.get('page'))
+        posts = models.Post.objects.filter(Q(user__is_public=True)).order_by('-rate')[(page_number - 1) * 5
+                                                                                      :page_number * 5]
+        return posts

@@ -181,4 +181,4 @@ class FollowRequestSerializer(serializers.ModelSerializer):
 class TopPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        exclude = ['type', 'content']
