@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from . import models, serializers
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer,\
+    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
     ImageSerializer
 
 
