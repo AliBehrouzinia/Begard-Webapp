@@ -10,6 +10,9 @@ import { ActivatedRoute } from '@angular/router';
 import { PlanningItem } from '../plan-item.model';
 import { Location } from '../location'
 import { last } from 'rxjs/operators';
+import { LocationService } from '../map/location.service';
+import { MapLocationService } from '../map-locations.service';
+
 
 
 L10n.load({
@@ -38,13 +41,14 @@ export class CalenderComponent implements OnInit {
 
   constructor(
     private dataStorage: DataStorageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: MapLocationService
   ) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
       var plan: Plan = data['plan'];
-
+      this.location.setLocation(plan.plan.plan_items);
       for (var i = 0; i < plan.plan.plan_items.length; i++) {
         this.planItems.push(new PlanningItem(
           new Date(plan.plan.plan_items[i].start_date).toISOString()
@@ -60,6 +64,7 @@ export class CalenderComponent implements OnInit {
         ));
 
       }
+      this.selectedDate= new Date(plan.plan.plan_items[0].start_date);
     });
 
   }
@@ -69,7 +74,7 @@ export class CalenderComponent implements OnInit {
   public weeksInterval: number = 2;
   public weekInterval: number = 1;
   title = 'drag-resize-actions';
-  public selectedDate: Date = new Date(2020, 3, 8);
+  public selectedDate: Date ;
   public currentView: View = 'Week';
   public setViews: View[] = ['Day', 'Week', 'Month'];
 
