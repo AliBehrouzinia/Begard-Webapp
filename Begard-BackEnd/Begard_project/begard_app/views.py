@@ -1,21 +1,16 @@
 import datetime
 import enum
 from itertools import chain
-from django.db.models import Q
 
+from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework import status, generics
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import filters
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from . import models, serializers
 from .managers.time_table import TimeTable
-
-from .serializers import PlanItemSerializer, PlanSerializer
-from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer
 

@@ -79,7 +79,7 @@ class Post(models.Model):
     plan_id = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
     creation_date = models.DateTimeField()
     content = models.TextField(max_length=500, default='This is my post')
-    image = models.ImageField(upload_to='images', null=True, blank=True)
+    image = models.ImageField(upload_to='images')
     place_id = models.CharField(null=True, max_length=100, blank=True)
     place_name = models.CharField(null=True, max_length=200, blank=True)
     rate = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
