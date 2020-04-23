@@ -158,6 +158,7 @@ class ShowPostSerializer(serializers.ModelSerializer):
 class CreateCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
+        fields = '__all__'
 
 
 class FollowingsSerializer(serializers.ModelSerializer):

@@ -289,14 +289,9 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class FollowingsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = FollowingsSerializer
-
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        self.add_following(data)
-        return Response()
 
     def get(self, request, *args, **kwargs):
         user = self.request.user.id
@@ -309,12 +304,6 @@ class FollowingsView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIVi
         following_id = data['following_id']
         models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
         return Response()
-
-    def add_following(self, data):
-        data['user_id'] = self.request.user.id
-        serializer = FollowingsSerializer(data=data)
-        if serializer.is_valid(True):
-            serializer.save()
 
 
 class FollowersView(generics.ListAPIView):
@@ -341,8 +330,8 @@ class LikeOnPostView(generics.ListCreateAPIView):
         data['user'] = self.request.user.id
         data['post'] = self.kwargs.get('id')
 
-        exist_like = models.Like.objects.get(Q(user=data['user']) & Q(post=data['post']))
-        if exist_like is not None:
+        exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
+        if exist_like is True:
             return Response(status=status.HTTP_200_OK)
 
         serializer = serializers.CreateLikeSerializer(data=data)
@@ -352,7 +341,7 @@ class LikeOnPostView(generics.ListCreateAPIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
+class ListCreateFollowRequestView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.FollowRequestSerializer
 
@@ -362,16 +351,53 @@ class FollowRequestView(generics.ListCreateAPIView, generics.DestroyAPIView):
     def post(self, request, *args, **kwargs):
         data = self.request.data
         data['request_from'] = self.request.user.id
+
+        following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
+        if following_users.filter(following_user_id=data['request_to']).exists():
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        if models.BegardUser.objects.get(id=data['request_to']).is_public:
+            follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
+            serializer = serializers.FollowingsSerializer(data=follow_user_data)
+            if serializer.is_valid():
+                serializer.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
         serializer = serializers.FollowRequestSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
 
-    def delete(self, request, *args, **kwargs):
-        follow_request_id = self.request.data['follow_request_id']
-        models.FollowRequest.objects.get(id=follow_request_id).delete()
 
+class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
+    """Accept or Reject a follow request"""
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
+        action = self.request.query_params.get('action')
+
+        if not ((action == 'accept') or (action == 'reject')):
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        if action == 'accept':
+            data = {'user_id': follow_request.request_from_id, 'following_user_id': follow_request.request_to_id}
+            serializer = serializers.FollowingsSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+
+        follow_request.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
+        if not (follow_request.request_from_id == self.request.user.id):
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        follow_request.delete()
         return Response(status=status.HTTP_200_OK)
 
 
