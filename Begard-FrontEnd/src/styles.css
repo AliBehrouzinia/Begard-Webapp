@@ -29,6 +29,7 @@ body {
   background-repeat:repeat;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
+  --profile-cover-ur: none;
 }
 
 .app-header {

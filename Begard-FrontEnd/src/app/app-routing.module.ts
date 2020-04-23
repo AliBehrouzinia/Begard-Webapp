@@ -7,13 +7,16 @@ import { SearchComponent } from './search/search.component';
 import { DataStorageService } from './data-storage.service';
 import { CalenderComponent } from './calender/calender.component';
 import { CalenderResolver } from './calender-resolver.service';
+import { HomePageComponent } from './home-page/home-page.component';
+
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '', redirectTo: '/homepage', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'map', component: MapComponent },
     { path: 'search', component: SearchComponent },
+    { path: 'homepage', component: HomePageComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } }
 ]
 

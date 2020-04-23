@@ -29,6 +29,7 @@ import { LocationService } from './map/location.service';
 import { DynamicSearchService } from './dynamic-search.service';
 import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, DragAndDropService, ResizeService } from '@syncfusion/ej2-angular-schedule';
 import { CalenderComponent } from './calender/calender.component';
+import { NavBarService } from './nav-bar.service'
 
 import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
@@ -37,6 +38,12 @@ import { DynamicSearchComponent } from './dynamic-search/dynamic-search.componen
 
 import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
+import { HomePageComponent } from './home-page/home-page.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
+
+import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
+
 
 import { MapLocationService } from './map-locations.service';
 
@@ -51,7 +58,11 @@ import { MapLocationService } from './map-locations.service';
       RegisterComponent,
       SearchComponent,
       CalenderComponent,
-      DynamicSearchComponent
+      DynamicSearchComponent,
+      HomePageComponent,
+      NavBarComponent,
+      HorizontlListComponent,
+      PlanOverviewComponent
 
    ],
    imports: [
@@ -76,7 +87,7 @@ import { MapLocationService } from './map-locations.service';
       DateTimePickerModule,
       TabModule
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService],
+   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService],
    bootstrap: [
       AppComponent
    ],
