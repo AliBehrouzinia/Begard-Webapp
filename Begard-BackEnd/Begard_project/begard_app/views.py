@@ -404,4 +404,3 @@ class LocationPostView(generics.CreateAPIView):
         serializer = LocationPostSerializer(data=data)
         if serializer.is_valid(True):
             serializer.save()
-            print(serializer)
