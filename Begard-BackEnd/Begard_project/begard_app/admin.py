@@ -147,3 +147,11 @@ class FollowRequestAdmin(admin.ModelAdmin):
 
 
 admin.site.register(FollowRequest, FollowRequestAdmin)
+
+
+class ImageAdmin(admin.ModelAdmin):
+    model = Image
+    list_display = ('post', 'image')
+
+
+admin.site.register(Image, ImageAdmin)

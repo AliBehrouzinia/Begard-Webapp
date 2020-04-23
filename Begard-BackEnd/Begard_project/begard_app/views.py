@@ -12,7 +12,8 @@ from rest_framework.views import APIView
 from . import models, serializers
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer
+    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer,\
+    ImageSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -97,10 +98,8 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         data['creation_date'] = datetime.datetime.now()
         data['user'] = self.request.user.id
         data['plan_id'] = plan_id
-        print(1)
         serializer = SavePostSerializer(data=data)
         if serializer.is_valid(True):
-            print(2)
             serializer.save()
 
 
@@ -416,12 +415,23 @@ class LocationPostView(generics.CreateAPIView):
     serializer_class = LocationPostSerializer
 
     def post(self, request, *args, **kwargs):
-        self.get_queryset(request.data)
+        images = dict(request.data.lists())['image']
+        post = self.save_post(request.data)
+        post_id = post.pk
+        for img_name in images:
+            modified_data = self.modify_input_for_multiple_files(img_name, post_id)
+            serializer = ImageSerializer(data=modified_data)
+            if serializer.is_valid(True):
+                serializer.save()
         return Response()
 
-    def get_queryset(self, data):
+    def modify_input_for_multiple_files(self, image, post):
+        list_element = {'post': post, 'image': image}
+        return list_element
+
+    def save_post(self, data):
         data['creation_date'] = datetime.datetime.now()
         data['user'] = self.request.user.id
         serializer = LocationPostSerializer(data=data)
         if serializer.is_valid(True):
-            serializer.save()
+            return serializer.save()
