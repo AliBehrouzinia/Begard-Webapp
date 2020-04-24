@@ -1,23 +1,19 @@
 import datetime
 import enum
 from itertools import chain
-from django.db.models import Q
 
+from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework import status, generics
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import filters
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from . import models, serializers
 from .managers.time_table import TimeTable
-
-from .serializers import PlanItemSerializer, PlanSerializer
-from .permissions import IsOwnerOrReadOnly
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
-    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer
+    SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
+    ImageSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -78,8 +74,15 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
 
     def post(self, request, *args, **kwargs):
         plan = self.create_plan(request.data)
-        self.save_post(request.data, plan.id)
-        return Response()
+        post = self.save_post(request.data, plan.id)
+        post_id = post.pk
+        images = dict(request.data.lists())['image']
+        for image in images:
+            modified_data = {'post': post_id, 'image': image}
+            serializer = ImageSerializer(data=modified_data)
+            if serializer.is_valid(True):
+                serializer.save()
+        return Response(status=status.HTTP_200_OK)
 
     def create_plan_items(self, plan_items, plan_id):
         for item in plan_items:
@@ -102,11 +105,9 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         data['creation_date'] = datetime.datetime.now()
         data['user'] = self.request.user.id
         data['plan_id'] = plan_id
-        print(1)
         serializer = SavePostSerializer(data=data)
         if serializer.is_valid(True):
-            print(2)
-            serializer.save()
+            return serializer.save()
 
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
@@ -414,3 +415,30 @@ class TopPostsView(generics.ListAPIView):
         posts = models.Post.objects.filter(Q(user__is_public=True)).order_by('-rate')[(page_number - 1) * 5
                                                                                       :page_number * 5]
         return posts
+
+
+class LocationPostView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LocationPostSerializer
+
+    def post(self, request, *args, **kwargs):
+        images = dict(request.data.lists())['image']
+        post = self.save_post(request.data)
+        post_id = post.pk
+        for img_name in images:
+            modified_data = self.modify_input_for_multiple_files(img_name, post_id)
+            serializer = ImageSerializer(data=modified_data)
+            if serializer.is_valid(True):
+                serializer.save()
+        return Response(status=status.HTTP_200_OK)
+
+    def modify_input_for_multiple_files(self, image, post):
+        list_element = {'post': post, 'image': image}
+        return list_element
+
+    def save_post(self, data):
+        data['creation_date'] = datetime.datetime.now()
+        data['user'] = self.request.user.id
+        serializer = LocationPostSerializer(data=data)
+        if serializer.is_valid(True):
+            return serializer.save()

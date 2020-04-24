@@ -183,3 +183,15 @@ class TopPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         exclude = ['type', 'content']
+
+
+class LocationPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        exclude = ['plan_id']
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['image', 'post']

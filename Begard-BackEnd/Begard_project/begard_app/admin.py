@@ -111,7 +111,7 @@ admin.site.register(Museum, MuseumAdmin)
 
 class PostAdmin(admin.ModelAdmin):
     model = Post
-    list_display = ('user', 'plan_id')
+    list_display = ('type', 'user', 'creation_date')
 
 
 admin.site.register(Post, PostAdmin)
@@ -147,3 +147,11 @@ class FollowRequestAdmin(admin.ModelAdmin):
 
 
 admin.site.register(FollowRequest, FollowRequestAdmin)
+
+
+class ImageAdmin(admin.ModelAdmin):
+    model = Image
+    list_display = ('post', 'image')
+
+
+admin.site.register(Image, ImageAdmin)
