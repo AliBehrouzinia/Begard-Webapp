@@ -14,7 +14,6 @@ const appRoutes: Routes = [
     { path: '', redirectTo: '/homepage', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'map', component: MapComponent },
     { path: 'search', component: SearchComponent },
     { path: 'homepage', component: HomePageComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } }

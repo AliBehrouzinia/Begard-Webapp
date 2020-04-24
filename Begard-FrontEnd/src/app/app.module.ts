@@ -87,6 +87,7 @@ import { MapLocationService } from './map-locations.service';
       GridModule,
       DropDownListModule,
       DateTimePickerModule,
+      NguCarouselModule,
       TabModule
    ],
    providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService],
