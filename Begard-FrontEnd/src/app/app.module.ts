@@ -47,6 +47,9 @@ import { PostDialogComponent } from './post-dialog/post-dialog.component';
 
 
 import { MapLocationService } from './map-locations.service';
+import { LocationPostComponent } from './location-post/location-post.component';
+import { CommentComponent } from './location-post/comment/comment.component';
+import { LocationCarouselComponent } from './location-post/location-carousel/location-carousel.component';
 
 
 
@@ -64,7 +67,10 @@ import { MapLocationService } from './map-locations.service';
       NavBarComponent,
       HorizontlListComponent,
       PlanOverviewComponent,
-      PostDialogComponent
+      PostDialogComponent,
+      LocationPostComponent,
+      CommentComponent,
+      LocationCarouselComponent
 
    ],
    imports: [
