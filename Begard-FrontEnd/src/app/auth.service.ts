@@ -14,6 +14,8 @@ export interface AuthResponseData {
 export class AuthService {
 
   user = new BehaviorSubject<User>(null);
+  private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus());
+  private email = new BehaviorSubject<string>(this.getUserEmail());
 
   constructor(private http: HttpClient) { }
 
@@ -36,25 +38,25 @@ export class AuthService {
 
   }
 
-  autoLogin(){
-    const userData :{
-      email : string,
-      _token : string
-    }= JSON.parse(localStorage.getItem('userData'));
-    if(!userData) {
+  autoLogin() {
+    const userData: {
+      email: string,
+      _token: string
+    } = JSON.parse(localStorage.getItem('userData'));
+    if (!userData) {
       return;
     }
 
-    const loadedUser = new User(userData.email,userData._token);
+    const loadedUser = new User(userData.email, userData._token);
     this.user.next(loadedUser);
-
   }
 
   private handleAuthentication(email: string, token: string) {
     const user = new User(email, token);
     this.user.next(user);
     localStorage.setItem('userData', JSON.stringify(user));
-
+    this.userEmail.next(email);
+    this.loginStatus.next(true);
   }
 
   private handleError(errorRes: HttpErrorResponse) {
@@ -69,7 +71,49 @@ export class AuthService {
     //    break;
     //
     // }
-    return throwError(errorMessage);
 
+    this.loginStatus.next(false);
+
+    return throwError(errorMessage);
   }
+
+  logout(){
+    localStorage.removeItem('userData');
+    this.loginStatus.next(false);
+  }
+
+  getUserEmail() {
+    const userData: {
+      email: string,
+      _token: string
+    } = JSON.parse(localStorage.getItem('userData'));
+    if (userData) {
+      return userData.email;
+    }
+    else {
+      return "";
+    }
+  }
+
+  checkLoginStatus() {
+    const userData: {
+      email: string,
+      _token: string
+    } = JSON.parse(localStorage.getItem('userData'));
+    if (userData) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  get isLogedIn() {
+    return this.loginStatus;
+  }
+
+  get userEmail() {
+    return this.email;
+  }
+
 }
