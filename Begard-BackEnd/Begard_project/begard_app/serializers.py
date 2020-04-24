@@ -79,13 +79,13 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
 class PlanItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanItem
-        fields = ['place_id', 'plan', 'start_date', 'finish_date']
+        fields = ['id', 'place_id', 'plan', 'start_date', 'finish_date']
 
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = ['user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
+        fields = ['id', 'user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
 
 
 class UpdatePlanSerializer(serializers.ModelSerializer):

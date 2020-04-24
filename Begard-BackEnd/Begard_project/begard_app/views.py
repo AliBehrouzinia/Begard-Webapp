@@ -59,18 +59,13 @@ class SuggestPlanView(APIView):
         return plan
 
 
-class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.PlanSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, *args, **kwargs):
-        self.get_queryset()
-        return Response(status=status.HTTP_200_OK)
-
     def get_queryset(self):
         user = self.request.user
-        all_result = models.Plan.objects.filter(user=user)
-        return all_result
+        return models.Plan.objects.filter(user=user)
 
     def post(self, request, *args, **kwargs):
         plan = self.create_plan(request.data)
