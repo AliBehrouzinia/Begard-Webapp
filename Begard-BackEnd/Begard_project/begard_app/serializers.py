@@ -79,13 +79,13 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
 class PlanItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanItem
-        fields = ['place_id', 'plan', 'start_date', 'finish_date']
+        fields = ['id', 'place_id', 'plan', 'start_date', 'finish_date']
 
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = ['user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
+        fields = ['id', 'user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
 
 
 class UpdatePlanSerializer(serializers.ModelSerializer):
@@ -158,6 +158,7 @@ class ShowPostSerializer(serializers.ModelSerializer):
 class CreateCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
+        fields = '__all__'
 
 
 class FollowingsSerializer(serializers.ModelSerializer):
@@ -181,4 +182,16 @@ class FollowRequestSerializer(serializers.ModelSerializer):
 class TopPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        exclude = ['type', 'content', 'place_name', 'place_id']
+
+
+class LocationPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        exclude = ['plan_id']
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['image', 'post']
