@@ -280,9 +280,17 @@ class CommentsOnPostView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CreateCommentSerializer
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         post_id = self.kwargs.get('id')
-        return models.Comment.objects.filter(post=post_id)
+        comments = models.Comment.objects.filter(post=post_id)
+        serializer = serializers.CreateCommentSerializer(instance=comments, many=True)
+        serializer_data = [dict(d) for d in serializer.data]
+        for data in serializer_data:
+            user = models.BegardUser.objects.get(id=data['user'])
+            data['user_name'] = user.email
+            data['user_profile_img'] = user.profile_img.url
+
+        return JsonResponse(data=serializer_data, safe=False, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         data = self.request.data
@@ -322,20 +330,22 @@ class FollowersView(generics.ListAPIView):
         return queryset
 
 
-class LikeOnPostView(generics.ListCreateAPIView):
+class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = models.Like
+    serializer_class = serializers.CreateLikeSerializer
 
     def get(self, request, *args, **kwargs):
         post_id = self.kwargs.get('id')
+        user_id = self.request.user.id
         like_numbers = models.Like.objects.filter(post=post_id).count()
-        return Response(data={'like_numbers': like_numbers}, status=status.HTTP_200_OK)
+        is_liked = models.Like.objects.filter(Q(user=user_id) & Q(post=post_id)).exists()
+        return Response(data={'like_numbers': like_numbers, 'is_liked': is_liked}, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        data = self.request.data
-        data['user'] = self.request.user.id
-        data['post'] = self.kwargs.get('id')
-
+        data = {
+            'user': self.request.user.id,
+            'post': self.kwargs.get('id')
+        }
         exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
         if exist_like is True:
             return Response(status=status.HTTP_200_OK)
@@ -345,6 +355,17 @@ class LikeOnPostView(generics.ListCreateAPIView):
             serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+    def delete(self, request, *args, **kwargs):
+        data = {
+            'user': self.request.user.id,
+            'post': self.kwargs.get('id')
+        }
+        like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post']))
+        if like.exists():
+            like.delete()
+
+        return Response(status=status.HTTP_200_OK)
 
 
 class ListCreateFollowRequestView(generics.ListCreateAPIView):
