@@ -437,7 +437,7 @@ class TopPostsView(generics.ListAPIView):
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
             data['image'] = models.Image.objects.get(post__pk=data['id']).image.url
-        return JsonResponse(posts_data, safe=False, status=status.HTTP_200_OK)
+        return Response(posts_data, status=status.HTTP_200_OK)
 
 
 class LocationPostView(generics.CreateAPIView):

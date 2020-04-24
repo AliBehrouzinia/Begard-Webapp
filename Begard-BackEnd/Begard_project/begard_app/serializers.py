@@ -182,7 +182,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
 class TopPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ['type', 'content']
+        exclude = ['type', 'content', 'place_name', 'place_id']
 
 
 class LocationPostSerializer(serializers.ModelSerializer):
