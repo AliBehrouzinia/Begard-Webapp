@@ -430,11 +430,14 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
 class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         page_number = int(self.request.query_params.get('page'))
-        posts = models.Post.objects.filter(Q(user__is_public=True)).order_by('-rate')[(page_number - 1) * 5
-                                                                                      :page_number * 5]
-        return posts
+        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[
+                (page_number - 1) * 5:page_number * 5]
+        posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
+        for data in posts_data:
+            data['image'] = models.Image.objects.get(post__pk=data['id']).image.url
+        return JsonResponse(posts_data, safe=False, status=status.HTTP_200_OK)
 
 
 class LocationPostView(generics.CreateAPIView):
