@@ -1,18 +1,17 @@
 
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { extend, closest } from '@syncfusion/ej2-base';
+import { closest } from '@syncfusion/ej2-base';
 import { EventSettingsModel, View, DayService, WeekService, DragAndDropService, ResizeService, ScheduleComponent, CellClickEventArgs, DragEventArgs, ResizeEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { hospitalData, waitingList } from './data';
+import { waitingList } from './data';
 import { L10n } from '@syncfusion/ej2-base';
 import { DataStorageService, PlanItem, Plan } from '../data-storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { PlanningItem } from '../plan-item.model';
-import { Location } from '../location'
-import { last } from 'rxjs/operators';
-import { LocationService } from '../map/location.service';
-import { MapLocationService } from '../map-locations.service';
-
+import { MatDialog } from '@angular/material/dialog';
+import { PostDialogComponent } from './../post-dialog/post-dialog.component';
+import { PostPlan, PI } from '../post-plan';
+import { PostPlanService } from '../post-plan.service';
 
 
 L10n.load({
@@ -36,13 +35,17 @@ L10n.load({
 })
 export class CalenderComponent implements OnInit {
 
+  postPlan: PostPlan;
+  pi: PI[];
+
   planItems: PlanningItem[] = [];
   gridItems: PlanningItem[] = [];
 
   constructor(
-    private dataStorage: DataStorageService,
+    public dataService: DataStorageService,
+    public postPlanService: PostPlanService,
     private route: ActivatedRoute,
-    private location: MapLocationService
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -82,12 +85,6 @@ export class CalenderComponent implements OnInit {
   public dateParser(data: string) {
     return new Date(data);
   }
-  // public statusFields: Object = { text: 'StatusText', value: 'StatusText'};
-  // public StatusData : Object[]=[
-  //   {StatusText:'New'},
-  //   {StatusText:'Requested'},
-  //   {StatusText:'Confirmed'}
-  // ];
 
   @ViewChild('scheduleObj')
   public scheduleObj: ScheduleComponent;
@@ -154,11 +151,44 @@ export class CalenderComponent implements OnInit {
   }
 
   addToLocationList(location) {
-    this.gridObj.addRecord( new PlanningItem(
+    this.gridObj.addRecord(new PlanningItem(
       this.gridItems[0].startDate
       , this.gridItems[0].finishDate
       , location.name
       , location.id
     ));
   }
+
+  openDialog(): void {
+    this.pi = [];
+    this.planItems.forEach(pi => {
+      this.pi.push({ start_date: pi.startDate, finish_date: pi.finishDate, place_id: pi.placeId })
+    });
+
+    this.postPlanService.setPostPlan(
+      new PostPlan(
+        this.dataService.getCity()
+        , ""
+        , this.dataService.getStartDate()
+        , this.dataService.getEndDate()
+        , this.pi
+      ))
+
+    const dialogRef = this.dialog.open(PostDialogComponent, {
+      maxWidth: '1200px',
+      maxHeight: '800px',
+      minWidth: '550px',
+      height: 'auto',
+      width: 'auto',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('result : ' + result);
+    });
+  }
+
+  addPlanDetails(postDetil) {
+    console.log(" post details : " + postDetil.description)
+  }
+
 }

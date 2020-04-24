@@ -43,6 +43,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
+import { PostDialogComponent } from './post-dialog/post-dialog.component';
 
 
 import { MapLocationService } from './map-locations.service';
@@ -62,7 +63,8 @@ import { MapLocationService } from './map-locations.service';
       HomePageComponent,
       NavBarComponent,
       HorizontlListComponent,
-      PlanOverviewComponent
+      PlanOverviewComponent,
+      PostDialogComponent
 
    ],
    imports: [

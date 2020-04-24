@@ -28,6 +28,9 @@ export interface Plan {
 
 export class DataStorageService {
     public planUrl: string = '';
+    start_date;
+    finish_date;
+    city;
 
     constructor(
         private http: HttpClient,
@@ -60,5 +63,32 @@ export class DataStorageService {
 
     }
 
+    getPlanUrl(){
+        return this.planUrl;
+    }
+
+    setStartDate(sd){
+        this.start_date = sd; 
+    }
+
+    setEndDate(ed){
+        this.finish_date = ed; 
+    }
+
+    setCity(c){
+        this.city = c; 
+    }
+
+    getStartDate(){
+        return this.start_date; 
+    }
+
+    getEndDate(){
+        return this.finish_date; 
+    }
+
+    getCity(){
+        return this.city; 
+    }
 
 }
