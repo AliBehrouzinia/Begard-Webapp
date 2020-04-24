@@ -17,6 +17,7 @@ import { PlanOverView } from '../plan-overview';
 })
 export class HomePageComponent implements OnInit {
   planOverviews;
+  plans
   
   constructor(public planOverviewService: PlanOverviewService) {
   }
@@ -24,4 +25,5 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     this.planOverviewService.getPlanOverviews().subscribe(planOverviews => {this.planOverviews = planOverviews});
   }
+  
 }
