@@ -74,8 +74,15 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
 
     def post(self, request, *args, **kwargs):
         plan = self.create_plan(request.data)
-        self.save_post(request.data, plan.id)
-        return Response()
+        post = self.save_post(request.data, plan.id)
+        post_id = post.pk
+        images = dict(request.data.lists())['image']
+        for image in images:
+            modified_data = {'post': post_id, 'image': image}
+            serializer = ImageSerializer(data=modified_data)
+            if serializer.is_valid(True):
+                serializer.save()
+        return Response(status=status.HTTP_200_OK)
 
     def create_plan_items(self, plan_items, plan_id):
         for item in plan_items:
@@ -100,7 +107,7 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
         data['plan_id'] = plan_id
         serializer = SavePostSerializer(data=data)
         if serializer.is_valid(True):
-            serializer.save()
+            return serializer.save()
 
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
@@ -423,7 +430,7 @@ class LocationPostView(generics.CreateAPIView):
             serializer = ImageSerializer(data=modified_data)
             if serializer.is_valid(True):
                 serializer.save()
-        return Response()
+        return Response(status=status.HTTP_200_OK)
 
     def modify_input_for_multiple_files(self, image, post):
         list_element = {'post': post, 'image': image}
