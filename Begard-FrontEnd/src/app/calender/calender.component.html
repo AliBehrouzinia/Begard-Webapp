@@ -64,17 +64,19 @@
 
             <div style="width:400px;float:none;margin-left:30px; margin-right:30px">
 
-                <ejs-grid id='Grid' #gridObj [dataSource]='gridItems' width="300px" [allowSelection]="true"
+                <ejs-grid id='Grid' class="grid" #gridObj [dataSource]='gridItems' width="300px" [allowSelection]="true"
                     [allowRowDragAndDrop]="true" [editSettings]='editSettings' [rowDropSettings]="srcDropOptions"
                     (rowDrop)="onDragStop($event)" (rowDrag)="onRowDrag($event)">
                     <e-columns>
-                        <e-column field='placeId' isPrimaryKey='primaryKeyVal' headerText='ID' width='30' textAlign='Right'>
-                        </e-column>
-                        <e-column field='placeName' headerText='Name' width='40'></e-column>
+                    
+                        <e-column field='placeName' headerText='Name' width='70'></e-column>
                         
                     </e-columns>
                 </ejs-grid>
             </div>
+
+            <button class="save-button" mat-raised-button (click)="openDialog()"> save </button>
+
         </div>
     </div>
 

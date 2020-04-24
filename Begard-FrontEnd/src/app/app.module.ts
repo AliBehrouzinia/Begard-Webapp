@@ -45,8 +45,8 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
 import { NguCarouselModule } from '@ngu/carousel';
-import { PlanPostComponent } from './plan-post/plan-post.component';
 import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
+import { PostDialogComponent } from './post-dialog/post-dialog.component';
 
 
 
@@ -69,8 +69,8 @@ import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
       HomePageComponent,
       NavBarComponent,
       HorizontlListComponent,
-      PlanPostComponent,
-      PlanOverviewComponent
+      PlanOverviewComponent,
+      PostDialogComponent
 
    ],
    imports: [
