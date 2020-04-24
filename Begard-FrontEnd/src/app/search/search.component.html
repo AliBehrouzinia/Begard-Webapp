@@ -1,14 +1,12 @@
 
+<router-outlet></router-outlet>
 
 <div class="search-wrapper" fxLayout="row" fxLayoutAlign="center center">
 
-
-
   <div class="search-box">
     <mat-card-header>
-      <mat-card-title>Choose Your Destination : </mat-card-title>
+      <mat-card-title>Choose Your Destination </mat-card-title>
     </mat-card-header>
-
     <p>
       <mat-form-field class="example-half-width">
           
@@ -26,24 +24,24 @@
 
       <mat-form-field class="example-quart-width">
         <mat-label>From </mat-label>
-        <input matInput [formControl]="startdate" [min]="startDateMin" [matDatepicker]="startpicker" (dateInput)="onStartDateChanged($event.value)">
+        <input matInput disabled [formControl]="startdate" [min]="startDateMin" [matDatepicker]="startpicker" (dateInput)="onStartDateChanged($event.value)">
         <mat-datepicker-toggle matSuffix [for]="startpicker" ></mat-datepicker-toggle>
-        <mat-datepicker touchUi #startpicker></mat-datepicker>
+        <mat-datepicker touchUi #startpicker disabled="false"></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field class="example-quart-width">
         <mat-label>To</mat-label>
-        <input matInput [formControl]="enddate" [min]="endDateMin" [matDatepicker]="endpicker" [disabled]="endDateDisable" (dateInput)="onEndDateChanged($event.value)">
+        <input matInput disabled [formControl]="enddate" [min]="endDateMin" [matDatepicker]="endpicker" [disabled]="endDateDisable" (dateInput)="onEndDateChanged($event.value)">
         <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
-        <mat-datepicker touchUi #endpicker></mat-datepicker>
+        <mat-datepicker touchUi #endpicker disabled="false"></mat-datepicker>
       </mat-form-field>
-
-    </p>
-
 
 
     <button mat-stroked-button color="accent" class="btn-block" type="submit" (click)="onSearch()" [routerLink]="['/calender', cityCtrl.value?.id]">
     Search</button>
+
+    </p>
+
   </div>
 
 
