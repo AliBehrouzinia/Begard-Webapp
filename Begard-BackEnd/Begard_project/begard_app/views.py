@@ -47,7 +47,7 @@ class SuggestPlanView(APIView):
 
         result = self.get_plan(dest_city, start_day, finish_day)
 
-        return JsonResponse(data=result)
+        return JsonResponse(data=result, status=status.HTTP_200_OK)
 
     def get_plan(self, dest_city, start_date, finish_date):
         time_table = TimeTable(start_date, finish_date)
@@ -65,7 +65,7 @@ class SavePlanView(generics.CreateAPIView, generics.RetrieveUpdateDestroyAPIView
 
     def get(self, request, *args, **kwargs):
         self.get_queryset()
-        return Response()
+        return Response(status=status.HTTP_200_OK)
 
     def get_queryset(self):
         user = self.request.user
@@ -310,14 +310,14 @@ class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         user = self.request.user.id
         models.UserFollowing.objects.filter(user_id=user)
-        return Response()
+        return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         user_id = self.request.user.id
         data = request.data
         following_id = data['following_id']
         models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
-        return Response()
+        return Response(status=status.HTTP_200_OK)
 
 
 class FollowersView(generics.ListAPIView):
@@ -392,14 +392,14 @@ class ListCreateFollowRequestView(generics.ListCreateAPIView):
             return Response(status=status.HTTP_201_CREATED)
 
         serializer = serializers.FollowRequestSerializer(data=data)
-        if serializer.is_valid():
+        if serializer.is_valid(True):
             serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
 
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
-    """Accept or Reject a follow request"""
+    """Accept or Reject or delete a follow request"""
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
@@ -412,7 +412,7 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
         if action == 'accept':
             data = {'user_id': follow_request.request_from_id, 'following_user_id': follow_request.request_to_id}
             serializer = serializers.FollowingsSerializer(data=data)
-            if serializer.is_valid():
+            if serializer.is_valid(True):
                 serializer.save()
 
         follow_request.delete()
