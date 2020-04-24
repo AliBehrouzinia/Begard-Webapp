@@ -79,10 +79,14 @@ class Post(models.Model):
     plan_id = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
     creation_date = models.DateTimeField()
     content = models.TextField(max_length=500, default='This is my post')
-    image = models.ImageField(upload_to='images', null=True, blank=True)
     place_id = models.CharField(null=True, max_length=100, blank=True)
     place_name = models.CharField(null=True, max_length=200, blank=True)
     rate = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
+
+
+class Image(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images')
 
 
 class Comment(models.Model):
@@ -104,7 +108,7 @@ class UserFollowing(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True)
 
 
 class FollowRequest(models.Model):
@@ -113,6 +117,7 @@ class FollowRequest(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        unique_together = ("request_from", "request_to")
         ordering = ['-date']
 
 
