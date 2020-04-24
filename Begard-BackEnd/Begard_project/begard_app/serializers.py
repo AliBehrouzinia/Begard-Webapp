@@ -158,6 +158,7 @@ class ShowPostSerializer(serializers.ModelSerializer):
 class CreateCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
+        fields = '__all__'
 
 
 class FollowingsSerializer(serializers.ModelSerializer):
@@ -181,4 +182,16 @@ class FollowRequestSerializer(serializers.ModelSerializer):
 class TopPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        exclude = ['type', 'content']
+
+
+class LocationPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        exclude = ['plan_id']
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['image', 'post']
