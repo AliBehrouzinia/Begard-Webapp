@@ -1,1 +1,29 @@
-<p>comment works!</p>
+<!--  -->
+
+<!-- Grid row -->
+<div class="row " >
+
+    <!-- Grid column -->
+    <div style="width: 96%; font-size: smaller;">
+  
+      <!-- Exaple 1 -->
+      <div  class="card example-1 scrollbar-ripe-malinka shadow-none">
+        <mat-card *ngFor="let comment of comments" class="comment" >
+            <div style="display: flex;">
+              <div matRipple mat-card-avatar class="example-header-image"></div>
+              <div style="margin-left: 10px;margin-top: 10px;"><b>David Beckham</b> says :</div>
+            </div>
+            <mat-card-content style="margin-left: 50px;">{{comment.description}}</mat-card-content>
+            
+        </mat-card>
+        
+      </div>
+      <!-- Exaple 1 -->
+  
+    </div>
+    <!-- Grid column -->
+  
+   
+  
+  </div>
+  <!-- Grid row -->

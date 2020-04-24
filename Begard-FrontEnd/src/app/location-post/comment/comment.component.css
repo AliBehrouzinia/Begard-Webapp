@@ -1,0 +1,39 @@
+
+  .comment{
+    -webkit-box-shadow: inset 0px 0px 20px -5px rgba(0,0,0,1);
+-moz-box-shadow: inset 0px 0px 20px -5px rgba(0,0,0,1);
+box-shadow: inset 0px 0px 10px -5px rgba(0,0,0,1);
+border-radius: 50px;
+margin-top: 2%;
+margin-left: 3%;
+width: 94%;
+  }
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+    cursor: pointer;
+  }
+
+
+  .my-custom-scrollbar {
+    position: relative;
+    width: 800px;
+    height: 400px;
+    overflow: auto;
+  }
+
+    .scrollbar-ripe-malinka::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5; }
+    
+    .scrollbar-ripe-malinka::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-image: -webkit-linear-gradient(330deg, #bdbdbd 0%, #616161 100%);
+    background-image: linear-gradient(120deg, #bdbdbd  0%, #616161 100%); }
+    
+    
+    .example-1 {
+    position: relative;
+    overflow-y: scroll;
+    height: 100px; }

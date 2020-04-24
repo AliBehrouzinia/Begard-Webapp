@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+interface Comment{
+  description:string
+}
+
 
 @Component({
   selector: 'app-comment',
@@ -11,5 +15,9 @@ export class CommentComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  public comments:Comment[]=[
+    {description: "dfkjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"},
+    {description:"dfjdkfjldfj;lsjdflsdjfldsjfldjflasjdfl;sjdf;ldjfs;ldjsf;lsjdflsdjf"}
+  ];
 
 }
