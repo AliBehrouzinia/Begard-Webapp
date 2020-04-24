@@ -1,25 +1,5 @@
 // import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// import {
-//    MatButtonModule,
-//    MatToolbarModule,
-//    MatIconModule,
-//    MatBadgeModule,
-//    MatSidenavModule,
-//    MatListModule,
-//    MatGridListModule,
-//    MatFormFieldModule,
-//    MatInputModule,
-//    MatSelectModule,
-//    MatRadioModule,
-//    MatDatepickerModule,
-//    MatNativeDateModule,
-//    MatChipsModule,
-//    MatTooltipModule,
-//    MatTableModule,
-//    MatPaginatorModule
-// } from '@angular/material';
 import { ModuleWithProviders, NgModule} from "@angular/core";
 import { MAT_LABEL_GLOBAL_OPTIONS, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -79,6 +59,7 @@ import { MatTreeModule } from '@angular/material/tree';
       MatTableModule,
       MatPaginatorModule,
       MatCheckboxModule,
+      MatTabsModule,
       MatMenuModule
    ],
    exports: [
@@ -100,6 +81,7 @@ import { MatTreeModule } from '@angular/material/tree';
       MatPaginatorModule,
       MatCheckboxModule,
       MatAutocompleteModule,
+      MatTabsModule,
       MatAutocompleteModule,
       MatBadgeModule,
       MatButtonModule,
