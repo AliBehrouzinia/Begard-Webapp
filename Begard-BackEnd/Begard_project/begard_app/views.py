@@ -282,14 +282,13 @@ class CommentsOnPostView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         post_id = self.kwargs.get('id')
         comments = models.Comment.objects.filter(post=post_id)
-        serializer = serializers.CreateCommentSerializer(instance=comments, many=True)
-        serializer_data = [dict(d) for d in serializer.data]
+        serializer_data = serializers.CreateCommentSerializer(instance=comments, many=True).data
         for data in serializer_data:
             user = models.BegardUser.objects.get(id=data['user'])
             data['user_name'] = user.email
             data['user_profile_img'] = user.profile_img.url
 
-        return JsonResponse(data=serializer_data, safe=False, status=status.HTTP_200_OK)
+        return Response(data=serializer_data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         data = self.request.data
