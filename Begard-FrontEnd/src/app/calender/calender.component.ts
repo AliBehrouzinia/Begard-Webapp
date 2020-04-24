@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PostDialogComponent } from './../post-dialog/post-dialog.component';
 import { PostPlan, PI } from '../post-plan';
 import { PostPlanService } from '../post-plan.service';
+import { MapLocationService } from '../map-locations.service';
 
 
 L10n.load({
@@ -45,7 +46,8 @@ export class CalenderComponent implements OnInit {
     public dataService: DataStorageService,
     public postPlanService: PostPlanService,
     private route: ActivatedRoute,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private location : MapLocationService
   ) { }
 
   ngOnInit() {
