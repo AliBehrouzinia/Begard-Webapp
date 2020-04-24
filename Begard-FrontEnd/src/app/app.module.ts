@@ -93,6 +93,7 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
       GridModule,
       DropDownListModule,
       DateTimePickerModule,
+      NguCarouselModule,
       TabModule
    ],
    providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService],
