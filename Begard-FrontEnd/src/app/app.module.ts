@@ -13,6 +13,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { AngularMaterialModule } from './angular-material.module';
 import { HttpClientModule } from '@angular/common/http';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 
 import { AppComponent } from './app.component';
@@ -20,14 +21,10 @@ import { MapComponent } from './map/map.component';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { LocationListComponent } from './map/location-list/location-list.component';
-import { LocationItemComponent } from './map/location-list/location-item/location-item.component';
-import { LocationDetailComponent } from './map/location-detail/location-detail.component';
 import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataStorageService } from './data-storage.service';
 import { AppRoutingModule } from './app-routing.module';
-import { LocationDetailStartComponent } from './map/location-detail-start/location-detail-start.component';
 import { LocationService } from './map/location.service';
 import { DynamicSearchService } from './dynamic-search.service';
 import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, DragAndDropService, ResizeService } from '@syncfusion/ej2-angular-schedule';
@@ -49,6 +46,7 @@ import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
 import { PostDialogComponent } from './post-dialog/post-dialog.component';
 
 
+import { MapLocationService } from './map-locations.service';
 
 
 
@@ -59,10 +57,6 @@ import { PostDialogComponent } from './post-dialog/post-dialog.component';
       HeaderComponent,
       LoginComponent,
       RegisterComponent,
-      LocationListComponent,
-      LocationItemComponent,
-      LocationDetailComponent,
-      LocationDetailStartComponent,
       SearchComponent,
       CalenderComponent,
       DynamicSearchComponent,
@@ -93,9 +87,9 @@ import { PostDialogComponent } from './post-dialog/post-dialog.component';
       GridModule,
       DropDownListModule,
       DateTimePickerModule,
-      NguCarouselModule
+      TabModule
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver ,NavBarService],
+   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService],
    bootstrap: [
       AppComponent
    ],
