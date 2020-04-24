@@ -51,7 +51,7 @@ import { LocationPostComponent } from './location-post/location-post.component';
 import { CommentComponent } from './location-post/comment/comment.component';
 import { LocationCarouselComponent } from './location-post/location-carousel/location-carousel.component';
 
-
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
 
 @NgModule({
    declarations: [
@@ -94,7 +94,9 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
       DropDownListModule,
       DateTimePickerModule,
       NguCarouselModule,
-      TabModule
+      TabModule,
+      MDBBootstrapModule
+      
    ],
    providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService],
    bootstrap: [
