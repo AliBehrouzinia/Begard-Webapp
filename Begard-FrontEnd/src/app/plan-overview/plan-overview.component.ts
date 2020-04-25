@@ -1,4 +1,4 @@
-import { Component, OnInit ,Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class PlanOverviewComponent implements OnInit {
     this.setDateCreation();
   }
 
-  setDateCreation(){
+  setDateCreation() {
     // this.date = new Date();
     // if (this.planDateCreted == this.date){
     //   this.planDateCreted = "Today";
