@@ -251,6 +251,8 @@ class ShowPostView(generics.ListAPIView):
             data['destination_city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
             data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
             data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+            data['number_of_likes'] = models.Like.objects.filter(post=data['id']).count()
+            data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
             if following_users.__contains__(data['user']):
                 data['following_state'] = 'following'
             else:
