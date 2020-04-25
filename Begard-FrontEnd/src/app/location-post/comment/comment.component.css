@@ -17,7 +17,7 @@ width: 94%;
 
   .my-custom-scrollbar {
     position: relative;
-    width: 700px;
+    width: 800px;
     height: 400px;
     overflow: auto;
   }
@@ -36,4 +36,5 @@ width: 94%;
     .example-1 {
     position: relative;
     overflow-y: scroll;
-    height: 100px; }
+    height: 100px;
+  margin-left: 10px; }
