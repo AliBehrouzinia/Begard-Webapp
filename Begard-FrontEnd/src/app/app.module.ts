@@ -52,6 +52,7 @@ import { CommentComponent } from './location-post/comment/comment.component';
 import { LocationCarouselComponent } from './location-post/location-carousel/location-carousel.component';
 
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import { LocationPostService } from './location-post/location-post.service';
 
 @NgModule({
    declarations: [
@@ -98,7 +99,7 @@ import {MDBBootstrapModule} from 'angular-bootstrap-md';
       MDBBootstrapModule
       
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService],
+   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService,LocationPostService],
    bootstrap: [
       AppComponent
    ],
