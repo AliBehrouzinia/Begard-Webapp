@@ -14,7 +14,7 @@ import { PlanOverView } from '../plan-overview';
   styleUrls: ['./horizontl-list.component.css']
 })
 export class HorizontlListComponent implements OnInit {
-  @Input() planOverviews: PlanOverView[];
+  @Input() planOverviews: PlanOverView[] = [];
 
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
