@@ -238,6 +238,9 @@ class ShowPostView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = ShowPostSerializer
 
+    def get_queryset(self):
+        pass
+
     def get(self, request, *args, **kwargs):
         user = self.request.user.id
         following_users = [item['following_user_id'] for item in
