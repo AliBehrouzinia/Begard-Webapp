@@ -20,6 +20,7 @@ class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
     serializer_class = serializers.CitySerializer
+    permission_classes = [AllowAny]
 
 
 class SuggestListView(generics.ListAPIView):
@@ -237,6 +238,9 @@ class ShowPostView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = ShowPostSerializer
 
+    def get_queryset(self):
+        pass
+
     def get(self, request, *args, **kwargs):
         user = self.request.user.id
         following_users = [item['following_user_id'] for item in
@@ -250,6 +254,8 @@ class ShowPostView(generics.ListAPIView):
             data['destination_city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
             data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
             data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+            data['number_of_likes'] = models.Like.objects.filter(post=data['id']).count()
+            data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
             if following_users.__contains__(data['user']):
                 data['following_state'] = 'following'
             else:
@@ -363,7 +369,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ListCreateFollowRequestView(generics.ListCreateAPIView):
+class FollowRequestView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.FollowRequestSerializer
 
@@ -376,21 +382,24 @@ class ListCreateFollowRequestView(generics.ListCreateAPIView):
 
         following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
         if following_users.filter(following_user_id=data['request_to']).exists():
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if models.BegardUser.objects.get(id=data['request_to']).is_public:
             follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
-            if serializer.is_valid():
+            if serializer.is_valid(True):
                 serializer.save()
 
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(data={"status": "Followed"},
+                            status=status.HTTP_201_CREATED)
 
         serializer = serializers.FollowRequestSerializer(data=data)
         if serializer.is_valid(True):
             serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(data={"status": "Requested"},
+                        status=status.HTTP_201_CREATED)
 
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
@@ -433,7 +442,10 @@ class TopPostsView(generics.ListAPIView):
                 (page_number - 1) * 5:page_number * 5]
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
-            data['image'] = models.Image.objects.get(post__pk=data['id']).image.url
+            data['city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
+            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
+            data['profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+            data['cover'] = models.Image.objects.get(post__pk=data['id']).image.url
         return Response(posts_data, status=status.HTTP_200_OK)
 
 
