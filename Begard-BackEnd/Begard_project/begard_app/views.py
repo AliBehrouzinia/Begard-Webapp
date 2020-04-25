@@ -5,7 +5,7 @@ from itertools import chain
 from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework import status, generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -20,16 +20,17 @@ class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
     serializer_class = serializers.CitySerializer
+    permission_classes = [AllowAny]
 
 
 class SuggestListView(generics.ListAPIView):
     """List of some suggestion according to selected city"""
     serializer_class = serializers.SuggestSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
         city = models.City.objects.get(pk=city_id)
-
         queryset = list(models.Restaurant.objects.filter(city=city).order_by('-rating')[0:3])
         queryset += models.RecreationalPlace.objects.filter(city=city).order_by('-rating')[0:3]
         queryset += models.Museum.objects.filter(city=city).order_by('-rating')[0:3]
@@ -39,6 +40,7 @@ class SuggestListView(generics.ListAPIView):
 
 class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
+    permission_classes = [AllowAny]
 
     def get(self, request, id):
         dest_city = models.City.objects.get(pk=id)
@@ -172,6 +174,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
 class GlobalSearchList(generics.ListAPIView):
     serializer_class = GlobalSearchSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
@@ -201,6 +204,7 @@ class LocationTypes(enum.Enum):
 
 class AdvancedSearch(generics.CreateAPIView):
     serializer_class = AdvancedSearchSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         all_result = self.get_queryset(request.data)
@@ -231,8 +235,11 @@ class AdvancedSearch(generics.CreateAPIView):
 
 
 class ShowPostView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ShowPostSerializer
+
+    def get_queryset(self):
+        pass
 
     def get(self, request, *args, **kwargs):
         user = self.request.user.id
@@ -242,13 +249,13 @@ class ShowPostView(generics.ListAPIView):
         posts = models.Post.objects.filter(Q(user__in=following_users) |
                                            Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
                                                                                                * 20:page_number * 20]
-
         posts_data = serializers.ShowPostSerializer(instance=posts, many=True).data
         for data in posts_data:
             data['destination_city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
             data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
             data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
-
+            data['number_of_likes'] = models.Like.objects.filter(post=data['id']).count()
+            data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
             if following_users.__contains__(data['user']):
                 data['following_state'] = 'following'
             else:
@@ -362,7 +369,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ListCreateFollowRequestView(generics.ListCreateAPIView):
+class FollowRequestView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.FollowRequestSerializer
 
@@ -375,21 +382,24 @@ class ListCreateFollowRequestView(generics.ListCreateAPIView):
 
         following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
         if following_users.filter(following_user_id=data['request_to']).exists():
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if models.BegardUser.objects.get(id=data['request_to']).is_public:
             follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
-            if serializer.is_valid():
+            if serializer.is_valid(True):
                 serializer.save()
 
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(data={"status": "Followed"},
+                            status=status.HTTP_201_CREATED)
 
         serializer = serializers.FollowRequestSerializer(data=data)
         if serializer.is_valid(True):
             serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(data={"status": "Requested"},
+                        status=status.HTTP_201_CREATED)
 
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
@@ -424,6 +434,7 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
 
 class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
+    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         page_number = int(self.request.query_params.get('page'))
@@ -431,7 +442,10 @@ class TopPostsView(generics.ListAPIView):
                 (page_number - 1) * 5:page_number * 5]
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
-            data['image'] = models.Image.objects.get(post__pk=data['id']).image.url
+            data['city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
+            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
+            data['profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+            data['cover'] = models.Image.objects.get(post__pk=data['id']).image.url
         return Response(posts_data, status=status.HTTP_200_OK)
 
 
