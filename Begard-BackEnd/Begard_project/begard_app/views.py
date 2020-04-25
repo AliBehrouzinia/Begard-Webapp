@@ -364,7 +364,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class ListCreateFollowRequestView(generics.ListCreateAPIView):
+class FollowRequestView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.FollowRequestSerializer
 
@@ -377,21 +377,24 @@ class ListCreateFollowRequestView(generics.ListCreateAPIView):
 
         following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
         if following_users.filter(following_user_id=data['request_to']).exists():
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if models.BegardUser.objects.get(id=data['request_to']).is_public:
             follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
-            if serializer.is_valid():
+            if serializer.is_valid(True):
                 serializer.save()
 
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(data={"status": "Followed"},
+                            status=status.HTTP_201_CREATED)
 
         serializer = serializers.FollowRequestSerializer(data=data)
         if serializer.is_valid(True):
             serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(data={"status": "Requested"},
+                        status=status.HTTP_201_CREATED)
 
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
