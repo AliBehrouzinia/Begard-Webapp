@@ -20,6 +20,7 @@ class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
     serializer_class = serializers.CitySerializer
+    permission_classes = [AllowAny]
 
 
 class SuggestListView(generics.ListAPIView):
