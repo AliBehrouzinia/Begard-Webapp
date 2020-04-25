@@ -433,7 +433,10 @@ class TopPostsView(generics.ListAPIView):
                 (page_number - 1) * 5:page_number * 5]
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
-            data['image'] = models.Image.objects.get(post__pk=data['id']).image.url
+            data['city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
+            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
+            data['profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+            data['cover'] = models.Image.objects.get(post__pk=data['id']).image.url
         return Response(posts_data, status=status.HTTP_200_OK)
 
 
