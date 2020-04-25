@@ -35,9 +35,10 @@ export class LocationPostComponent implements OnInit {
   constructor(private postservice: LocationPostService) { }
 
   ngOnInit(): void {
-    // this.postservice.getPostData().subscribe(resdata => {
-    //   this.setPostData(resdata);
-    // });
+     this.postservice.getPostData().subscribe(resdata => {
+       this.setPostData(resdata);
+	console.log(resdata);
+     });
 
   }
 

@@ -23,7 +23,7 @@ export class LocationPostService {
     constructor( private http : HttpClient) { }
 
     getPostData(){
-       return this.http.get<PostRes[]>("127.0.0.1:8000/posts/?page=1");
+       return this.http.get<PostRes[]>("http://127.0.0.1:8000/posts/?page=1");
     }
   
 }
