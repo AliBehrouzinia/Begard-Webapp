@@ -1,4 +1,4 @@
-<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="planOverviews"  >
+<ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="pv">
   <ngu-tile *nguCarouselDef="let item; let i = index; let ani = animate"> <!-- [@slider]="ani" PLease this animation to this tile to see animation. stackblitz have error with animations -->
     <app-plan-overview class="tile" [plannerProfileCover]="item.profile_image" [planCity]="item.city" [planCover]="item.cover" [plannerUsername]="item.user_name" [planDateCreted]="item.creation_date" ></app-plan-overview>
   </ngu-tile>
