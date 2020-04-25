@@ -5,7 +5,7 @@ from itertools import chain
 from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework import status, generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -25,11 +25,11 @@ class CitiesListView(generics.ListAPIView):
 class SuggestListView(generics.ListAPIView):
     """List of some suggestion according to selected city"""
     serializer_class = serializers.SuggestSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
         city = models.City.objects.get(pk=city_id)
-
         queryset = list(models.Restaurant.objects.filter(city=city).order_by('-rating')[0:3])
         queryset += models.RecreationalPlace.objects.filter(city=city).order_by('-rating')[0:3]
         queryset += models.Museum.objects.filter(city=city).order_by('-rating')[0:3]
@@ -39,6 +39,7 @@ class SuggestListView(generics.ListAPIView):
 
 class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
+    permission_classes = [AllowAny]
 
     def get(self, request, id):
         dest_city = models.City.objects.get(pk=id)
@@ -172,6 +173,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
 class GlobalSearchList(generics.ListAPIView):
     serializer_class = GlobalSearchSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
@@ -201,6 +203,7 @@ class LocationTypes(enum.Enum):
 
 class AdvancedSearch(generics.CreateAPIView):
     serializer_class = AdvancedSearchSerializer
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         all_result = self.get_queryset(request.data)
@@ -231,7 +234,7 @@ class AdvancedSearch(generics.CreateAPIView):
 
 
 class ShowPostView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ShowPostSerializer
 
     def get(self, request, *args, **kwargs):
@@ -242,13 +245,11 @@ class ShowPostView(generics.ListAPIView):
         posts = models.Post.objects.filter(Q(user__in=following_users) |
                                            Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
                                                                                                * 20:page_number * 20]
-
         posts_data = serializers.ShowPostSerializer(instance=posts, many=True).data
         for data in posts_data:
             data['destination_city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
             data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
             data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
-
             if following_users.__contains__(data['user']):
                 data['following_state'] = 'following'
             else:
@@ -424,6 +425,7 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
 
 class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
+    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         page_number = int(self.request.query_params.get('page'))
