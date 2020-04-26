@@ -1,14 +1,14 @@
 
 <router-outlet></router-outlet>
 
-<div class="search-wrapper" fxLayout="row" fxLayoutAlign="center center">
+<div class="search-wrapper"  >
 
   <div class="search-box">
     <mat-card-header>
       <mat-card-title>Choose Your Destination </mat-card-title>
     </mat-card-header>
     <p>
-      <mat-form-field class="example-half-width">
+      <mat-form-field class="example-quart-width">
           
         <mat-select [formControl]="cityCtrl" placeholder="City" #singleSelect>
           <mat-option>
@@ -37,7 +37,7 @@
       </mat-form-field>
 
 
-    <button mat-stroked-button color="accent" class="btn-block" type="submit" (click)="onSearch()" [routerLink]="['/calender', cityCtrl.value?.id]">
+    <button  mat-stroked-button color="primary" class="btn-block" type="submit" (click)="onSearch()" [routerLink]="['/calender', cityCtrl.value?.id]">
     Search</button>
 
     </p>

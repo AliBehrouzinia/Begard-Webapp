@@ -18,7 +18,8 @@ const appRoutes: Routes = [
     { path: 'search', component: SearchComponent },
     { path: 'homepage', component: HomePageComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } },
-    { path: 'postlocatio', component: LocationPostComponent }
+    { path: 'postlocatio', component: LocationPostComponent },
+  
 ]
 
 @NgModule({

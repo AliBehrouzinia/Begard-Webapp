@@ -44,8 +44,7 @@ export class PlanOverviewService {
           observe: 'response',
           params: {
             page: '1',
-          },
-          headers: new HttpHeaders({ 'Authorization': token })
+          }
         })
         .pipe(
           map(res => {
