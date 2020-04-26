@@ -14,16 +14,8 @@ import { PlanOverView } from '../plan-overview';
   styleUrls: ['./horizontl-list.component.css']
 })
 export class HorizontlListComponent implements OnInit {
-  @Input() planOverviews: PlanOverView[];
-  img =  "https://material.angular.io/assets/img/examples/shiba2.jpg";
-  name = "john malcovich";
-  date = "Today";
-  city = "London";
-  profileCover = '../../assets/prr.png';
+  @Input() planOverviews: PlanOverView[] = [];
 
-  imgags = [
-    'assets/begrd_icon.svg',
-  ];
   public carouselTileConfig: NguCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
     speed: 250,
@@ -35,12 +27,11 @@ export class HorizontlListComponent implements OnInit {
     interval: { timing: 1500 },
     animation: 'lazy' 
   };
-  tempData: any[];
-  
+  pv
   constructor() {}
 
   ngOnInit() {
-    document.querySelector("body").style.cssText = "--profile-cover-url: url("+this.profileCover+")";
+    this.pv = [1,3,4]
   }
 
 }

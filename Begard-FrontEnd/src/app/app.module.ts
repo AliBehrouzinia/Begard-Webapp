@@ -90,7 +90,7 @@ import { MapLocationService } from './map-locations.service';
       NguCarouselModule,
       TabModule
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService],
+   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService],
    bootstrap: [
       AppComponent
    ],
