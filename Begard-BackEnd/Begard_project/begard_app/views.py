@@ -438,6 +438,9 @@ class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
     permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        pass
+    
     def get(self, request, *args, **kwargs):
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[
