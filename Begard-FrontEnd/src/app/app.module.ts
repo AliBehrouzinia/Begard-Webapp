@@ -99,11 +99,7 @@ import { LocationPostService } from './location-post/location-post.service';
       MDBBootstrapModule
       
    ],
-<<<<<<< HEAD
    providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService,LocationPostService],
-=======
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService],
->>>>>>> feature/v1.0.0/social-front
    bootstrap: [
       AppComponent
    ],
