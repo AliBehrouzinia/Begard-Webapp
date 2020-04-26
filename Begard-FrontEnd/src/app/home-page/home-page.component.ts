@@ -23,7 +23,7 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.planOverviewService.getPlanOverviews().subscribe(planOverviews => {this.planOverviews = planOverviews});
+    this.planOverviewService.getPlanOverviews().subscribe(planOverviews => {this.planOverviews = planOverviews;});
   }
   
 }
