@@ -52,14 +52,15 @@ export class DataStorageService {
 
     getCities() {
 
-        return this.authservice.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
-            return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
-                {
-                    headers: new HttpHeaders({ 'Authorization': token })
-                }
-            );
-        }));
+        // return this.authservice.user.pipe(take(1), exhaustMap(user => {
+        //     var token = 'token ' + user.token;
+        //     return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
+        //         {
+        //             headers: new HttpHeaders({ 'Authorization': token })
+        //         }
+        //     );
+        // }));
+        return this.http.get<City[]>('http://127.0.0.1:8000/cities/');
 
     }
 
