@@ -3,19 +3,18 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import BegardUserCreationForm, BegardUserChangeForm
-from .models import BegardUser, City, Restaurant, Plan, PlanItem, Hotel, ShoppingMall, Cafe, RecreationalPlace\
-    , TouristAttraction, Museum
+from .models import *
 
 
 class BegardUserAdmin(UserAdmin):
     add_form = BegardUserCreationForm
     form = BegardUserChangeForm
     model = BegardUser
-    list_display = ('email', 'date_joined')
+    list_display = ('email', 'date_joined', 'profile_img')
     list_filter = ('email', 'date_joined')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Permissions', {'fields': ('date_joined', 'is_staff')}),
+        ('Permissions', {'fields': ('date_joined', 'is_public', 'profile_img')}),
     )
     add_fieldsets = (
         (None, {
@@ -32,7 +31,7 @@ admin.site.register(BegardUser, BegardUserAdmin)
 
 class CityAdmin(admin.ModelAdmin):
     model = City
-    list_display = ('name', )
+    list_display = ('name',)
 
 
 admin.site.register(City, CityAdmin)
@@ -108,3 +107,51 @@ class MuseumAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Museum, MuseumAdmin)
+
+
+class PostAdmin(admin.ModelAdmin):
+    model = Post
+    list_display = ('type', 'user', 'creation_date')
+
+
+admin.site.register(Post, PostAdmin)
+
+
+class CommentAdmin(admin.ModelAdmin):
+    model = Comment
+    list_display = ('user', 'post', 'content')
+
+
+admin.site.register(Comment, CommentAdmin)
+
+
+class UserFollowingAdmin(admin.ModelAdmin):
+    model = UserFollowing
+    list_display = ('user_id', 'following_user_id', 'created')
+
+
+admin.site.register(UserFollowing, UserFollowingAdmin)
+
+
+class LikeAdmin(admin.ModelAdmin):
+    model = Like
+    list_display = ('user', 'post', 'date')
+
+
+admin.site.register(Like, LikeAdmin)
+
+
+class FollowRequestAdmin(admin.ModelAdmin):
+    model = FollowRequest
+    list_display = ('request_from', 'request_to', 'date')
+
+
+admin.site.register(FollowRequest, FollowRequestAdmin)
+
+
+class ImageAdmin(admin.ModelAdmin):
+    model = Image
+    list_display = ('post', 'image')
+
+
+admin.site.register(Image, ImageAdmin)

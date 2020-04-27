@@ -1,4 +1,4 @@
-import { Component, OnInit ,Input} from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 
 @Component({
@@ -12,20 +12,19 @@ export class PlanOverviewComponent implements OnInit {
   @Input() planCover;
   @Input() planDateCreted;
   @Input() plannerProfileCover;
+  date
 
   constructor() { }
 
   ngOnInit(): void {
+    this.planCover = 'http://127.0.0.1:8000' + this.planCover;
+    this.plannerProfileCover = 'http://127.0.0.1:8000' + this.plannerProfileCover;
     this.setDateCreation();
   }
 
-  setDateCreation(){
-    // this.date = new Date();
-    // if (this.planDateCreted == this.date){
-    //   this.planDateCreted = "Today";
-    // }else if(this.planDateCreted.getCurrentDay()+1 == this.date){
-    //   this.planDateCreted = "Yesterday";
-    // }
+  setDateCreation() {
+    this.date = new Date(this.planDateCreted);
+    console.log(" date : " + this.date);
+       
   }
-
 }
