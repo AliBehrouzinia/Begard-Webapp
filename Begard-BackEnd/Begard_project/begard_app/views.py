@@ -256,6 +256,8 @@ class ShowPostView(generics.ListAPIView):
             data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
             data['number_of_likes'] = models.Like.objects.filter(post=data['id']).count()
             data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
+            images = models.Image.objects.filter(post=data['id'])
+            data['images'] = [image.image.url for image in images]
             if following_users.__contains__(data['user']):
                 data['following_state'] = 'following'
             else:
@@ -436,6 +438,9 @@ class TopPostsView(generics.ListAPIView):
     serializer_class = TopPostSerializer
     permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        pass
+    
     def get(self, request, *args, **kwargs):
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[

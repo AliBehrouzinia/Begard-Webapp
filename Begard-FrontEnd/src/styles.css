@@ -66,6 +66,24 @@ body {
 }
 
 
+.postlocation{
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  height: 500px;
+  
+
+}
+
+
+
+.middle-tile{
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+
+}
+
 
 .box.back {
   transform: scale(.95);

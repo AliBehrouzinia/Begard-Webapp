@@ -8,6 +8,7 @@ import { DataStorageService } from './data-storage.service';
 import { CalenderComponent } from './calender/calender.component';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
+import { LocationPostComponent } from './location-post/location-post.component';
 
 
 const appRoutes: Routes = [
@@ -16,7 +17,9 @@ const appRoutes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'search', component: SearchComponent },
     { path: 'homepage', component: HomePageComponent },
-    { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } }
+    { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } },
+    { path: 'postlocatio', component: LocationPostComponent },
+  
 ]
 
 @NgModule({
