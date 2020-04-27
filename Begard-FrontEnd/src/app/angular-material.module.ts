@@ -1,25 +1,5 @@
 // import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// import {
-//    MatButtonModule,
-//    MatToolbarModule,
-//    MatIconModule,
-//    MatBadgeModule,
-//    MatSidenavModule,
-//    MatListModule,
-//    MatGridListModule,
-//    MatFormFieldModule,
-//    MatInputModule,
-//    MatSelectModule,
-//    MatRadioModule,
-//    MatDatepickerModule,
-//    MatNativeDateModule,
-//    MatChipsModule,
-//    MatTooltipModule,
-//    MatTableModule,
-//    MatPaginatorModule
-// } from '@angular/material';
 import { ModuleWithProviders, NgModule} from "@angular/core";
 import { MAT_LABEL_GLOBAL_OPTIONS, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -78,7 +58,9 @@ import { MatTreeModule } from '@angular/material/tree';
       MatTooltipModule,
       MatTableModule,
       MatPaginatorModule,
-      MatCheckboxModule
+      MatCheckboxModule,
+      MatTabsModule,
+      MatMenuModule
    ],
    exports: [
       MatButtonModule,
@@ -98,7 +80,41 @@ import { MatTreeModule } from '@angular/material/tree';
       MatTableModule,
       MatPaginatorModule,
       MatCheckboxModule,
-      MatAutocompleteModule
+      MatAutocompleteModule,
+      MatTabsModule,
+      MatAutocompleteModule,
+      MatBadgeModule,
+      MatButtonModule,
+      MatButtonToggleModule,
+      MatCardModule,
+      MatCheckboxModule,
+      MatChipsModule,
+      MatStepperModule,
+      MatDatepickerModule,
+      MatDialogModule,
+      MatExpansionModule,
+      MatGridListModule,
+      MatIconModule,
+      MatInputModule,
+      MatListModule,
+      MatMenuModule,
+      MatNativeDateModule,
+      MatPaginatorModule,
+      MatProgressBarModule,
+      MatProgressSpinnerModule,
+      MatRadioModule,
+      MatRippleModule,
+      MatSelectModule,
+      MatSidenavModule,
+      MatSliderModule,
+      MatSlideToggleModule,
+      MatSnackBarModule,
+      MatSortModule,
+      MatTableModule,
+      MatTabsModule,
+      MatToolbarModule,
+      MatTooltipModule,
+      MatTreeModule,
       ],
    providers: [
       MatDatepickerModule,

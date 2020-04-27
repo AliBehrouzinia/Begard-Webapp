@@ -1,0 +1,42 @@
+.plan-card {
+    max-width: 500px;
+    max-height: 400px;
+  }
+  
+  .profile-image {
+    background-size: cover;
+  }
+  
+  .mat-card-avatar{
+    height: 50px;
+    width: 50px;
+  }
+  
+  .im{
+    padding: 15px;
+    height: 250px;
+    width: 400px;
+  }
+  
+  .location-icon{
+    font-size: 20px;
+    color:rgb(14, 212, 219);
+  }
+  
+  .city{
+    margin-top: 2px;
+    font-size: 15px;
+  
+  }
+  
+  mat-card-subtitle{
+    display: flex;
+  
+  }
+  
+  .date{
+    margin-top: 2px;
+    margin-left: 10px;
+    font-size: 15px;
+  
+  }

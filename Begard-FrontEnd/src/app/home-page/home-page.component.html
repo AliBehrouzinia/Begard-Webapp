@@ -1,0 +1,25 @@
+<mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
+
+    <mat-grid-tile class="tile" rowspan=2 colspan=5>
+        <app-search class="search"></app-search>
+    </mat-grid-tile>
+
+   
+
+</mat-grid-list>
+<div style="display: flex; justify-content: center">
+   <div style="width: 60%;">
+    <mat-card class="child-card">
+        <mat-card-title>Recent Posts</mat-card-title>
+        <app-horizontl-list [planOverviews]="planOverviews"></app-horizontl-list>
+    </mat-card>
+   </div>
+</div>
+<div style="display:flex; justify-content: center; ">
+    <div style="width: 50%;">
+        <app-location-post></app-location-post>
+    </div>
+
+</div>
+
+<router-outlet></router-outlet>

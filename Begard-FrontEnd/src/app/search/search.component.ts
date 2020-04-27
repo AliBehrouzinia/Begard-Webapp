@@ -124,6 +124,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       enddate.getDate() + 'T0:0Z';
     this.dataStorageService.planUrl = 'http://127.0.0.1:8000/cities/' + this.cityCtrl.value?.id + '/suggest-plan/?start_date=' +
       startday + '&finish_date=' + endday;
+    this.dataStorageService.setStartDate(startday);
+    this.dataStorageService.setEndDate(endday);
+    this.dataStorageService.setCity(this.cityCtrl.value?.id);
   }
 
 
