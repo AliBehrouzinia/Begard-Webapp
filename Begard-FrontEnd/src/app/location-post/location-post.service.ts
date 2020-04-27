@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../auth.service';
+import { take, exhaustMap } from 'rxjs/operators';
 
 export interface PostRes { 
     "id": number,
@@ -15,15 +17,55 @@ export interface PostRes {
     "destination_city": string,
     "user_name": string,
     "user_profile_image": string,
+    "number_of_likes": number,
+    "is_liked": boolean,
     "following_state": string
 }
 
 @Injectable()
 export class LocationPostService {
-    constructor( private http : HttpClient) { }
+    constructor( private http : HttpClient,
+        private authService : AuthService) { }
 
     getPostData(){
-       return this.http.get<PostRes[]>("http://127.0.0.1:8000/posts/?page=1");
+       return this.authService.user.pipe(take(1), exhaustMap(user => {
+        var token = 'token ' + user.token;
+        return this.http.get<PostRes[]>("http://127.0.0.1:8000/posts/?page=1",
+            {
+                headers: new HttpHeaders({ 'Authorization': token })
+            }
+        );
+    }))
+    }
+    
+    onLike(id : number){
+        
+         this.authService.user.pipe(take(1), exhaustMap(user => {
+            var token = 'token ' + user.token;
+            var url = 'http://127.0.0.1:8000/posts/'+ id + '/likes/';
+            return this.http.post(url,{},
+                {
+                    headers: new HttpHeaders({ 'Authorization': token })
+                }
+            );
+        })).subscribe();
+        
+
+    }
+
+    disLike(id : number){
+
+        this.authService.user.pipe(take(1), exhaustMap(user => {
+            var token = 'token ' + user.token;
+            var url = 'http://127.0.0.1:8000/posts/'+ id + '/likes/';
+            return this.http.delete(url,
+                {
+                    headers: new HttpHeaders({ 'Authorization': token })
+                }
+            );
+        })).subscribe();
+
+
     }
   
 }

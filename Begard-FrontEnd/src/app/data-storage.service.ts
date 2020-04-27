@@ -60,7 +60,7 @@ export class DataStorageService {
         //         }
         //     );
         // }));
-        return this.http.get<City[]>('http://127.0.0.1:8000/cities/                                                                                                                                                             ');
+        return this.http.get<City[]>('http://127.0.0.1:8000/cities/');
 
     }
 
