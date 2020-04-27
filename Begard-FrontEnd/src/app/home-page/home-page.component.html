@@ -4,32 +4,22 @@
         <app-search class="search"></app-search>
     </mat-grid-tile>
 
-    <mat-grid-tile class="left-tile"  rowspan=3>
-        <!-- <mat-card class="left-parent-card"></mat-card> -->
-        
-    </mat-grid-tile>
-
-    <mat-grid-tile class="middle-tile" rowspan=3 colspan=3>
-        <mat-card class="parent-card">
-            <div class="lists">
-                <mat-card class="child-card">
-                    <mat-card-title>Recent Posts</mat-card-title>
-                    <app-horizontl-list [planOverviews]="planOverviews"></app-horizontl-list>
-                </mat-card>
-                <mat-card style="height :100%; ">
-                    fsfkjsdf
-
-                </mat-card>
-
-            </div>
-        </mat-card>
-    </mat-grid-tile>
-
-    <mat-grid-tile class="left-tile"  rowspan=3>
-        <!-- <mat-card class="right-parent-card"> </mat-card> -->
-    </mat-grid-tile>
+   
 
 </mat-grid-list>
+<div style="display: flex; justify-content: center">
+   <div style="width: 60%;">
+    <mat-card class="child-card">
+        <mat-card-title>Recent Posts</mat-card-title>
+        <!-- <app-horizontl-list [planOverviews]="planOverviews"></app-horizontl-list> -->
+    </mat-card>
+   </div>
+</div>
+<div style="display:flex; justify-content: center; ">
+    <div style="width: 50%;">
+        <app-location-post></app-location-post>
+    </div>
 
+</div>
 
 <router-outlet></router-outlet>

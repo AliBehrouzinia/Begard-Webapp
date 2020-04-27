@@ -21,6 +21,7 @@ class Post{
   styleUrls: ['./location-post.component.css']
 })
 export class LocationPostComponent implements OnInit {
+  public userName : string;
 
   public posts : Post[]= [];
   public isLiked: boolean = false;
