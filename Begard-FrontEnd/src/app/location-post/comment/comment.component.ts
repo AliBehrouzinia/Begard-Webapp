@@ -26,8 +26,8 @@ export class CommentComponent implements OnInit {
   @Input() postId: number;
   @Input() resetFormSubject: Subject<boolean> = new Subject<boolean>();
 
-  updateComment(comment : Comment) {
-    
+  updateComment(comment: Comment) {
+
     this.comments.push(comment);
     console.log(this.comments);
   }

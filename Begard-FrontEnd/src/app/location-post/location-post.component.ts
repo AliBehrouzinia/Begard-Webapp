@@ -85,15 +85,7 @@ export class LocationPostComponent implements OnInit {
   onComment(post: Post, comment: string) {
     if (comment != '') {
       this.postservice.onComment(comment, post.id).subscribe(resdata => {
-        var data: Comment = {
-          id: 1,
-          content: 'fuck you',
-          user: 4,
-          post: 5,
-          user_name: 'Ali',
-          user_profile_img: 'hot'
-        }
-        this.child.updateComment(data);
+        this.child.updateComment(resdata);
       });
       
     }
