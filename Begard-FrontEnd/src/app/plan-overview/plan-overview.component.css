@@ -1,6 +1,6 @@
 .plan-card {
-    max-width: 500px;
-    max-height: 400px;
+  width: auto;
+  height: auto;
   }
   
   .profile-image {
@@ -13,9 +13,10 @@
   }
   
   .im{
-    padding: 15px;
     height: 250px;
-    width: 400px;
+    width: 457px;
+    margin-top: 0px;
+    margin-left: 2px;
   }
   
   .location-icon{
