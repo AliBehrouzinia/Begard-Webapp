@@ -12,9 +12,9 @@ class Post {
     public userName: string,
     public userProImgSrc: string,
     public followingState: string,
-    public likeNums:number,
-    public isLiked:boolean,
-    public id:number
+    public likeNums: number,
+    public isLiked: boolean,
+    public id: number
 
   ) { }
 }
@@ -62,17 +62,24 @@ export class LocationPostComponent implements OnInit {
     }
 
   }
-  onLike(post : Post) {
-    post.isLiked= true;
+  onLike(post: Post) {
+    post.isLiked = true;
     post.likeNums++;
     this.postservice.onLike(post.id);
 
-    
+
   }
-  onDislike(post : Post) {
-    post.isLiked=false;
+  onDislike(post: Post) {
+    post.isLiked = false;
     post.likeNums--;
-   this.postservice.disLike(post.id);
+    this.postservice.disLike(post.id);
   }
-  
+
+  onComment(post: Post, comment: string) {
+    if(comment != '')
+    {
+      this.postservice.onComment(comment, post.id);
+    }
+  }
+
 }

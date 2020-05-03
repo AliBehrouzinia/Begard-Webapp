@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { take, exhaustMap } from 'rxjs/operators';
 
-export interface PostRes { 
+export interface PostRes {
     "id": number,
     "type": string,
     "creation_date": string,
@@ -24,40 +24,40 @@ export interface PostRes {
 
 @Injectable()
 export class LocationPostService {
-    constructor( private http : HttpClient,
-        private authService : AuthService) { }
+    constructor(private http: HttpClient,
+        private authService: AuthService) { }
 
-    getPostData(){
-       return this.authService.user.pipe(take(1), exhaustMap(user => {
-        var token = 'token ' + user.token;
-        return this.http.get<PostRes[]>("http://127.0.0.1:8000/posts/?page=1",
-            {
-                headers: new HttpHeaders({ 'Authorization': token })
-            }
-        );
-    }))
-    }
-    
-    onLike(id : number){
-        
-         this.authService.user.pipe(take(1), exhaustMap(user => {
+    getPostData() {
+        return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
-            var url = 'http://127.0.0.1:8000/posts/'+ id + '/likes/';
-            return this.http.post(url,{},
+            return this.http.get<PostRes[]>("http://127.0.0.1:8000/posts/?page=1",
+                {
+                    headers: new HttpHeaders({ 'Authorization': token })
+                }
+            );
+        }))
+    }
+
+    onLike(id: number) {
+
+        this.authService.user.pipe(take(1), exhaustMap(user => {
+            var token = 'token ' + user.token;
+            var url = 'http://127.0.0.1:8000/posts/' + id + '/likes/';
+            return this.http.post(url, {},
                 {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
         })).subscribe();
-        
+
 
     }
 
-    disLike(id : number){
+    disLike(id: number) {
 
         this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
-            var url = 'http://127.0.0.1:8000/posts/'+ id + '/likes/';
+            var url = 'http://127.0.0.1:8000/posts/' + id + '/likes/';
             return this.http.delete(url,
                 {
                     headers: new HttpHeaders({ 'Authorization': token })
@@ -67,5 +67,17 @@ export class LocationPostService {
 
 
     }
-  
+
+    onComment(content: string, postid: number) {
+        this.authService.user.pipe(take(1), exhaustMap(user => {
+            var token = 'token ' + user.token;
+            var url = 'http://127.0.0.1:8000/posts/' + postid + '/comments/';
+            return this.http.post(url, content,
+                {
+                    headers: new HttpHeaders({ 'Authorization': token })
+                }
+            );
+        })).subscribe();
+
+    }
 }
