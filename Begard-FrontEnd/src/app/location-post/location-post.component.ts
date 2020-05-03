@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LocationPostService, PostRes } from './location-post.service';
 import { ThemePalette } from '@angular/material/core';
+import { CommentComponent, Comment } from './comment/comment.component';
 
 class Post {
   constructor(
@@ -25,6 +26,8 @@ class Post {
   styleUrls: ['./location-post.component.css']
 })
 export class LocationPostComponent implements OnInit {
+
+  @ViewChild(CommentComponent) child: CommentComponent;
   public userName: string;
 
   public posts: Post[] = [];
@@ -63,23 +66,38 @@ export class LocationPostComponent implements OnInit {
 
   }
   onLike(post: Post) {
-    post.isLiked = true;
-    post.likeNums++;
-    this.postservice.onLike(post.id);
+
+    this.postservice.onLike(post.id).subscribe(resdata => {
+      post.isLiked = true;
+      post.likeNums++;
+    });
 
 
   }
   onDislike(post: Post) {
-    post.isLiked = false;
-    post.likeNums--;
-    this.postservice.disLike(post.id);
+
+    this.postservice.disLike(post.id).subscribe(resdata => {
+      post.isLiked = false;
+      post.likeNums--;
+    });
   }
 
   onComment(post: Post, comment: string) {
-    if(comment != '')
-    {
-      this.postservice.onComment(comment, post.id);
+    if (comment != '') {
+      this.postservice.onComment(comment, post.id).subscribe(resdata => {
+        var data: Comment = {
+          id: 1,
+          content: 'fuck you',
+          user: 4,
+          post: 5,
+          user_name: 'Ali',
+          user_profile_img: 'hot'
+        }
+        this.child.updateComment(data);
+      });
+      
     }
+
   }
 
 }

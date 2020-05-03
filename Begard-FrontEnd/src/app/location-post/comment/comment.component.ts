@@ -2,7 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from 'src/app/auth.service';
 import { take, exhaustMap } from 'rxjs/operators';
-interface Comment {
+import { Subject } from 'rxjs';
+export interface Comment {
   id: number,
   content: string,
   user: number,
@@ -19,33 +20,42 @@ interface Comment {
 })
 export class CommentComponent implements OnInit {
 
-  constructor( private http : HttpClient,
-    private authService : AuthService) { }
+  constructor(private http: HttpClient,
+    private authService: AuthService) { }
 
   @Input() postId: number;
+  @Input() resetFormSubject: Subject<boolean> = new Subject<boolean>();
+
+  updateComment(comment : Comment) {
+    
+    this.comments.push(comment);
+    console.log(this.comments);
+  }
+
   public comments: Comment[] = [];
 
 
   ngOnInit(): void {
+
     this.getComments(this.postId).subscribe(resdata => {
-      for(var i=0 ;i<resdata.length;i++){
+      for (var i = 0; i < resdata.length; i++) {
         this.comments.push(resdata[i]);
       }
     });
-    
+
   }
   private getComments(postId: number) {
     return this.authService.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
-      var url = "http://127.0.0.1:8000/posts/"+postId+"/comments/";
+      var url = "http://127.0.0.1:8000/posts/" + postId + "/comments/";
       return this.http.get<Comment[]>(url,
-          {
-              headers: new HttpHeaders({ 'Authorization': token })
-          }
+        {
+          headers: new HttpHeaders({ 'Authorization': token })
+        }
       );
-  }));
+    }));
   }
 
- 
+
 
 }

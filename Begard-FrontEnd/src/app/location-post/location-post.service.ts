@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { take, exhaustMap } from 'rxjs/operators';
+import { Comment } from './comment/comment.component';
 
 export interface PostRes {
     "id": number,
@@ -40,7 +41,7 @@ export class LocationPostService {
 
     onLike(id: number) {
 
-        this.authService.user.pipe(take(1), exhaustMap(user => {
+        return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
             var url = 'http://127.0.0.1:8000/posts/' + id + '/likes/';
             return this.http.post(url, {},
@@ -48,14 +49,14 @@ export class LocationPostService {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
-        })).subscribe();
+        }));
 
 
     }
 
     disLike(id: number) {
 
-        this.authService.user.pipe(take(1), exhaustMap(user => {
+        return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
             var url = 'http://127.0.0.1:8000/posts/' + id + '/likes/';
             return this.http.delete(url,
@@ -63,21 +64,21 @@ export class LocationPostService {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
-        })).subscribe();
+        }));
 
 
     }
 
     onComment(content: string, postid: number) {
-        this.authService.user.pipe(take(1), exhaustMap(user => {
+        return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
             var url = 'http://127.0.0.1:8000/posts/' + postid + '/comments/';
-            return this.http.post(url, {content},
+            return this.http.post<Comment>(url, {content},
                 {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
-        })).subscribe();
+        }));
 
     }
 }
