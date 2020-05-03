@@ -72,7 +72,7 @@ export class LocationPostService {
         this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
             var url = 'http://127.0.0.1:8000/posts/' + postid + '/comments/';
-            return this.http.post(url, content,
+            return this.http.post(url, {content},
                 {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
