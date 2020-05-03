@@ -18,10 +18,9 @@
   justify-content: center;
 }
 .tile {
-  min-height: 250px;
-  min-width: 300px;
+  min-height: 200px;
+  background-color: #ccc;
   background-size: cover !important;
-  display: inline-flex;
 }
 .tile h1 {
   text-align: center;
