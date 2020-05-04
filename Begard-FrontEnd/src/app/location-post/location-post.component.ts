@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { LocationPostService, PostRes } from './location-post.service';
 import { ThemePalette } from '@angular/material/core';
 import { CommentComponent, Comment } from './comment/comment.component';
+import { NgForm, NgModel } from '@angular/forms';
 
 class Post {
   constructor(
@@ -27,8 +28,12 @@ class Post {
 })
 export class LocationPostComponent implements OnInit {
 
-  @ViewChild(CommentComponent) child: CommentComponent;
+  @ViewChildren(CommentComponent) child: QueryList<CommentComponent>;
+
   public userName: string;
+  
+
+  public defaultValue : string = '';
 
   public posts: Post[] = [];
   centered = false;
@@ -82,13 +87,25 @@ export class LocationPostComponent implements OnInit {
     });
   }
 
-  onComment(post: Post, comment: string) {
-    if (comment != '') {
-      this.postservice.onComment(comment, post.id).subscribe(resdata => {
-        this.child.updateComment(resdata);
-      });
-      
-    }
+  onComment(post: Post,comment:NgModel) {
+    // if (comment.value != '') {
+    //   for (var i = 0; i < this.child.toArray().length; i++) {
+    //     if (this.child.toArray()[i].postId == post.id) {
+    //       var commentChild= this.child.toArray()[i];
+    //       this.postservice.onComment(comment.value, post.id).subscribe(resdata => {
+    //         commentChild.updateComment(resdata);
+            
+    //       });
+         
+    //     }
+    //   }
+    
+
+     
+
+    // }
+    console.log(post.id , comment.value);
+  
 
   }
 

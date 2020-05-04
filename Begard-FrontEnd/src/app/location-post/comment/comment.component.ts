@@ -19,31 +19,26 @@ export interface Comment {
   styleUrls: ['./comment.component.css']
 })
 export class CommentComponent implements OnInit {
-
   constructor(private http: HttpClient,
     private authService: AuthService) { }
 
   @Input() postId: number;
-  @Input() resetFormSubject: Subject<boolean> = new Subject<boolean>();
 
-  updateComment(comment: Comment) {
-
+  updateComment(comment : Comment) {
     this.comments.push(comment);
-    console.log(this.comments);
+    
   }
 
   public comments: Comment[] = [];
 
-
   ngOnInit(): void {
-
     this.getComments(this.postId).subscribe(resdata => {
       for (var i = 0; i < resdata.length; i++) {
         this.comments.push(resdata[i]);
       }
     });
-
   }
+  
   private getComments(postId: number) {
     return this.authService.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
