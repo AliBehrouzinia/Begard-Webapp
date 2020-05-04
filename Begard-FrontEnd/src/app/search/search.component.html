@@ -33,7 +33,7 @@
         <mat-label>To</mat-label>
         <input matInput disabled [formControl]="enddate" [min]="endDateMin" [matDatepicker]="endpicker" [disabled]="endDateDisable" (dateInput)="onEndDateChanged($event.value)">
         <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
-        <mat-datepicker touchUi #endpicker disabled="false"></mat-datepicker>
+        <mat-datepicker touchUi #endpicker [disabled]="endDateDisable"></mat-datepicker>
       </mat-form-field>
 
 
