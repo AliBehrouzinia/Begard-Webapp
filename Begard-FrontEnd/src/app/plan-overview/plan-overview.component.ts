@@ -20,6 +20,7 @@ export class PlanOverviewComponent implements OnInit {
     this.planCover = this.SERVER_URL + this.planCover;
     this.plannerProfileCover = this.SERVER_URL + this.plannerProfileCover;
     this.setDateCreation();
+    this.setUserName();
   }
 
   setDateCreation() {
@@ -40,4 +41,7 @@ export class PlanOverviewComponent implements OnInit {
     }
   }
 
+  setUserName() {
+    this.plannerUsername = this.plannerUsername.substring(0, this.plannerUsername.search('@'));
+  }
 }
