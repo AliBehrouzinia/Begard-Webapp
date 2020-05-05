@@ -36,9 +36,9 @@
             <div style="width: 100%;">
                 <mat-form-field  class="example-full-width" style="margin-right: 5px;">
                     <mat-label>Leave a comment</mat-label>
-                    <textarea ngModel #comment  matInput placeholder="It makes me feel..."></textarea>
+                    <textarea [formControl]="commentFc" matInput placeholder="It makes me feel..."></textarea>
                 </mat-form-field>
-                <a (click)="onComment(post,comment)" mat-icon-button style="width:10%; color:#9e9e9e;">
+                <a (click)="onComment(post)" mat-icon-button style="width:10%; color:#9e9e9e;">
                     <mdb-icon far icon="paper-plane" size="2x"></mdb-icon>
                     
     

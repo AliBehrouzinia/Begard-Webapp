@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/
 import { LocationPostService, PostRes } from './location-post.service';
 import { ThemePalette } from '@angular/material/core';
 import { CommentComponent, Comment } from './comment/comment.component';
-import { NgForm, NgModel } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 class Post {
   constructor(
@@ -27,6 +27,8 @@ class Post {
   styleUrls: ['./location-post.component.css']
 })
 export class LocationPostComponent implements OnInit {
+
+  commentFc = new FormControl()
 
   @ViewChildren(CommentComponent) child: QueryList<CommentComponent>;
 
@@ -87,24 +89,24 @@ export class LocationPostComponent implements OnInit {
     });
   }
 
-  onComment(post: Post,comment:NgModel) {
-    // if (comment.value != '') {
-    //   for (var i = 0; i < this.child.toArray().length; i++) {
-    //     if (this.child.toArray()[i].postId == post.id) {
-    //       var commentChild= this.child.toArray()[i];
-    //       this.postservice.onComment(comment.value, post.id).subscribe(resdata => {
-    //         commentChild.updateComment(resdata);
+  onComment(post: Post) {
+    if (this.commentFc.value != '') {
+      for (var i = 0; i < this.child.toArray().length; i++) {
+        if (this.child.toArray()[i].postId == post.id) {
+          var commentChild= this.child.toArray()[i];
+          this.postservice.onComment(this.commentFc.value, post.id).subscribe(resdata => {
+            commentChild.updateComment(resdata);
+            this.commentFc.reset();
             
-    //       });
+          });
          
-    //     }
-    //   }
+        }
+      }
     
 
      
 
-    // }
-    console.log(post.id , comment.value);
+    }
   
 
   }
