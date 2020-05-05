@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, interval } from 'rxjs';
+import { Observable, interval, observable, BehaviorSubject } from 'rxjs';
 import { startWith, take, map } from 'rxjs/operators';
 import { NguCarouselConfig } from '@ngu/carousel';
 import { slider } from './animation'
@@ -14,24 +14,41 @@ import { PlanOverView } from '../plan-overview';
   styleUrls: ['./horizontl-list.component.css']
 })
 export class HorizontlListComponent implements OnInit {
-  @Input() planOverviews: PlanOverView[] = [];
+  @Input() planOverviews: BehaviorSubject<any[]>;
+  tempData: string[];
 
+  imgags = [
+    'assets/bg.jpg',
+    'assets/car.png',
+    'assets/canberra.jpg',
+    'assets/holi.jpg'
+  ];
+
+  public carouselTileItems: any[] = [];
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { xs: 1, sm: 1, md: 1, lg: 5, all: 0 },
+    grid: { xs: 2, sm: 2, md: 2, lg: 2, all: 0 },
     speed: 250,
     point: {
       visible: true
     },
     touch: true,
-    loop: true,
+    loop: false,
     interval: { timing: 1500 },
-    animation: 'lazy' 
+    animation: 'lazy'
   };
-  pv
-  constructor() {}
 
-  ngOnInit() {
-    this.pv = [1,3,4]
+  constructor() {
+
   }
 
+  ngOnInit() {
+    this.tempData = [];
+    this.planOverviews.toPromise().then(po => { this.setItems(po); })
+  }
+
+  setItems(po: PlanOverView[]) {
+    //this.carouselTileItems = po;
+    for (let i = 0; i < po.length; i++) { this.carouselTileItems.push(po[i]); }
+    console.log("nowww");
+  }
 }

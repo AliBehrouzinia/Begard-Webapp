@@ -4,22 +4,21 @@
         <app-search class="search"></app-search>
     </mat-grid-tile>
 
-   
-
 </mat-grid-list>
-<div style="display: flex; justify-content: center">
+
+<div style="display:flex;justify-content: center">
    <div style="width: 60%;">
     <mat-card class="child-card">
-        <mat-card-title>Recent Posts</mat-card-title>
+        <mat-card-title>Top Posts</mat-card-title>
         <app-horizontl-list [planOverviews]="planOverviews"></app-horizontl-list>
     </mat-card>
    </div>
 </div>
+
 <div style="display:flex; justify-content: center; ">
-    <div style="width: 50%;">
+    <div style="width: auto;">
         <app-location-post></app-location-post>
     </div>
-
 </div>
 
 <router-outlet></router-outlet>
