@@ -30,6 +30,9 @@ class GetUpdateDeletePlanPermission(permissions.BasePermission):
             if request.method == "GET":
                 plan = models.Plan.objects.get(pk=view.kwargs['id'])
                 if not plan.is_public:
+                    user = plan.user
+                    if request.user == user:
+                        return True
                     return False
                 return True
             plan = models.Plan.objects.get(pk=view.kwargs['id'])
