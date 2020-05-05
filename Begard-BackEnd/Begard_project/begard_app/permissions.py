@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from .models import Plan
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -8,3 +9,13 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         return obj.owner == request.user
+
+
+class GetUpdateDeletePlanPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        plan = Plan.objects.get(pk=view.kwargs['id'])
+        user = plan.user
+        if request.user == user:
+            return True
+        return False

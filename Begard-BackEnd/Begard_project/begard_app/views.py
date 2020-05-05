@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import models, serializers
+from .permissions import GetUpdateDeletePlanPermission
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
@@ -108,7 +109,7 @@ class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPI
 
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, GetUpdateDeletePlanPermission]
 
     def get(self, request, *args, **kwargs):
         plan_id = self.kwargs.get('id')
@@ -406,7 +407,7 @@ class FollowRequestView(generics.ListCreateAPIView):
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
     """Accept or Reject or delete a follow request"""
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
