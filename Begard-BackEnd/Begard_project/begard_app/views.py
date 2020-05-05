@@ -415,28 +415,43 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, ActionOnFollowRequestPermission]
 
     def get(self, request, *args, **kwargs):
-        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
+        follow_request = models.FollowRequest.objects.filter(id=self.kwargs.get('id'))
+        if not follow_request.exists():
+            return Response(data={"error: ": "Does not exists follow request with this id."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        else:
+            follow_request = follow_request[0]
+
+        self.check_object_permissions(request, follow_request)
+
         action = self.request.query_params.get('action')
 
         if not ((action == 'accept') or (action == 'reject')):
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error: ": "you need 'action' query params with 'accept' or 'reject' value."},
+                            status.HTTP_400_BAD_REQUEST)
 
         if action == 'accept':
             data = {'user_id': follow_request.request_from_id, 'following_user_id': follow_request.request_to_id}
             serializer = serializers.FollowingsSerializer(data=data)
             if serializer.is_valid(True):
                 serializer.save()
-
-        follow_request.delete()
+        else:
+            follow_request.delete()
 
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
-        if not (follow_request.request_from_id == self.request.user.id):
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        follow_request = models.FollowRequest.objects.filter(id=self.kwargs.get('id'))
 
+        if not follow_request.exists():
+            return Response({"error: ": "Does not exists follow request with this id."},
+                            status.HTTP_400_BAD_REQUEST)
+        else:
+            follow_request = follow_request[0]
+
+        self.check_object_permissions(request, follow_request)
         follow_request.delete()
+
         return Response(status=status.HTTP_200_OK)
 
 
