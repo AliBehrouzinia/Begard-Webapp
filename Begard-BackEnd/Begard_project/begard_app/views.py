@@ -412,7 +412,7 @@ class FollowRequestView(generics.ListCreateAPIView):
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
     """Accept or Reject or delete a follow request"""
-    permission_classes = (IsAuthenticated, )
+    permission_classes = [IsAuthenticated, ActionOnFollowRequestPermission]
 
     def get(self, request, *args, **kwargs):
         follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
