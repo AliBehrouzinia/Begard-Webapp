@@ -355,9 +355,16 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
             'user': self.request.user.id,
             'post': self.kwargs.get('id')
         }
+
+        post = models.Post.objects.filter(id=data['post'])
+        if not post.exists():
+            return Response({"error": "Does not exist post with this id."},
+                            status.HTTP_400_BAD_REQUEST)
+
         exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
-        if exist_like is True:
-            return Response(status=status.HTTP_200_OK)
+        if exist_like:
+            return Response(data={"warning": "this post is liked by you.now you are trying to like again."},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
 
         serializer = serializers.CreateLikeSerializer(data=data)
         if serializer.is_valid(True):
