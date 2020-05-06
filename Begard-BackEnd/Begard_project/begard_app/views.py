@@ -274,7 +274,7 @@ class SearchPostView(generics.ListAPIView):
         user = self.request.user.id
         user_following = models.UserFollowing.objects.filter(user_id=user)
         if not (self.request.query_params.get('city')).isdigit():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
         city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
         models.Post.objects.filter((Q(plan_id__in=plans) & Q(user__id__in=user_following)) |
@@ -453,7 +453,7 @@ class TopPostsView(generics.ListAPIView):
     
     def get(self, request, *args, **kwargs):
         if not (self.request.query_params.get('page')).isdigit():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[
                 (page_number - 1) * 5:page_number * 5]
