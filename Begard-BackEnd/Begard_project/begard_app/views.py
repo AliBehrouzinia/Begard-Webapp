@@ -475,7 +475,7 @@ class LocationPostView(generics.CreateAPIView):
         post = self.save_post(request.data)
         post_id = post.pk
         for image in images:
-            modified_data = self.modify_input_for_multiple_files(image, post_id)
+            modified_data = self.modify_input_for_multiple_files(image['image'], post_id)
             serializer = ImageSerializer(data=modified_data)
             if serializer.is_valid(True):
                 serializer.save()
