@@ -355,9 +355,16 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
             'user': self.request.user.id,
             'post': self.kwargs.get('id')
         }
+
+        post = models.Post.objects.filter(id=data['post'])
+        if not post.exists():
+            return Response({"error": "Does not exist post with this id."},
+                            status.HTTP_400_BAD_REQUEST)
+
         exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
-        if exist_like is True:
-            return Response(status=status.HTTP_200_OK)
+        if exist_like:
+            return Response(data={"warning": "this post is liked by you.now you are trying to like again."},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
 
         serializer = serializers.CreateLikeSerializer(data=data)
         if serializer.is_valid(True):
@@ -388,26 +395,33 @@ class FollowRequestView(generics.ListCreateAPIView):
         data = self.request.data
         data['request_from'] = self.request.user.id
 
+        if type(data['request_to']) is not int:
+            return Response({"error": "data is not in valid format."},
+                            status.HTTP_400_BAD_REQUEST)
+
         following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
         if following_users.filter(following_user_id=data['request_to']).exists():
             return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                            status=status.HTTP_400_BAD_REQUEST)
 
-        if models.BegardUser.objects.get(id=data['request_to']).is_public:
+        request_to_user = models.BegardUser.objects.filter(id=data['request_to'])
+        if not request_to_user.exists():
+            return Response({"error": "bad request. 'request_to' user does not exists."},
+                            status.HTTP_400_BAD_REQUEST)
+
+        if request_to_user[0].is_public:
             follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
             if serializer.is_valid(True):
                 serializer.save()
+                return Response(data={"status": "Followed"}, status=status.HTTP_201_CREATED)
+        else:
+            serializer = serializers.FollowRequestSerializer(data=data)
+            if serializer.is_valid(True):
+                serializer.save()
+                return Response(data={"status": "Requested"}, status=status.HTTP_201_CREATED)
 
-            return Response(data={"status": "Followed"},
-                            status=status.HTTP_201_CREATED)
-
-        serializer = serializers.FollowRequestSerializer(data=data)
-        if serializer.is_valid(True):
-            serializer.save()
-
-        return Response(data={"status": "Requested"},
-                        status=status.HTTP_201_CREATED)
+        return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
