@@ -31,7 +31,8 @@ export class LocationPostService {
     getPostData() {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
-            return this.http.get<PostRes[]>("http://127.0.0.1:8000/posts/?page=1",
+            var url = "http://127.0.0.1:8000/posts/?page=1";
+            return this.http.get<PostRes[]>(url,
                 {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
