@@ -4,14 +4,12 @@ from . import models
 
 class ActionOnFollowRequestPermission(permissions.BasePermission):
 
-    def has_permission(self, request, view):
-        if request.method == 'GET':
-            follow_request = models.FollowRequest.objects.get(id=view.kwargs.get('id'))
-            return follow_request.request_to == request.user
-
     def has_object_permission(self, request, view, obj):
         if request.method == 'DELETE':
             return request.user == obj.request_from
+
+        if request.method == 'GET':
+            return request.user == obj.request_to
 
 
 class GetUpdateDeletePlanPermission(permissions.BasePermission):
