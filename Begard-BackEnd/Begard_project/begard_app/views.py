@@ -301,10 +301,15 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         data['post'] = self.kwargs.get('id')
         data['user'] = self.request.user.id
         comment_serializer = serializers.CreateCommentSerializer(data=data)
-        if comment_serializer.is_valid(True):
-            comment_serializer.save()
+        if comment_serializer.is_valid():
+            comment = comment_serializer.save()
+            comment_data = serializers.CreateCommentSerializer(instance=comment).data
+            user = models.BegardUser.objects.get(id=comment_data['user'])
+            comment_data['user_name'] = user.email
+            comment_data['user_profile_img'] = user.profile_img.url
+            return Response(data=comment_data, status=status.HTTP_201_CREATED)
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
