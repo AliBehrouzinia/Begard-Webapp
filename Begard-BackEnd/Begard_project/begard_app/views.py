@@ -282,7 +282,7 @@ class SearchPostView(generics.ListAPIView):
 
 
 class CommentsOnPostView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, LikeAndCommentOnPostPermission]
     serializer_class = serializers.CreateCommentSerializer
 
     def get(self, request, *args, **kwargs):
@@ -301,7 +301,7 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         data['post'] = self.kwargs.get('id')
         data['user'] = self.request.user.id
         comment_serializer = serializers.CreateCommentSerializer(data=data)
-        if comment_serializer.is_valid():
+        if comment_serializer.is_valid(True):
             comment_serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
@@ -335,7 +335,7 @@ class FollowersView(generics.ListAPIView):
 
 
 class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, LikeAndCommentOnPostPermission]
     serializer_class = serializers.CreateLikeSerializer
 
     def get(self, request, *args, **kwargs):

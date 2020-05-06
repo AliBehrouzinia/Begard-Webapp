@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import permissions
 from . import models
 
@@ -31,3 +32,19 @@ class GetUpdateDeletePlanPermission(permissions.BasePermission):
             if request.user == user:
                 return True
             return False
+
+
+class LikeAndCommentOnPostPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        post_id = view.kwargs.get('id')
+        user = request.user
+        post = get_object_or_404(models.Post, id=post_id)
+
+        if post.user.is_public:
+            return True
+
+        if models.UserFollowing.objects.filter(user_id=user, following_user_id=post.user).exists():
+            return True
+
+        return False
