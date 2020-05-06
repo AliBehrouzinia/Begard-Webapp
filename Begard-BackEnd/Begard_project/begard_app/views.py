@@ -74,12 +74,11 @@ class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPI
         plan = self.create_plan(request.data)
         post = self.save_post(request.data, plan.id)
         post_id = post.pk
-        images = dict(request.data.lists())['image']
-        for image in images:
-            modified_data = {'post': post_id, 'image': image}
-            serializer = ImageSerializer(data=modified_data)
-            if serializer.is_valid(True):
-                serializer.save()
+        image = request.data['image']
+        modified_data = {'post': post_id, 'image': image}
+        serializer = ImageSerializer(data=modified_data)
+        if serializer.is_valid(True):
+            serializer.save()
         return Response(status=status.HTTP_200_OK)
 
     def create_plan_items(self, plan_items, plan_id):
@@ -271,14 +270,19 @@ class SearchPostView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ShowPostSerializer
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         user = self.request.user.id
         user_following = models.UserFollowing.objects.filter(user_id=user)
+        if not (self.request.query_params.get('city')).isdigit():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
-        queryset = models.Post.objects.filter((Q(plan__in=plans) & Q(user__id__in=user_following)) |
-                                              (Q(plan__in=plans) & Q(user__is_public=True)))
-        return queryset
+        models.Post.objects.filter((Q(plan_id__in=plans) & Q(user__id__in=user_following)) |
+                                   (Q(plan_id__in=plans) & Q(user__is_public=True)))
+        return Response(status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        pass
 
 
 class CommentsOnPostView(generics.ListCreateAPIView):
@@ -448,6 +452,8 @@ class TopPostsView(generics.ListAPIView):
         pass
     
     def get(self, request, *args, **kwargs):
+        if not (self.request.query_params.get('page')).isdigit():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[
                 (page_number - 1) * 5:page_number * 5]
@@ -465,11 +471,11 @@ class LocationPostView(generics.CreateAPIView):
     serializer_class = LocationPostSerializer
 
     def post(self, request, *args, **kwargs):
-        images = dict(request.data.lists())['image']
+        images = request.data['image']
         post = self.save_post(request.data)
         post_id = post.pk
-        for img_name in images:
-            modified_data = self.modify_input_for_multiple_files(img_name, post_id)
+        for image in images:
+            modified_data = self.modify_input_for_multiple_files(image, post_id)
             serializer = ImageSerializer(data=modified_data)
             if serializer.is_valid(True):
                 serializer.save()
