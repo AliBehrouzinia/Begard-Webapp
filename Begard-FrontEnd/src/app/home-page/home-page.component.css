@@ -53,3 +53,10 @@
     display: block;
 }
 
+
+.underline:hover{
+    text-decoration: underline;
+}
+.input{
+    border-radius: 10px;
+}
