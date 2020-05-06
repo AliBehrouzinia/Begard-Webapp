@@ -76,7 +76,7 @@ class Post(models.Model):
 
     type = models.CharField(max_length=30, choices=POST_TYPES)
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
-    plan_id = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
+    plan_id = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True, blank=True)
     creation_date = models.DateTimeField()
     content = models.TextField(max_length=500, default='This is my post')
     place_id = models.CharField(null=True, max_length=100, blank=True)
