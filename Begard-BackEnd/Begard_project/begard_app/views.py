@@ -479,7 +479,7 @@ class TopPostsView(generics.ListAPIView):
 
     def get_queryset(self):
         pass
-    
+
     def get(self, request, *args, **kwargs):
         if not (self.request.query_params.get('page')).isdigit():
             return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
@@ -524,23 +524,23 @@ class LocationPostView(generics.CreateAPIView):
 
 class TopPlannerView(generics.ListAPIView):
     permission_classes = [AllowAny]
-    serializer_class = TopPostSerializer
+    serializer_class = TopPlannerSerializer
 
     def get_queryset(self):
         pass
 
     def get(self, request, *args, **kwargs):
-        users = models.BegardUser.objects.filter(is_public=True)
+        user_auth = self.request.user.id
+        followers = models.UserFollowing.objects.filter(user_id=user_auth)
+        users = models.BegardUser.objects.filter(Q(is_public=True) & ~Q(id__in=followers))
         for person in users:
             posts = models.Post.objects.filter(Q(user=person))
             sum_of_rates = 0
             for item in posts:
                 sum_of_rates += item.rate
-            # person.average_rate = sum_of_rates/len(posts)
             if len(posts) != 0:
                 person.average_rate = sum_of_rates / len(posts)
             else:
                 person.average_rate = 0
-        users.order_by('average_rate')
-        print(users)
+        queryset = users.order_by('average_rate')[0:5]
         return Response(status=status.HTTP_200_OK)
