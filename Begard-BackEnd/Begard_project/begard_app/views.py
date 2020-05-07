@@ -72,6 +72,7 @@ class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPI
 
     def post(self, request, *args, **kwargs):
         plan = self.create_plan(request.data)
+        self.create_plan_items(request.data['plan_items'], plan.id)
         post = self.save_post(request.data, plan.id)
         post_id = post.pk
         image = request.data['image']
@@ -277,8 +278,8 @@ class SearchPostView(generics.ListAPIView):
             return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
         city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
-        models.Post.objects.filter((Q(plan_id__in=plans) & Q(user__id__in=user_following)) |
-                                   (Q(plan_id__in=plans) & Q(user__is_public=True)))
+        queryset = models.Post.objects.filter((Q(plan_id__in=plans) & Q(user__id__in=user_following)) |
+                                              (Q(plan_id__in=plans) & Q(user__is_public=True)))
         return Response(status=status.HTTP_200_OK)
 
     def get_queryset(self):
@@ -479,7 +480,7 @@ class TopPostsView(generics.ListAPIView):
 
     def get_queryset(self):
         pass
-    
+
     def get(self, request, *args, **kwargs):
         if not (self.request.query_params.get('page')).isdigit():
             return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
