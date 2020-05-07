@@ -53,6 +53,7 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
 
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
    declarations: [
@@ -71,7 +72,8 @@ import { LocationPostService } from './location-post/location-post.service';
       PostDialogComponent,
       LocationPostComponent,
       CommentComponent,
-      LocationCarouselComponent
+      LocationCarouselComponent,
+      ProfileComponent
 
    ],
    imports: [
