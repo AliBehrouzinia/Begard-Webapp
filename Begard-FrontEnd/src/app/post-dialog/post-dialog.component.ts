@@ -25,7 +25,7 @@ export class PostDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
     public postPlanService: PostPlanService
-    ) { }
+  ) { }
 
 
   ngOnInit(): void {
@@ -38,6 +38,12 @@ export class PostDialogComponent implements OnInit {
   onPost() {
     console.log("this is description: " + this.description);
     console.log("this is photo: " + this.coverBinaryString);
+    if (this.description == undefined) {
+      this.description = "";
+    }
+    if (this.coverBinaryString == undefined) {
+      this.coverBinaryString = "";
+    }
     this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
     this.dialogRef.close();
   }

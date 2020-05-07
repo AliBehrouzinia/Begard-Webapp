@@ -18,9 +18,10 @@ export class PostPlanService {
   }
 
   setPostPlanDetail(planDetail: PlanDetail) {
-    console.log("service : " + planDetail);
+    console.log("planDetail : " + JSON.stringify(planDetail));
     this.postPlan.setDescription(planDetail.description + "");
-    console.log("postind data : " + this.postPlan)
+    this.postPlan.setImage(planDetail.photo + "");
+    console.log("posting data : " + JSON.stringify(this.postPlan))
     this.sendPostPlan();
   }
 
@@ -30,7 +31,7 @@ export class PostPlanService {
     this.authservice.user.subscribe(user => {
       var token = 'token ' + user.token;
       this.http
-        .post<PostPlan>(url, this.postPlan, {
+        .post<PostPlan>(url, JSON.stringify(this.postPlan), {
           headers: new HttpHeaders({ 'Authorization': token })
         }).toPromise().then()
     })
