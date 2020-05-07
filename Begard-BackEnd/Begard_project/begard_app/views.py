@@ -178,7 +178,7 @@ class GlobalSearchList(generics.ListAPIView):
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
-        city = models.City.objects.get(pk=city_id)
+        city = get_object_or_404(models.City, pk=city_id)
         query = self.request.query_params.get('query', None)
         restaurants = models.Restaurant.objects.filter(Q(name__icontains=query) & Q(city=city))
         museums = models.Museum.objects.filter(Q(name__icontains=query) & Q(city=city))
@@ -245,15 +245,17 @@ class ShowPostView(generics.ListAPIView):
         user = self.request.user.id
         following_users = [item['following_user_id'] for item in
                            models.UserFollowing.objects.filter(user_id=user).values('following_user_id')]
+        if not self.request.query_params.get('page').isdigit():
+            return Response({"error": "the page number is not correct."}, status.HTTP_400_BAD_REQUEST)
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__in=following_users) |
                                            Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
                                                                                                * 20:page_number * 20]
         posts_data = serializers.ShowPostSerializer(instance=posts, many=True).data
         for data in posts_data:
-            data['destination_city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
-            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
-            data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+            data['destination_city'] = get_object_or_404(models.Plan, id=data['plan_id']).destination_city.name
+            data['user_name'] = get_object_or_404(models.BegardUser, id=data['user']).email
+            data['user_profile_image'] = get_object_or_404(models.BegardUser, id=data['user']).profile_img.url
             data['number_of_likes'] = models.Like.objects.filter(post=data['id']).count()
             data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
             images = models.Image.objects.filter(post=data['id'])
@@ -475,10 +477,10 @@ class TopPostsView(generics.ListAPIView):
                 (page_number - 1) * 5:page_number * 5]
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
-            data['city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
-            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
-            data['profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
-            data['cover'] = models.Image.objects.get(post__pk=data['id']).image.url
+            data['city'] = get_object_or_404(models.Plan, id=data['plan_id']).destination_city.name
+            data['user_name'] = get_object_or_404(models.BegardUser, id=data['user']).email
+            data['profile_image'] = get_object_or_404(models.BegardUser, id=data['user']).profile_img.url
+            data['cover'] = get_object_or_404(models.Image, post__pk=data['id']).image.url
         return Response(posts_data, status=status.HTTP_200_OK)
 
 
