@@ -47,7 +47,7 @@ export class CalenderComponent implements OnInit {
     public postPlanService: PostPlanService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    private location : MapLocationService
+    private location: MapLocationService
   ) { }
 
   ngOnInit() {
@@ -69,7 +69,7 @@ export class CalenderComponent implements OnInit {
         ));
 
       }
-      this.selectedDate= new Date(plan.plan.plan_items[0].start_date);
+      this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
     });
 
   }
@@ -79,7 +79,7 @@ export class CalenderComponent implements OnInit {
   public weeksInterval: number = 2;
   public weekInterval: number = 1;
   title = 'drag-resize-actions';
-  public selectedDate: Date ;
+  public selectedDate: Date;
   public currentView: View = 'Week';
   public setViews: View[] = ['Day', 'Week', 'Month'];
 
@@ -169,11 +169,12 @@ export class CalenderComponent implements OnInit {
 
     this.postPlanService.setPostPlan(
       new PostPlan(
-        this.dataService.getCity()
+        this.dataService.getCity() + ""
         , ""
         , this.dataService.getStartDate()
         , this.dataService.getEndDate()
         , this.pi
+        , ""
       ))
 
     const dialogRef = this.dialog.open(PostDialogComponent, {

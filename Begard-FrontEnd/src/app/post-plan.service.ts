@@ -32,7 +32,11 @@ export class PostPlanService {
       var token = 'token ' + user.token;
       this.http
         .post<PostPlan>(url, JSON.stringify(this.postPlan), {
-          headers: new HttpHeaders({ 'Authorization': token })
+          headers: new HttpHeaders({
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          })
         }).toPromise().then()
     })
 

@@ -74,7 +74,7 @@ export class PostDialogComponent implements OnInit {
     if (files && file) {
       var binaryReader = new FileReader();
       binaryReader.onload = this._handleReaderLoaded.bind(this);
-      binaryReader.readAsBinaryString(file);
+      binaryReader.readAsDataURL(file);
     }
   }
 }
