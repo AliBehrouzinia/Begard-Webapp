@@ -282,7 +282,7 @@ class SearchPostView(generics.ListAPIView):
 
 
 class CommentsOnPostView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, LikeAndCommentOnPostPermission]
     serializer_class = serializers.CreateCommentSerializer
 
     def get(self, request, *args, **kwargs):
@@ -340,7 +340,7 @@ class FollowersView(generics.ListAPIView):
 
 
 class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, LikeAndCommentOnPostPermission]
     serializer_class = serializers.CreateLikeSerializer
 
     def get(self, request, *args, **kwargs):
