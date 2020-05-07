@@ -53,6 +53,7 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
 
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
+import { TopPlannersComponent } from './top-planners/top-planners.component';
 
 @NgModule({
    declarations: [
@@ -71,7 +72,8 @@ import { LocationPostService } from './location-post/location-post.service';
       PostDialogComponent,
       LocationPostComponent,
       CommentComponent,
-      LocationCarouselComponent
+      LocationCarouselComponent,
+      TopPlannersComponent
 
    ],
    imports: [
