@@ -11,9 +11,9 @@
         <mat-card *ngFor="let comment of comments" class="comment" >
             <div style="display: flex;">
               <div matRipple mat-card-avatar class="example-header-image"></div>
-              <div style="margin-left: 10px;margin-top: 10px;"><b>David Beckham</b> says :</div>
+              <div style="margin-left: 10px;margin-top: 10px;"><b>{{comment.user_name}}</b> says :</div>
             </div>
-            <mat-card-content style="margin-left: 50px;">{{comment.description}}</mat-card-content>
+            <mat-card-content style="margin-left: 50px;">{{comment.content}}</mat-card-content>
             
         </mat-card>
         
