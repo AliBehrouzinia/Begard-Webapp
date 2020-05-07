@@ -522,7 +522,7 @@ class LocationPostView(generics.CreateAPIView):
             return serializer.save()
 
 
-class TopPlanners(generics.ListAPIView):
+class TopPlannerView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = TopPostSerializer
 
