@@ -31,7 +31,7 @@ class SuggestListView(generics.ListAPIView):
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
-        city = models.City.objects.get(pk=city_id)
+        city = get_object_or_404(models.City, pk=city_id)
         queryset = list(models.Restaurant.objects.filter(city=city).order_by('-rating')[0:3])
         queryset += models.RecreationalPlace.objects.filter(city=city).order_by('-rating')[0:3]
         queryset += models.Museum.objects.filter(city=city).order_by('-rating')[0:3]
@@ -43,8 +43,8 @@ class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
     permission_classes = [AllowAny]
 
-    def get(self, request, id):
-        dest_city = models.City.objects.get(pk=id)
+    def get(self, request):
+        dest_city = models.City.objects.get(pk=self.kwargs.get('id'))
         start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
         finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
 
@@ -112,7 +112,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         plan_id = self.kwargs.get('id')
-        plan = models.Plan.objects.get(pk=plan_id)
+        plan = get_object_or_404(models.Plan, pk=plan_id)
 
         plan_details = serializers.PlanSerializer(instance=plan).data
         plan_details.pop('user')
@@ -129,7 +129,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         plan_items = self.request.data['plan_items']
         plan_id = self.kwargs.get('id')
-        plan = models.Plan.objects.get(id=plan_id)
+        plan = get_object_or_404(models.Plan, id=plan_id)
 
         plan_detail = self.request.data
         plan_detail['id'] = plan_id
@@ -152,7 +152,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
             else:
                 plan_items_update_data.append(plan_item)
                 plan_items_update_id.append(plan_item_id)
-                instances.append(models.PlanItem.objects.get(pk=plan_item_id))
+                instances.append(get_object_or_404(models.PlanItem, pk=plan_item_id))
 
         serializer = serializers.PatchPlanItemSerializer(instance=instances,
                                                          data=plan_items_update_data, many=True)
@@ -304,11 +304,13 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         data = self.request.data
         data['post'] = self.kwargs.get('id')
         data['user'] = self.request.user.id
+        post = get_object_or_404(models.Post, id=data['post'])
+
         comment_serializer = serializers.CreateCommentSerializer(data=data)
         if comment_serializer.is_valid():
             comment = comment_serializer.save()
             comment_data = serializers.CreateCommentSerializer(instance=comment).data
-            user = models.BegardUser.objects.get(id=comment_data['user'])
+            user = get_object_or_404(models.BegardUser, id=comment_data['user'])
             comment_data['user_name'] = user.email
             comment_data['user_profile_img'] = user.profile_img.url
             return Response(data=comment_data, status=status.HTTP_201_CREATED)
@@ -360,10 +362,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
             'post': self.kwargs.get('id')
         }
 
-        post = models.Post.objects.filter(id=data['post'])
-        if not post.exists():
-            return Response({"error": "Does not exist post with this id."},
-                            status.HTTP_400_BAD_REQUEST)
+        post = get_object_or_404(models.Post, id=data['post'])
 
         exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
         if exist_like:
@@ -381,7 +380,9 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
             'user': self.request.user.id,
             'post': self.kwargs.get('id')
         }
-        like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post']))
+        post = get_object_or_404(models.Post, id=data['post'])
+
+        like = models.Like.objects.filter(Q(user=data['user']) & Q(post=post.id))
         if like.exists():
             like.delete()
 
@@ -408,12 +409,9 @@ class FollowRequestView(generics.ListCreateAPIView):
             return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        request_to_user = models.BegardUser.objects.filter(id=data['request_to'])
-        if not request_to_user.exists():
-            return Response({"error": "bad request. 'request_to' user does not exists."},
-                            status.HTTP_400_BAD_REQUEST)
+        request_to_user = get_object_or_404(models.BegardUser, id=data['request_to'])
 
-        if request_to_user[0].is_public:
+        if request_to_user.is_public:
             follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
             if serializer.is_valid(True):
@@ -433,12 +431,7 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, ActionOnFollowRequestPermission]
 
     def get(self, request, *args, **kwargs):
-        follow_request = models.FollowRequest.objects.filter(id=self.kwargs.get('id'))
-        if not follow_request.exists():
-            return Response(data={"error: ": "Does not exists follow request with this id."},
-                            status=status.HTTP_400_BAD_REQUEST)
-        else:
-            follow_request = follow_request[0]
+        follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
 
         self.check_object_permissions(request, follow_request)
 
@@ -459,13 +452,7 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        follow_request = models.FollowRequest.objects.filter(id=self.kwargs.get('id'))
-
-        if not follow_request.exists():
-            return Response({"error: ": "Does not exists follow request with this id."},
-                            status.HTTP_400_BAD_REQUEST)
-        else:
-            follow_request = follow_request[0]
+        follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
 
         self.check_object_permissions(request, follow_request)
         follow_request.delete()
