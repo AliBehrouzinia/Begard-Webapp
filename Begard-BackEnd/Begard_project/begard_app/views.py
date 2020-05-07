@@ -510,3 +510,30 @@ class LocationPostView(generics.CreateAPIView):
         serializer = LocationPostSerializer(data=data)
         if serializer.is_valid(True):
             return serializer.save()
+
+
+class ProfileDetailsView(generics.RetrieveAPIView):
+    """Get profile details of a user"""
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        source_user = self.request.user
+        target_user = get_object_or_404(models.BegardUser, id=self.kwargs.get('id'))
+
+        data = dict()
+        data['username'] = target_user.email
+        data['profile_image'] = target_user.profile_img.url
+        data['posts_count'] = models.Post.objects.filter(user=target_user).count()
+        data['followings_count'] = models.UserFollowing.objects.filter(user_id=target_user).count()
+        data['followers_count'] = models.UserFollowing.objects.filter(following_user_id=target_user).count()
+
+        if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+            following_state = 'Following'
+        elif models.FollowRequest.objects.filter(request_from=source_user, request_to=target_user).exists():
+            following_state = 'Requested'
+        else:
+            following_state = 'Follow'
+
+        data['following_state'] = following_state
+
+        return Response(data=data, status=status.HTTP_200_OK)
