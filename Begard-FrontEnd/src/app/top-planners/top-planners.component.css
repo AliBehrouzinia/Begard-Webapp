@@ -1,6 +1,6 @@
 .example-card {
     height: auto;
-    margin-top: 18px;
+    margin-top: 13px;
   }
   
   .title{
@@ -29,10 +29,22 @@
   
   .name{
     font-size:18px;
-    margin-top:13px;
+    margin-top:5px;
   }
 
   .trip{
     font-size:11px;
     margin-top:0px;
   }
+
+  .hr{
+    background-color: #d2cece;
+
+height: 1px;
+
+width: 171px;
+
+margin-top: 2px;
+
+margin-bottom: 0px;
+}
