@@ -14,7 +14,7 @@ from .permissions import *
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
-    ImageSerializer
+    ImageSerializer, TopPlannerSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -520,3 +520,27 @@ class LocationPostView(generics.CreateAPIView):
         serializer = LocationPostSerializer(data=data)
         if serializer.is_valid(True):
             return serializer.save()
+
+
+class TopPlanners(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = TopPostSerializer
+
+    def get_queryset(self):
+        pass
+
+    def get(self, request, *args, **kwargs):
+        users = models.BegardUser.objects.filter(is_public=True)
+        for person in users:
+            posts = models.Post.objects.filter(Q(user=person))
+            sum_of_rates = 0
+            for item in posts:
+                sum_of_rates += item.rate
+            # person.average_rate = sum_of_rates/len(posts)
+            if len(posts) != 0:
+                person.average_rate = sum_of_rates / len(posts)
+            else:
+                person.average_rate = 0
+        users.order_by('average_rate')
+        print(users)
+        return Response(status=status.HTTP_200_OK)
