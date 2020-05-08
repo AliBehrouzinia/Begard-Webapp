@@ -239,5 +239,5 @@ class ImageSerializer(serializers.ModelSerializer):
 class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
-        fields = '__all__'
+        exclude = ['password', 'user_permissions', 'groups']
 
