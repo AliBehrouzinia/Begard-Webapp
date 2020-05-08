@@ -21,4 +21,5 @@ urlpatterns = [
     path('top-posts/', views.TopPostsView.as_view()),
     path('location-post/', views.LocationPostView.as_view()),
     path('profile/<int:id>/header/', views.ProfileDetailsView.as_view()),
+    path('profile/<int:id>/posts/', views.UserPostsView.as_view()),
 ]
