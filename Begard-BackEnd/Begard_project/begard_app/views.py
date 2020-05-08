@@ -14,7 +14,7 @@ from .permissions import *
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
-    ImageSerializer
+    ImageSerializer, TopPlannerSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -209,7 +209,6 @@ class AdvancedSearch(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         all_result = self.get_queryset(request.data)
-        print(all_result)
         return Response()
 
     def get_queryset(self, data):
@@ -510,3 +509,30 @@ class LocationPostView(generics.CreateAPIView):
         serializer = LocationPostSerializer(data=data)
         if serializer.is_valid(True):
             return serializer.save()
+
+
+class TopPlannerView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = TopPlannerSerializer
+
+    def get_queryset(self):
+        user_auth = self.request.user.id
+        followers = models.UserFollowing.objects.filter(user_id=user_auth)
+        followers_list = list(followers)
+        following_id = []
+        for item in followers_list:
+            following_id.append(item.following_user_id.id)
+        users = models.BegardUser.objects.exclude(Q(pk__in=following_id) | Q(pk=user_auth))
+        users_list = list(users)
+        for person in users_list:
+            posts = models.Post.objects.filter(Q(user_id__in=users) & Q(user_id=person.id))
+            sum_of_rates = 0
+            for item1 in posts:
+                sum_of_rates += item1.rate
+            if len(posts) != 0:
+                person.average_rate = sum_of_rates / len(posts)
+            else:
+                person.average_rate = 0
+        sorted_list = sorted(users_list, key=lambda x: x.average_rate)
+        sorted_list.reverse()
+        return sorted_list
