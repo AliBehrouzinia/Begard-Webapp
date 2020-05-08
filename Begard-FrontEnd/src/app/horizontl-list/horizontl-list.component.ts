@@ -47,8 +47,6 @@ export class HorizontlListComponent implements OnInit {
   }
 
   setItems(po: PlanOverView[]) {
-    //this.carouselTileItems = po;
     for (let i = 0; i < po.length; i++) { this.carouselTileItems.push(po[i]); }
-    console.log("nowww");
   }
 }
