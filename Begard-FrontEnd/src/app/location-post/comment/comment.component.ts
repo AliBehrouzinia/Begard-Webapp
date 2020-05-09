@@ -1,6 +1,15 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
-interface Comment{
-  description:string
+import { Component, OnInit, Input } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from 'src/app/auth.service';
+import { take, exhaustMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+export interface Comment {
+  id: number,
+  content: string,
+  user: number,
+  post: number,
+  user_name: string,
+  user_profile_img: string
 }
 
 
@@ -9,27 +18,39 @@ interface Comment{
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent implements OnInit , OnChanges {
+export class CommentComponent implements OnInit {
+  constructor(private http: HttpClient,
+    private authService: AuthService) { }
 
-  constructor() { }
-  ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
-    if(changes['postId']){
-      this.post=this.postId;
-    }
+  @Input() postId: number;
+
+  updateComment(comment : Comment) {
+    this.comments.push(comment);
+    
   }
 
-  
-    
-  @Input() postId: number;
-  public post:number;
+  public comments: Comment[] = [];
 
   ngOnInit(): void {
-
-
+    this.getComments(this.postId).subscribe(resdata => {
+      for (var i = 0; i < resdata.length; i++) {
+        this.comments.push(resdata[i]);
+      }
+    });
   }
-  public comments:Comment[]=[
-    {description: "dfkjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"},
-    {description:"dfjdkfjldfj;lsjdflsdjfldsjfldjflasjdfl;sjdf;ldjfs;ldjsf;lsjdflsdjf"}
-  ];
+  
+  private getComments(postId: number) {
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      var url = "http://127.0.0.1:8000/posts/" + postId + "/comments/";
+      return this.http.get<Comment[]>(url,
+        {
+          headers: new HttpHeaders({ 'Authorization': token })
+        }
+      );
+    }));
+  }
+
+
 
 }

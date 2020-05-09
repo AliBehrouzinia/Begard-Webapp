@@ -14,7 +14,7 @@ from .permissions import *
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
-    ImageSerializer
+    ImageSerializer, TopPlannerSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -31,7 +31,7 @@ class SuggestListView(generics.ListAPIView):
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
-        city = models.City.objects.get(pk=city_id)
+        city = get_object_or_404(models.City, pk=city_id)
         queryset = list(models.Restaurant.objects.filter(city=city).order_by('-rating')[0:3])
         queryset += models.RecreationalPlace.objects.filter(city=city).order_by('-rating')[0:3]
         queryset += models.Museum.objects.filter(city=city).order_by('-rating')[0:3]
@@ -43,8 +43,8 @@ class SuggestPlanView(APIView):
     """Get a plan suggestion to user"""
     permission_classes = [AllowAny]
 
-    def get(self, request, id):
-        dest_city = models.City.objects.get(pk=id)
+    def get(self, request):
+        dest_city = models.City.objects.get(pk=self.kwargs.get('id'))
         start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
         finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
 
@@ -72,14 +72,14 @@ class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPI
 
     def post(self, request, *args, **kwargs):
         plan = self.create_plan(request.data)
+        self.create_plan_items(request.data['plan_items'], plan.id)
         post = self.save_post(request.data, plan.id)
         post_id = post.pk
-        images = dict(request.data.lists())['image']
-        for image in images:
-            modified_data = {'post': post_id, 'image': image}
-            serializer = ImageSerializer(data=modified_data)
-            if serializer.is_valid(True):
-                serializer.save()
+        image = request.data['image']
+        modified_data = {'post': post_id, 'image': image}
+        serializer = ImageSerializer(data=modified_data)
+        if serializer.is_valid(True):
+            serializer.save()
         return Response(status=status.HTTP_200_OK)
 
     def create_plan_items(self, plan_items, plan_id):
@@ -113,7 +113,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         plan_id = self.kwargs.get('id')
-        plan = models.Plan.objects.get(pk=plan_id)
+        plan = get_object_or_404(models.Plan, pk=plan_id)
 
         plan_details = serializers.PlanSerializer(instance=plan).data
         plan_details.pop('user')
@@ -130,7 +130,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         plan_items = self.request.data['plan_items']
         plan_id = self.kwargs.get('id')
-        plan = models.Plan.objects.get(id=plan_id)
+        plan = get_object_or_404(models.Plan, id=plan_id)
 
         plan_detail = self.request.data
         plan_detail['id'] = plan_id
@@ -153,7 +153,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
             else:
                 plan_items_update_data.append(plan_item)
                 plan_items_update_id.append(plan_item_id)
-                instances.append(models.PlanItem.objects.get(pk=plan_item_id))
+                instances.append(get_object_or_404(models.PlanItem, pk=plan_item_id))
 
         serializer = serializers.PatchPlanItemSerializer(instance=instances,
                                                          data=plan_items_update_data, many=True)
@@ -179,7 +179,7 @@ class GlobalSearchList(generics.ListAPIView):
 
     def get_queryset(self):
         city_id = self.kwargs.get('id')
-        city = models.City.objects.get(pk=city_id)
+        city = get_object_or_404(models.City, pk=city_id)
         query = self.request.query_params.get('query', None)
         restaurants = models.Restaurant.objects.filter(Q(name__icontains=query) & Q(city=city))
         museums = models.Museum.objects.filter(Q(name__icontains=query) & Q(city=city))
@@ -209,7 +209,6 @@ class AdvancedSearch(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         all_result = self.get_queryset(request.data)
-        print(all_result)
         return Response()
 
     def get_queryset(self, data):
@@ -246,15 +245,17 @@ class ShowPostView(generics.ListAPIView):
         user = self.request.user.id
         following_users = [item['following_user_id'] for item in
                            models.UserFollowing.objects.filter(user_id=user).values('following_user_id')]
+        if not self.request.query_params.get('page').isdigit():
+            return Response({"error": "the page number is not correct."}, status.HTTP_400_BAD_REQUEST)
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__in=following_users) |
                                            Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
                                                                                                * 20:page_number * 20]
         posts_data = serializers.ShowPostSerializer(instance=posts, many=True).data
         for data in posts_data:
-            data['destination_city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
-            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
-            data['user_profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
+            data['destination_city'] = get_object_or_404(models.Plan, id=data['plan_id']).destination_city.name
+            data['user_name'] = get_object_or_404(models.BegardUser, id=data['user']).email
+            data['user_profile_image'] = get_object_or_404(models.BegardUser, id=data['user']).profile_img.url
             data['number_of_likes'] = models.Like.objects.filter(post=data['id']).count()
             data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
             images = models.Image.objects.filter(post=data['id'])
@@ -271,18 +272,23 @@ class SearchPostView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ShowPostSerializer
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         user = self.request.user.id
         user_following = models.UserFollowing.objects.filter(user_id=user)
+        if not (self.request.query_params.get('city')).isdigit():
+            return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
         city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
-        queryset = models.Post.objects.filter((Q(plan__in=plans) & Q(user__id__in=user_following)) |
-                                              (Q(plan__in=plans) & Q(user__is_public=True)))
-        return queryset
+        queryset = models.Post.objects.filter((Q(plan_id__in=plans) & Q(user__id__in=user_following)) |
+                                              (Q(plan_id__in=plans) & Q(user__is_public=True)))
+        return Response(status=status.HTTP_200_OK)
+
+    def get_queryset(self):
+        pass
 
 
 class CommentsOnPostView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, LikeAndCommentOnPostPermission]
     serializer_class = serializers.CreateCommentSerializer
 
     def get(self, request, *args, **kwargs):
@@ -300,11 +306,13 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         data = self.request.data
         data['post'] = self.kwargs.get('id')
         data['user'] = self.request.user.id
+        post = get_object_or_404(models.Post, id=data['post'])
+
         comment_serializer = serializers.CreateCommentSerializer(data=data)
         if comment_serializer.is_valid():
             comment = comment_serializer.save()
             comment_data = serializers.CreateCommentSerializer(instance=comment).data
-            user = models.BegardUser.objects.get(id=comment_data['user'])
+            user = get_object_or_404(models.BegardUser, id=comment_data['user'])
             comment_data['user_name'] = user.email
             comment_data['user_profile_img'] = user.profile_img.url
             return Response(data=comment_data, status=status.HTTP_201_CREATED)
@@ -340,7 +348,7 @@ class FollowersView(generics.ListAPIView):
 
 
 class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, LikeAndCommentOnPostPermission]
     serializer_class = serializers.CreateLikeSerializer
 
     def get(self, request, *args, **kwargs):
@@ -355,9 +363,13 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
             'user': self.request.user.id,
             'post': self.kwargs.get('id')
         }
+
+        post = get_object_or_404(models.Post, id=data['post'])
+
         exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
-        if exist_like is True:
-            return Response(status=status.HTTP_200_OK)
+        if exist_like:
+            return Response(data={"warning": "this post is liked by you.now you are trying to like again."},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
 
         serializer = serializers.CreateLikeSerializer(data=data)
         if serializer.is_valid(True):
@@ -370,7 +382,9 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
             'user': self.request.user.id,
             'post': self.kwargs.get('id')
         }
-        like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post']))
+        post = get_object_or_404(models.Post, id=data['post'])
+
+        like = models.Like.objects.filter(Q(user=data['user']) & Q(post=post.id))
         if like.exists():
             like.delete()
 
@@ -388,26 +402,30 @@ class FollowRequestView(generics.ListCreateAPIView):
         data = self.request.data
         data['request_from'] = self.request.user.id
 
+        if type(data['request_to']) is not int:
+            return Response({"error": "data is not in valid format."},
+                            status.HTTP_400_BAD_REQUEST)
+
         following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
         if following_users.filter(following_user_id=data['request_to']).exists():
             return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                            status=status.HTTP_400_BAD_REQUEST)
 
-        if models.BegardUser.objects.get(id=data['request_to']).is_public:
+        request_to_user = get_object_or_404(models.BegardUser, id=data['request_to'])
+
+        if request_to_user.is_public:
             follow_user_data = {"user_id": data['request_from'], "following_user_id": data['request_to']}
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
             if serializer.is_valid(True):
                 serializer.save()
+                return Response(data={"status": "Followed"}, status=status.HTTP_201_CREATED)
+        else:
+            serializer = serializers.FollowRequestSerializer(data=data)
+            if serializer.is_valid(True):
+                serializer.save()
+                return Response(data={"status": "Requested"}, status=status.HTTP_201_CREATED)
 
-            return Response(data={"status": "Followed"},
-                            status=status.HTTP_201_CREATED)
-
-        serializer = serializers.FollowRequestSerializer(data=data)
-        if serializer.is_valid(True):
-            serializer.save()
-
-        return Response(data={"status": "Requested"},
-                        status=status.HTTP_201_CREATED)
+        return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
@@ -415,28 +433,32 @@ class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, ActionOnFollowRequestPermission]
 
     def get(self, request, *args, **kwargs):
-        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
+        follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
+
+        self.check_object_permissions(request, follow_request)
+
         action = self.request.query_params.get('action')
 
         if not ((action == 'accept') or (action == 'reject')):
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error: ": "you need 'action' query params with 'accept' or 'reject' value."},
+                            status.HTTP_400_BAD_REQUEST)
 
         if action == 'accept':
             data = {'user_id': follow_request.request_from_id, 'following_user_id': follow_request.request_to_id}
             serializer = serializers.FollowingsSerializer(data=data)
             if serializer.is_valid(True):
                 serializer.save()
-
-        follow_request.delete()
+        else:
+            follow_request.delete()
 
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
-        follow_request = models.FollowRequest.objects.get(id=self.kwargs.get('id'))
-        if not (follow_request.request_from_id == self.request.user.id):
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
 
+        self.check_object_permissions(request, follow_request)
         follow_request.delete()
+
         return Response(status=status.HTTP_200_OK)
 
 
@@ -446,17 +468,19 @@ class TopPostsView(generics.ListAPIView):
 
     def get_queryset(self):
         pass
-    
+
     def get(self, request, *args, **kwargs):
+        if not (self.request.query_params.get('page')).isdigit():
+            return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[
                 (page_number - 1) * 5:page_number * 5]
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
-            data['city'] = models.Plan.objects.get(id=data['plan_id']).destination_city.name
-            data['user_name'] = models.BegardUser.objects.get(id=data['user']).email
-            data['profile_image'] = models.BegardUser.objects.get(id=data['user']).profile_img.url
-            data['cover'] = models.Image.objects.get(post__pk=data['id']).image.url
+            data['city'] = get_object_or_404(models.Plan, id=data['plan_id']).destination_city.name
+            data['user_name'] = get_object_or_404(models.BegardUser, id=data['user']).email
+            data['profile_image'] = get_object_or_404(models.BegardUser, id=data['user']).profile_img.url
+            data['cover'] = get_object_or_404(models.Image, post__pk=data['id']).image.url
         return Response(posts_data, status=status.HTTP_200_OK)
 
 
@@ -465,11 +489,11 @@ class LocationPostView(generics.CreateAPIView):
     serializer_class = LocationPostSerializer
 
     def post(self, request, *args, **kwargs):
-        images = dict(request.data.lists())['image']
+        images = request.data['image']
         post = self.save_post(request.data)
         post_id = post.pk
-        for img_name in images:
-            modified_data = self.modify_input_for_multiple_files(img_name, post_id)
+        for image in images:
+            modified_data = self.modify_input_for_multiple_files(image['image'], post_id)
             serializer = ImageSerializer(data=modified_data)
             if serializer.is_valid(True):
                 serializer.save()
@@ -485,3 +509,102 @@ class LocationPostView(generics.CreateAPIView):
         serializer = LocationPostSerializer(data=data)
         if serializer.is_valid(True):
             return serializer.save()
+
+
+<<<<<<< HEAD
+class ProfileDetailsView(generics.RetrieveAPIView):
+    """Get profile details of a user"""
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        source_user = self.request.user
+        target_user = get_object_or_404(models.BegardUser, id=self.kwargs.get('id'))
+
+        data = dict()
+        data['username'] = target_user.email
+        data['profile_image'] = target_user.profile_img.url
+        data['posts_count'] = models.Post.objects.filter(user=target_user).count()
+        data['followings_count'] = models.UserFollowing.objects.filter(user_id=target_user).count()
+        data['followers_count'] = models.UserFollowing.objects.filter(following_user_id=target_user).count()
+
+        if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+            following_state = 'Following'
+        elif models.FollowRequest.objects.filter(request_from=source_user, request_to=target_user).exists():
+            following_state = 'Requested'
+        else:
+            following_state = 'Follow'
+
+        data['following_state'] = following_state
+
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class UserPostsView(generics.ListAPIView):
+    """List of posts of a user"""
+    serializer_class = serializers.ShowPostSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        target_user = get_object_or_404(models.BegardUser, id=self.kwargs.get('id'))
+        source_user = self.request.user
+
+        if target_user.is_public:
+            return models.Post.objects.filter(user=target_user)
+
+        if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+            return models.Post.objects.filter(user=target_user)
+
+        return None
+
+    def get(self, request, *args, **kwargs):
+        target_user = get_object_or_404(models.BegardUser, id=self.kwargs.get('id'))
+        source_user = self.request.user
+
+        self.queryset = self.get_queryset()
+
+        posts = list(self.queryset)
+        serializer_data = ShowPostSerializer(instance=self.queryset, many=True).data
+
+        for i in range(len(self.queryset)):
+            serializer_data[i]['user_name'] = posts[i].user.email
+            serializer_data[i]['user_profile_img'] = posts[i].user.profile_img.url
+            serializer_data[i]['destination_city'] = posts[i].plan_id.destination_city.name
+            serializer_data[i]['number_of_like'] = models.Like.objects.filter(post=posts[i].id).count()
+            serializer_data[i]['is_liked'] = models.Like.objects.filter(post=posts[i].id, user=source_user).exists()
+
+            images = models.Image.objects.filter(post=posts[i].id)
+            serializer_data[i]['images'] = [image.image.url for image in images]
+
+            if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+                serializer_data[i]['following_state'] = 'Following'
+            else:
+                serializer_data[i]['following_state'] = 'Follow'
+
+        return Response(serializer_data, status.HTTP_200_OK)
+=======
+class TopPlannerView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = TopPlannerSerializer
+
+    def get_queryset(self):
+        user_auth = self.request.user.id
+        followers = models.UserFollowing.objects.filter(user_id=user_auth)
+        followers_list = list(followers)
+        following_id = []
+        for item in followers_list:
+            following_id.append(item.following_user_id.id)
+        users = models.BegardUser.objects.exclude(Q(pk__in=following_id) | Q(pk=user_auth))
+        users_list = list(users)
+        for person in users_list:
+            posts = models.Post.objects.filter(Q(user_id__in=users) & Q(user_id=person.id))
+            sum_of_rates = 0
+            for item1 in posts:
+                sum_of_rates += item1.rate
+            if len(posts) != 0:
+                person.average_rate = sum_of_rates / len(posts)
+            else:
+                person.average_rate = 0
+        sorted_list = sorted(users_list, key=lambda x: x.average_rate)
+        sorted_list.reverse()
+        return sorted_list
+>>>>>>> develop

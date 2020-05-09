@@ -51,9 +51,13 @@ import { LocationPostComponent } from './location-post/location-post.component';
 import { CommentComponent } from './location-post/comment/comment.component';
 import { LocationCarouselComponent } from './location-post/location-carousel/location-carousel.component';
 
-import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
 import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile.component';
+import { TopPlannersComponent } from './top-planners/top-planners.component';
+
+import { TopPlannersService } from './top-planners.service';
+
 
 @NgModule({
    declarations: [
@@ -74,7 +78,8 @@ import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile
       CommentComponent,
       LocationCarouselComponent,
       ProfileComponent,
-      DialogOverviewExampleDialog
+      DialogOverviewExampleDialog,
+      TopPlannersComponent
 
    ],
    imports: [
@@ -100,9 +105,9 @@ import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile
       NguCarouselModule,
       TabModule,
       MDBBootstrapModule
-      
+
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService,LocationPostService],
+   providers: [DataStorageService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],
