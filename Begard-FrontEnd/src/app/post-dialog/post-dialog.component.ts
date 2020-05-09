@@ -37,8 +37,6 @@ export class PostDialogComponent implements OnInit {
   }
 
   onPost() {
-    console.log("this is description: " + this.description);
-    console.log("this is photo: " + this.coverBinaryString);
     this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
     this.dialogRef.close();
   }
@@ -75,9 +73,6 @@ export class PostDialogComponent implements OnInit {
   }
 
   updateSaveButtonDisabled(){
-    console.log("update " + this.description + " \n" +this.coverBinaryString);
-    console.log("update " + this.description.length + " \n" +this.coverBinaryString.length);
-
     if (this.description != undefined && this.coverBinaryString != undefined){
       if (this.description.length > 0 && this.coverBinaryString.length > 0){
         this.saveDisabled = false;
@@ -92,7 +87,6 @@ export class PostDialogComponent implements OnInit {
   }
 
   onChange(e){
-      console.log("val : " + e.target.value);
       this.updateSaveButtonDisabled;
 
   }

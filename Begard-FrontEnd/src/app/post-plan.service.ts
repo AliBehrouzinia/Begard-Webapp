@@ -18,10 +18,8 @@ export class PostPlanService {
   }
 
   setPostPlanDetail(planDetail: PlanDetail) {
-    console.log("planDetail : " + JSON.stringify(planDetail));
     this.postPlan.setDescription(planDetail.description + "");
     this.postPlan.setImage(planDetail.photo + "");
-    console.log("posting data : " + JSON.stringify(this.postPlan))
     this.sendPostPlan();
   }
 
