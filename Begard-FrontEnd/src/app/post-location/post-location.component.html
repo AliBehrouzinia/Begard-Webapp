@@ -1,0 +1,37 @@
+<div class="example-card">
+	<div style="display:flex;">
+    <div style="width:30%;display:flex;">
+		<div mat-card-avatar class="example-header-image"></div>
+		<div style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px">Ahmad Ahmadi</div>
+    </div>
+    <div style=";float:right;width:70%;display:flex;justify-content:end">
+		<mat-form-field style="width:auto;float:right">
+			<mat-label>plan</mat-label>
+			<mat-select>
+				<mat-option *ngFor="let food of foods" [value]="food.value">
+					{{food.viewValue}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
+			<mat-label>location</mat-label>
+			<mat-select>
+				<mat-option *ngFor="let food of foods" [value]="food.value">
+					{{food.viewValue}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+    </div>
+	</div>
+
+  <form class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Leave a comment</mat-label>
+    <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+  </mat-form-field>
+</form>
+
+
+	<button mat-raised-button color='primary' style="float:right ;">post</button>
+
+</div>

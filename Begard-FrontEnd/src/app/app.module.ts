@@ -56,6 +56,7 @@ import { LocationPostService } from './location-post/location-post.service';
 import { TopPlannersComponent } from './top-planners/top-planners.component';
 
 import { TopPlannersService } from './top-planners.service';
+import { PostLocationComponent } from './post-location/post-location.component';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { TopPlannersService } from './top-planners.service';
       LocationPostComponent,
       CommentComponent,
       LocationCarouselComponent,
-      TopPlannersComponent
+      TopPlannersComponent,
+      PostLocationComponent
 
    ],
    imports: [
