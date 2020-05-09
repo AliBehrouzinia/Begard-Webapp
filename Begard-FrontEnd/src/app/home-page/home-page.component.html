@@ -20,16 +20,15 @@
        <mat-card class="side-section"> 
            <mat-card-title  style="display:flex;justify-content: center; width: 75%;">
                 Top Planners
-           </mat-card-title>
-           <mat-card-content style="margin-top: 40px;">
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-        </mat-card-content>
+            </mat-card-title>
+            <mat-card-content style="margin-top: 40px;">
+                <div *ngFor="let tp of topPlanners;">
+                    <app-top-planners [username]="tp.username" [email]="tp.email" [profileImg]="tp.profile_img"
+                        [rate]="tp.average_rate" [isPublic]="tp.is_public"></app-top-planners>
+                </div>
+            </mat-card-content>
         </mat-card>
-   </div>
+    </div>
 </div>
 
 <div style="display:flex; justify-content: center; ">
