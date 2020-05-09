@@ -23,7 +23,6 @@ export class TopPlannersService {
       })
       .pipe(
         map(res => {
-          console.log("topplanners : " + res.body)
           return res.body;
         })
       );
