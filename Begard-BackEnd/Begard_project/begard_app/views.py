@@ -14,7 +14,7 @@ from .permissions import *
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
-    ImageSerializer
+    ImageSerializer, UserPlansSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -581,3 +581,14 @@ class UserPostsView(generics.ListAPIView):
                 serializer_data[i]['following_state'] = 'Follow'
 
         return Response(serializer_data, status.HTTP_200_OK)
+
+
+class UserPlansView(generics.ListAPIView):
+    serializer_class = UserPlansSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('id')
+        plans = models.Plan.objects.filter(user_id=user_id)
+        print(1)
+        return plans

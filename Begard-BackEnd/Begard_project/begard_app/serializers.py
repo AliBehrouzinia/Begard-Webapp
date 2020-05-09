@@ -234,3 +234,9 @@ class ImageSerializer(serializers.ModelSerializer):
         image = validated_data.pop('image')
         data = validated_data.pop('post')
         return Image.objects.create(post=data, image=image)
+
+
+class UserPlansSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['__all__']
