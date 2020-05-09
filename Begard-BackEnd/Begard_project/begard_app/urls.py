@@ -20,10 +20,7 @@ urlpatterns = [
     path('follow-request/<int:id>/', views.ActionOnFollowRequestView.as_view()),
     path('top-posts/', views.TopPostsView.as_view()),
     path('location-post/', views.LocationPostView.as_view()),
-<<<<<<< HEAD
     path('profile/<int:id>/header/', views.ProfileDetailsView.as_view()),
     path('profile/<int:id>/posts/', views.UserPostsView.as_view()),
-=======
     path('top-planners/', views.TopPlannerView.as_view()),
->>>>>>> develop
 ]
