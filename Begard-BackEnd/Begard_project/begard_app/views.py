@@ -511,7 +511,6 @@ class LocationPostView(generics.CreateAPIView):
             return serializer.save()
 
 
-<<<<<<< HEAD
 class ProfileDetailsView(generics.RetrieveAPIView):
     """Get profile details of a user"""
     permission_classes = [AllowAny]
@@ -581,7 +580,6 @@ class UserPostsView(generics.ListAPIView):
                 serializer_data[i]['following_state'] = 'Follow'
 
         return Response(serializer_data, status.HTTP_200_OK)
-=======
 class TopPlannerView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = TopPlannerSerializer
@@ -607,4 +605,3 @@ class TopPlannerView(generics.ListAPIView):
         sorted_list = sorted(users_list, key=lambda x: x.average_rate)
         sorted_list.reverse()
         return sorted_list
->>>>>>> develop
