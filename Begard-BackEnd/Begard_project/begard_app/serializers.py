@@ -239,4 +239,4 @@ class ImageSerializer(serializers.ModelSerializer):
 class UserPlansSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = ['__all__']
+        fields = ['destination_city', 'creation_date', 'cover', 'user']

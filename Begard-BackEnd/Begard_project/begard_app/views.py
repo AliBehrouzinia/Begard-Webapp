@@ -588,7 +588,13 @@ class UserPlansView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user_id = self.kwargs.get('id')
-        plans = models.Plan.objects.filter(user_id=user_id)
-        print(1)
+        user_pk = self.kwargs.get('id')
+        self_user = self.request.user.id
+        followers = models.UserFollowing.objects.filter(user_id=self_user)
+        followers_list = list(followers)
+        following_id = []
+        for item in followers_list:
+            following_id.append(item.following_user_id.id)
+        plans = models.Plan.objects.filter(Q(user_id__in=following_id) & Q(user_id=user_pk) |
+                                           Q(user__is_public=True) & Q(user_id=user_pk))
         return plans
