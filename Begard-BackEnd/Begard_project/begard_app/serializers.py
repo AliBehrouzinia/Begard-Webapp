@@ -234,3 +234,10 @@ class ImageSerializer(serializers.ModelSerializer):
         image = validated_data.pop('image')
         data = validated_data.pop('post')
         return Image.objects.create(post=data, image=image)
+
+
+class TopPlannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BegardUser
+        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
