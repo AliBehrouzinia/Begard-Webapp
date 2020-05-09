@@ -1,44 +1,45 @@
 <div class="example-card">
 	<div style="display:flex;">
-    <div style="width:30%;display:flex;">
-		<div mat-card-avatar class="example-header-image"></div>
-		<div style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px">Ahmad Ahmadi</div>
-    </div>
-    <div style=";float:right;width:70%;display:flex;justify-content:end">
-		<mat-form-field style="width:auto;float:right">
-			<mat-label>plan</mat-label>
-			<mat-select>
-				<mat-option *ngFor="let food of foods" [value]="food.value">
-					{{food.viewValue}}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-		<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
-			<mat-label>location</mat-label>
-			<mat-select>
-				<mat-option *ngFor="let food of foods" [value]="food.value">
-					{{food.viewValue}}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-    </div>
+		<div style="width:30%;display:flex;">
+			<div mat-card-avatar class="example-header-image"></div>
+			<div style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px">Ahmad Ahmadi</div>
+		</div>
+		<div style="float:right;width:70%;display:flex;justify-content:end">
+			<mat-form-field style="width:auto;float:right">
+				<mat-label>plan</mat-label>
+				<mat-select>
+					<mat-option>
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
+				<mat-label>location</mat-label>
+				<mat-select>
+					<mat-option>
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
 	</div>
 
-  <form class="example-form">
-  <mat-form-field class="example-full-width">
-    <mat-label>Leave a comment</mat-label>
-    <textarea matInput></textarea>
-  </mat-form-field>
-</form>
+	<form class="example-form">
+		<mat-form-field class="example-full-width">
+			<mat-label>Leave a comment</mat-label>
+			<textarea matInput></textarea>
+		</mat-form-field>
+	</form>
 
-<mat-card>
-<div *ngFor="let item of items" style="display:inline-flex;margin:4px">
-  <img [src]="item" style="width:40px">
+	
+	<mat-card style="display:flex">
+		<div *ngFor="let img of images" style="display:inline-flex;margin:5px">
+			<img [src]="img" style="width:50px">
+		</div>
+		<input class="input-file" #file type="file" accept='image/*' (change)="preview(file.files)" />
+		<button mat-mini-fab (click)="file.click()" color="accent" style="margin-left: 5px;margin-top: 8px;"><mat-icon>add</mat-icon></button>
+	</mat-card>
+
+	<mat-card-actions align="end">
+		<button mat-raised-button color='primary' style="margin-top:10px; min-width: 100px; margin-right: 8px;">post</button>
+	</mat-card-actions>
+	
 </div>
-
-</mat-card>
-
-	<button mat-raised-button color='primary' style="float:right ;margin:10px">post</button>
-
-</div>
-

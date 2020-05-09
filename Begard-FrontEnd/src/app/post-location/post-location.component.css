@@ -17,3 +17,7 @@
   .example-full-width {
     width: 100%;
   }
+
+  .input-file{
+    display: none;
+}
