@@ -7,15 +7,17 @@
 		<div style="float:right;width:70%;justify-content:end">
 			<mat-form-field style="width:auto;float:right">
 				<mat-label>plan</mat-label>
-				<mat-select>
-					<mat-option>
+				<mat-select [formControl]="planControl" >
+					<mat-option *ngFor="let p of plans"[value]="p">
+						{{p}}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
 			<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
 				<mat-label>location</mat-label>
-				<mat-select>
-					<mat-option>
+				<mat-select [formControl]="locationControl" >
+					<mat-option *ngFor="let l of locations" [value]="l">
+						{{l}}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
@@ -25,7 +27,7 @@
 	<form class="example-form">
 		<mat-form-field class="example-full-width">
 			<mat-label>Leave a comment</mat-label>
-			<textarea matInput></textarea>
+			<textarea matInput [formControl]="descControl"></textarea>
 		</mat-form-field>
 	</form>
 
@@ -46,7 +48,7 @@
 	</div>
 
 	<mat-card-actions align="end">
-		<button mat-raised-button color='primary'
+		<button mat-raised-button color='primary' (click)="post()"
 			style="margin-top:10px; min-width: 100px; margin-right: 8px;margin-bottom: -23px;">post</button>
 	</mat-card-actions>
 

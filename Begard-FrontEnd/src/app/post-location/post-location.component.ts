@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+
 
 @Component({
   selector: 'app-post-location',
@@ -10,6 +12,15 @@ export class PostLocationComponent implements OnInit {
   imagePath;
   message;
   imgURL;
+
+  plans = [1,2,3]
+  locations = [1,2,4]
+
+  public planControl: FormControl = new FormControl('');
+  public locationControl: FormControl = new FormControl('');
+  public descControl: FormControl = new FormControl('');
+
+
   constructor() { }
 
   ngOnInit(): void {
@@ -43,7 +54,10 @@ export class PostLocationComponent implements OnInit {
   }
 
     clearPhoto(i){
-      console.log(i);
       this.images.splice(i,1);
+    }
+
+    post(){
+      console.log("plan : " + this.planControl.value + "loc : " + this.locationControl.value + " desc : " + this.descControl.value)
     }
 }
