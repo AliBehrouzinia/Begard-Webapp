@@ -470,11 +470,7 @@ class TopPostsView(generics.ListAPIView):
         pass
 
     def get(self, request, *args, **kwargs):
-        if not (self.request.query_params.get('page')).isdigit():
-            return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
-        page_number = int(self.request.query_params.get('page'))
-        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[
-                (page_number - 1) * 5:page_number * 5]
+        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[0:20]
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
             data['city'] = get_object_or_404(models.Plan, id=data['plan_id']).destination_city.name
