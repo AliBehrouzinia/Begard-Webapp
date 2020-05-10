@@ -42,4 +42,8 @@ export class PostLocationComponent implements OnInit {
     }
   }
 
+    clearPhoto(i){
+      console.log(i);
+      this.images.splice(i,1);
+    }
 }
