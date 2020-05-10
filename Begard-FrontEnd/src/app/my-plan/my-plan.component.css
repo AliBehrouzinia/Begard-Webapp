@@ -69,22 +69,25 @@
 }
 
 .im {
-    height: 250px;
-    width: 457px;
-    margin-top: 0px;
-    margin-left: 2px;
-    background-image: url('../../assets/back.jpg');
+    height: 85%;
+    width: 106%;
+    margin-top: 5px;
+    margin-left: -7px;
+    background-image: url('../../assets/back2.jpg');
+    background-size: cover;
 
 }
 
 .location-icon {
     font-size: 20px;
+    margin-left: -8px;
     color: rgb(14, 212, 219);
 }
 
 .city {
-    margin-top: 2px;
+    margin-top: 1px;
     font-size: 15px;
+    margin-left: -2px;
 }
 
 mat-card-subtitle {
@@ -92,7 +95,7 @@ mat-card-subtitle {
 }
 
 .date {
-    margin-top: 2px;
+    margin-top: 1px;
     margin-left: 10px;
     font-size: 15px;
 }
