@@ -7,7 +7,7 @@
 		<div style="float:right;width:70%;justify-content:end">
 			<mat-form-field style="width:auto;float:right">
 				<mat-label>plan</mat-label>
-				<mat-select [formControl]="planControl" >
+				<mat-select [formControl]="planControl" style="font-size: 17px;" >
 					<mat-option *ngFor="let p of plans"[value]="p">
 						{{p}}
 					</mat-option>
@@ -15,8 +15,8 @@
 			</mat-form-field>
 			<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
 				<mat-label>location</mat-label>
-				<mat-select [formControl]="locationControl" >
-					<mat-option *ngFor="let l of locations" [value]="l">
+				<mat-select [formControl]="locationControl" style="font-size: 17px;">
+					<mat-option *ngFor="let l of locations" [value]="l" >
 						{{l}}
 					</mat-option>
 				</mat-select>
@@ -24,32 +24,44 @@
 		</div>
 	</div>
 
-	<form class="example-form">
+	<form class="example-form" style="margin-top: 15px;">
 		<mat-form-field class="example-full-width">
 			<mat-label>Leave a comment</mat-label>
-			<textarea matInput [formControl]="descControl"></textarea>
+			<textarea matInput [formControl]="descControl" style="font-size: 20px;"></textarea>
 		</mat-form-field>
 	</form>
 
 
 	<div style="display:flex;margin-top: 15px;white-space: nowrap; overflow-x: scroll;">
 		<div *ngFor="let img of images;let indx = index" style="display:inline-flex;margin:0px">
-			<div>
-				<img [src]="img" style="width:50px ; height: 50px;border: 1px solid black;border-radius: 5px;">
-				<button mat-icon-button color="primary" style="margin-left: -10px;" (click)="clearPhoto(indx)">
-					<mat-icon style="font-size: 15px;">clear</mat-icon>
+			<div style="margin:5px">
+				<img [src]="img" style="width:150px ; height: 150px;border-radius: 5px;
+				box-shadow: 2px 2px 5px #717171;margin-top: 10px;margin-bottom: 10px;margin-right: 5px;">
+				<button mat-icon-button color="primary" style="position: relative;
+				z-index: 40;
+				top: 30px;
+				left: -35px;
+				color: white;
+				width: auto;
+				height: auto;" (click)="clearPhoto(indx)">
+					<mat-icon style="font-size: 20px;
+					margin-top: 11px;
+					position: absolute;
+					background-color: #00000069;
+					border-radius: 50px;">clear</mat-icon>
 				</button>
 			</div>
 		</div>
 		<input class="input-file" #file type="file" accept='image/*' (change)="preview(file.files)" />
-		<button mat-mini-fab (click)="file.click()" color="accent" style="margin-left: 5px;margin-top: 8px;">
+		<button mat-mini-fab (click)="file.click()" color="accent" style="margin-left: 5px;margin-top: 65px;
+		box-shadow: 2px 2px 2px #acacac !important;margin-bottom: 5px;">
 			<mat-icon>add</mat-icon>
 		</button>
 	</div>
 
 	<mat-card-actions align="end">
 		<button mat-raised-button color='primary' (click)="post()"
-			style="margin-top:10px; min-width: 100px; margin-right: 8px;margin-bottom: -23px;">post</button>
+			style="margin-top:10px; min-width: 100px; margin-right: 8px;margin-bottom: -23px;font-size: 17px;">post</button>
 	</mat-card-actions>
 
 </div>
