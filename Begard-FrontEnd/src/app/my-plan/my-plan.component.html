@@ -52,29 +52,27 @@
     </div>
 
     <div style="width: 50%; min-width: 500px; margin-left: 5%;">
-        <mat-card class="shadow-lg">
-            <mat-grid-list cols="3" rowHeight="200px">
-                <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows">
-                    <mat-card style="box-shadow: 4px 4px 9px #888888; width: 90%;height: 85%;">
-                        <div style="display:flex">
-                            <mat-icon class="location-icon">location_on</mat-icon>
-                            <span #city class="city"><strong>Tehran</strong></span>
-                            <span class="date">,created Today</span>
-                        </div>
-                        <img class="im" mat-card-image />
-                    </mat-card>
-                </mat-grid-tile>
-                <mat-grid-tile>
-                    <mat-card style="box-shadow: 4px 4px 9px #888888; width: 90%;height: 85%;background-color: #e1e1e1;">
-                        <button mat-icon-button style="width: 100%;height: 100%;">
-                            <mat-icon style="font-size: 100px;width: auto;height: 
+        <mat-grid-list cols="3" rowHeight="200px">
+            <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows">
+                <mat-card style="box-shadow: 4px 4px 9px #888888; width: 90%;height: 85%;">
+                    <div style="display:flex">
+                        <mat-icon class="location-icon">location_on</mat-icon>
+                        <span #city class="city"><strong>Tehran</strong></span>
+                        <span class="date">,created Today</span>
+                    </div>
+                    <img class="im" mat-card-image />
+                </mat-card>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-card style="box-shadow: 4px 4px 9px #888888; width: 90%;height: 85%;background-color: #e1e1e1;">
+                    <button mat-icon-button style="width: 100%;height: 100%;">
+                        <mat-icon style="font-size: 100px;width: auto;height: 
                             auto;color: white;">
-                                add
-                            </mat-icon>
-                        </button>
-                    </mat-card>
-                </mat-grid-tile>
-            </mat-grid-list>
-        </mat-card>
+                            add
+                        </mat-icon>
+                    </button>
+                </mat-card>
+            </mat-grid-tile>
+        </mat-grid-list>
     </div>
 </div>
