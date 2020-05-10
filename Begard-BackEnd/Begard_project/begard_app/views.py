@@ -591,9 +591,9 @@ class UserPlansView(generics.ListAPIView):
         user_pk = self.kwargs.get('id')
         self_user = self.request.user.id
         followings = models.UserFollowing.objects.filter(user_id=self_user)
-        followings_list = list(followers)
+        followings_list = list(followings)
         following_id = []
-        for item in followers_list:
+        for item in followings_list:
             following_id.append(item.following_user_id.id)
         plans = models.Plan.objects.filter(Q(user_id__in=following_id) & Q(user_id=user_pk) |
                                            Q(user__is_public=True) & Q(user_id=user_pk))
