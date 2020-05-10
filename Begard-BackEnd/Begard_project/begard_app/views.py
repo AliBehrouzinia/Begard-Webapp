@@ -590,8 +590,8 @@ class UserPlansView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         user_pk = self.kwargs.get('id')
         self_user = self.request.user.id
-        followers = models.UserFollowing.objects.filter(user_id=self_user)
-        followers_list = list(followers)
+        followings = models.UserFollowing.objects.filter(user_id=self_user)
+        followings_list = list(followers)
         following_id = []
         for item in followers_list:
             following_id.append(item.following_user_id.id)
