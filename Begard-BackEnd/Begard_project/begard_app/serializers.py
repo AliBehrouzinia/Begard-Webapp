@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
+
 from .models import *
 from .models import BegardUser
 from drf_extra_fields.fields import Base64ImageField
@@ -237,6 +239,14 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class UserPlansSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        result = super(UserPlansSerializer, self).to_representation(instance)
+        post = get_object_or_404(Post, plan_id=result['id'], type='plan_post')
+        image = get_object_or_404(Image, post=post)
+        result['cover'] = image.image.url
+        return result
+
     class Meta:
         model = Plan
-        fields = ['destination_city', 'creation_date', 'cover', 'user']
+        fields = ['id', 'destination_city', 'creation_date', 'user']
