@@ -527,9 +527,9 @@ class ProfileDetailsView(generics.RetrieveAPIView):
         data['followings_count'] = models.UserFollowing.objects.filter(user_id=target_user).count()
         data['followers_count'] = models.UserFollowing.objects.filter(following_user_id=target_user).count()
 
-        if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+        if models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user).exists():
             following_state = 'Following'
-        elif models.FollowRequest.objects.filter(request_from=source_user, request_to=target_user).exists():
+        elif models.FollowRequest.objects.filter(request_from=source_user.id, request_to=target_user).exists():
             following_state = 'Requested'
         else:
             following_state = 'Follow'
