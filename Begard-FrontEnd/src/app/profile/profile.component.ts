@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
@@ -27,49 +27,11 @@ export interface DialogData {
 })
 export class ProfileComponent implements OnInit {
 
-  userName: string;
-  postNum: number;
-  follwersNum: number;
-  follwingsNum: number;
-  imgUrl: string;
-  followingState : string;
-
-  animal: string;
-  name: string;
-  id: number;
-
-
-  constructor(public dialog: MatDialog,
-    private route: ActivatedRoute,
-    private http: HttpClient,
-    private authService: AuthService) { }
-
-
-  onFollow() {
-    console.log(this.id);
-  }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      height: '400px',
-      width: '600px',
-      data: { name: this.name, animal: this.animal }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
-    });
-  }
-
-
-
-
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.id = params['id'];
-    })
+    });
     console.log(this.id);
     this.authService.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
@@ -91,6 +53,48 @@ export class ProfileComponent implements OnInit {
     
   }
 
+  userName: string;
+  postNum: number;
+  follwersNum: number;
+  follwingsNum: number;
+  imgUrl: string;
+  followingState : string;
+
+  animal: string;
+  name: string;
+  id: number;
+
+
+  constructor(public dialog: MatDialog,
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router) { }
+
+
+  onFollow() {
+    console.log(this.id);
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      height: '400px',
+      width: '600px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });
+  }
+
+  goToHome(){
+    this.router.navigate(['/homepage']);
+  }
+
+
+
 
 }
 
@@ -109,4 +113,5 @@ export class DialogOverviewExampleDialog {
     this.dialogRef.close();
   }
 
+  
 }
