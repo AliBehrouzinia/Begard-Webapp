@@ -260,7 +260,7 @@ class LocationOfPlanSerializer(serializers.ModelSerializer):
         chain(places, ShoppingMall.objects.filter(place_id=place_id))
 
         if not places.exists():
-            raise NotFound("a Location not found in database.")
+            raise NotFound("any Location not found.")
 
         result['place_name'] = places[0].name
 
