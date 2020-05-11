@@ -46,3 +46,11 @@ class LikeAndCommentOnPostPermission(permissions.BasePermission):
             return True
 
         return False
+
+
+class IsPlanOwner(permissions.BasePermission):
+    """check that user is owner of plan"""
+
+    def has_permission(self, request, view):
+        plan = get_object_or_404(models.Plan, id=view.kwargs.get('id'))
+        return request.user == plan.user
