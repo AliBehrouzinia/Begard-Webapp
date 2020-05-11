@@ -4,6 +4,7 @@ from itertools import chain
 
 from django.db.models import Q
 from django.http import JsonResponse
+from django.http.response import HttpResponseBadRequest
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -71,6 +72,10 @@ class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPI
         return models.Plan.objects.filter(user=user)
 
     def post(self, request, *args, **kwargs):
+        if not request.data.get('plan_items'):
+            return HttpResponseBadRequest("Error : The plan items doesn't exist.", status=status.HTTP_400_BAD_REQUEST)
+        if not request.data.get('image'):
+            return HttpResponseBadRequest("Error : The cover image doesn't exist.", status=status.HTTP_400_BAD_REQUEST)
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
         post = self.save_post(request.data, plan.id)
@@ -332,6 +337,8 @@ class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         user_id = self.request.user.id
         data = request.data
+        if not self.request.data.get('following_id'):
+            return HttpResponseBadRequest()
         following_id = data['following_id']
         models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
         return Response(status=status.HTTP_200_OK)
