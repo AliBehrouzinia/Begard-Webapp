@@ -20,7 +20,7 @@ const appRoutes: Routes = [
     { path: 'homepage', component: HomePageComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } },
     { path: 'postlocatio', component: LocationPostComponent },
-    { path: 'profile', component: ProfileComponent }
+    { path: 'profile/:id', component: ProfileComponent }
 
 ]
 

@@ -2,31 +2,14 @@
 
 <div style="display: flex; justify-content: center;">
     <mat-card class="pro-info shadow-lg">
-
-
-        <!-- <div class="grid-container">
-              <div class="item1 item">
-                  dlkfjldjfffjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
-                <img style="width: 80%; border-radius: 50%;margin-left: 20%;" src='../../assets/prr.png'>
-              </div>
-              <div class="item2 item">2</div>
-              <div class="item3 item">3</div>  
-              <div class="item4 item">4</div>
-              <div class="item5 item">5</div>
-              <div class="item6 item">6</div>
-               
-            </div> -->
-
-
-
         <mat-grid-list class="gird-list" cols="6" rowHeight="50%">
             <mat-grid-tile [colspan]="1" [rowspan]="2">
-                <img style="width: 80%; border-radius: 50%;margin-left: 20%;" src='../../assets/prr.png'>
+                <img style="width: 80%; border-radius: 50%;margin-left: 20%;" src='{{imgUrl}}'>
             </mat-grid-tile>
-            <mat-grid-tile style="font-size: 30px;margin-left: 3%;" [colspan]="3" [rowspan]="1">UserName</mat-grid-tile>
+            <mat-grid-tile style="font-size: 30px;margin-left: 3%;" [colspan]="3" [rowspan]="1">{{userName}}</mat-grid-tile>
             <mat-grid-tile [colspan]="2" [rowspan]="1">
-                <button style="margin-left: 50%;" mat-raised-button color="primary">
-                    <mat-icon>person_add</mat-icon> Follow
+                <button (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
+                    <mat-icon>person_add</mat-icon> {{followingState}}
                 </button>
                
                 <button mat-button [matMenuTriggerFor]="beforeMenu">
@@ -41,14 +24,14 @@
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
                 <div style="margin-left: 20%;"> <b> posts<br>
-                        <div>12</div>
+                        <div>{{postNum}}</div>
                     </b> </div>
             </mat-grid-tile>
             <mat-grid-tile style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>followrs <br>
-                    <div (click)="openDialog()" class="number">12</div>
+                    <div (click)="openDialog()" class="number">{{follwersNum}}</div>
                 </b></mat-grid-tile>
             <mat-grid-tile style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>followings <br>
-                    <div (click)="openDialog()" class="number">20</div>
+                    <div (click)="openDialog()" class="number">{{follwingsNum}}</div>
                 </b></mat-grid-tile>
 
 
@@ -78,6 +61,6 @@
     </div>
 
     <div style="width: 50%; min-width: 500px; margin-left: 5%;">
-        <app-location-post></app-location-post>
+        <!-- <app-location-post></app-location-post> -->
     </div>
 </div>
