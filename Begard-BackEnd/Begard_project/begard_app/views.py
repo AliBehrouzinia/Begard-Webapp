@@ -4,6 +4,7 @@ from itertools import chain
 
 from django.db.models import Q
 from django.http import JsonResponse
+from django.http.response import HttpResponseBadRequest
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -71,6 +72,10 @@ class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPI
         return models.Plan.objects.filter(user=user)
 
     def post(self, request, *args, **kwargs):
+        if not request.data.get('plan_items'):
+            return HttpResponseBadRequest("Error : The plan items doesn't exist.")
+        if not request.data.get('image'):
+            return HttpResponseBadRequest("Error : The cover image doesn't exist.")
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
         post = self.save_post(request.data, plan.id)
@@ -209,7 +214,7 @@ class AdvancedSearch(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         all_result = self.get_queryset(request.data)
-        return Response()
+        return Response(data=all_result)
 
     def get_queryset(self, data):
         city_id = self.kwargs.get('id')
@@ -239,14 +244,15 @@ class ShowPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
-        pass
-
-    def get(self, request, *args, **kwargs):
         user = self.request.user.id
         following_users = [item['following_user_id'] for item in
                            models.UserFollowing.objects.filter(user_id=user).values('following_user_id')]
+        return following_users
+
+    def get(self, request, *args, **kwargs):
+        following_users = self.get_queryset()
         if not self.request.query_params.get('page').isdigit():
-            return Response({"error": "the page number is not correct."}, status.HTTP_400_BAD_REQUEST)
+            return HttpResponseBadRequest("Error : the page number is not correct.")
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__in=following_users) |
                                            Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
@@ -273,18 +279,19 @@ class SearchPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get(self, request, *args, **kwargs):
-        user = self.request.user.id
-        user_following = models.UserFollowing.objects.filter(user_id=user)
+        user_following = self.get_queryset()
         if not (self.request.query_params.get('city')).isdigit():
             return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
         city = self.request.query_params.get('city', None)
         plans = models.Plan.objects.filter(destination_city=city)
         queryset = models.Post.objects.filter((Q(plan_id__in=plans) & Q(user__id__in=user_following)) |
                                               (Q(plan_id__in=plans) & Q(user__is_public=True)))
-        return Response(status=status.HTTP_200_OK)
+        return Response(data=queryset, status=status.HTTP_200_OK)
 
     def get_queryset(self):
-        pass
+        user = self.request.user.id
+        user_following = models.UserFollowing.objects.filter(user_id=user)
+        return user_following
 
 
 class CommentsOnPostView(generics.ListCreateAPIView):
@@ -332,6 +339,8 @@ class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         user_id = self.request.user.id
         data = request.data
+        if not self.request.data.get('following_id'):
+            return HttpResponseBadRequest("the following_ID does not exists.")
         following_id = data['following_id']
         models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
         return Response(status=status.HTTP_200_OK)
@@ -375,7 +384,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         if serializer.is_valid(True):
             serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response()
 
     def delete(self, request, *args, **kwargs):
         data = {
@@ -467,10 +476,11 @@ class TopPostsView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        pass
+        queryset = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[0:20]
+        return queryset
 
     def get(self, request, *args, **kwargs):
-        posts = models.Post.objects.filter(Q(user__is_public=True) & Q(type='plan_post')).order_by('-rate')[0:20]
+        posts = self.get_queryset()
         posts_data = serializers.TopPostSerializer(instance=posts, many=True).data
         for data in posts_data:
             data['city'] = get_object_or_404(models.Plan, id=data['plan_id']).destination_city.name
@@ -485,6 +495,8 @@ class LocationPostView(generics.CreateAPIView):
     serializer_class = LocationPostSerializer
 
     def post(self, request, *args, **kwargs):
+        if not self.request.data.get('image'):
+            return HttpResponseBadRequest("the images does not exists.")
         images = request.data['image']
         post = self.save_post(request.data)
         post_id = post.pk
