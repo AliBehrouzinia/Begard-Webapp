@@ -12,7 +12,7 @@ export class MyLocationService {
 
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
-  getMyLocationss(planId) {
+  getMyLocations(planId) {
     const url = 'http://127.0.0.1:8000/plans/' + planId + '/locations/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {

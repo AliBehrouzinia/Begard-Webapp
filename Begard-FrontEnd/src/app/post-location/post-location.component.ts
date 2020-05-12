@@ -4,6 +4,7 @@ import { PostLocationService } from '../post-location.service';
 import { PostLocation, Image } from './../post-location'
 import { MyPlanService } from '../my-plan.service';
 import { MyPlan } from '../my-plan';
+import { MyLocationService } from '../my-location.service';
 
 
 
@@ -21,14 +22,16 @@ export class PostLocationComponent implements OnInit {
 
   postDisabled = true;
   plans = []
-  locations = [1, 2, 4]
+  locations = []
 
   public planControl: FormControl = new FormControl('');
   public locationControl: FormControl = new FormControl('');
   public descControl: FormControl = new FormControl('');
 
 
-  constructor(private postLocationService: PostLocationService, private myPlanService: MyPlanService) { }
+  constructor(private postLocationService: PostLocationService
+    , private myPlanService: MyPlanService
+    , private myLocationService: MyLocationService) { }
 
   ngOnInit(): void {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
@@ -108,16 +111,21 @@ export class PostLocationComponent implements OnInit {
     }
   }
 
-  onPlanChange(value) {
-    console.log("p" + value)
-    if (value != undefined) {
+  onPlanChange(plan) {
+    console.log("p" + JSON.stringify(plan))
+    if (plan != undefined) {
       this.updatePostButtonDisabled()
+      this.myLocationService.getMyLocations(plan.id).subscribe(myLocations => {
+        for (let i = 0; i < myLocations.length; i++) {
+          this.plans.push(myLocations[i])
+        }
+      })
     }
   }
 
-  onLocationChange(value) {
-    console.log("l" + value)
-    if (value != undefined) {
+  onLocationChange(location) {
+    console.log("l" + location)
+    if (location != undefined) {
       this.updatePostButtonDisabled()
     }
   }
