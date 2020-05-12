@@ -251,6 +251,7 @@ class MyPlansSerializer(serializers.ModelSerializer):
         post = get_object_or_404(Post, plan_id=ret['id'], type='plan_post')
         image = get_object_or_404(Image, post=post)
         ret['cover'] = image.image.url
+        ret['destination_city'] = instance.destination_city.name
 
         return ret
 
