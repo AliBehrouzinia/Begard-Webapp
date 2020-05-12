@@ -251,15 +251,16 @@ class LocationOfPlanSerializer(serializers.ModelSerializer):
         result = super(LocationOfPlanSerializer, self).to_representation(instance)
         place_id = result['place_id']
 
-        places = Restaurant.objects.filter(place_id=place_id)
-        chain(places, Hotel.objects.filter(place_id=place_id))
-        chain(places, Museum.objects.filter(place_id=place_id))
-        chain(places, TouristAttraction.objects.filter(place_id=place_id))
-        chain(places, RecreationalPlace.objects.filter(place_id=place_id))
-        chain(places, Cafe.objects.filter(place_id=place_id))
-        chain(places, ShoppingMall.objects.filter(place_id=place_id))
+        places = list(Restaurant.objects.filter(place_id=place_id))
 
-        if not places.exists():
+        places += list(Hotel.objects.filter(place_id=place_id))
+        places += list(Museum.objects.filter(place_id=place_id))
+        places += list(TouristAttraction.objects.filter(place_id=place_id))
+        places += list(RecreationalPlace.objects.filter(place_id=place_id))
+        places += list(Cafe.objects.filter(place_id=place_id))
+        places += list(ShoppingMall.objects.filter(place_id=place_id))
+
+        if len(places) == 0:
             raise NotFound("any Location not found.")
 
         result['place_name'] = places[0].name
