@@ -18,6 +18,7 @@ urlpatterns = [
     path('followings/<int:id>/', views.DeleteFollowingsView.as_view()),
     path('followings/requests/', views.FollowingRequestView.as_view()),
     path('followers/', views.FollowersView.as_view()),
+    path('followers/requests/', views.FollowersRequestsView.as_view()),
     path('follow-request/<int:id>/', views.AnswerFollowRequestView.as_view()),
     path('top-posts/', views.TopPostsView.as_view()),
     path('location-post/', views.LocationPostView.as_view()),

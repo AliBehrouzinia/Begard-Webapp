@@ -187,6 +187,19 @@ class FollowingRequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class FollowersRequestsSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(FollowersRequestsSerializer, self).to_representation(instance)
+        from_user = instance.request_from
+        result['profile_img'] = from_user.profile_img.url
+        result['username'] = from_user.email
+        return result
+
+    class Meta:
+        model = FollowRequest
+        fields = ['id', 'request_from', 'date']
+
+
 class TopPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
@@ -240,4 +253,3 @@ class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
         fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
-

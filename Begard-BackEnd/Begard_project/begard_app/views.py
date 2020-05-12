@@ -402,7 +402,6 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
 
 class FollowingRequestView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.FollowingRequestSerializer
 
     def post(self, request, *args, **kwargs):
         data = self.request.data
@@ -430,6 +429,16 @@ class FollowingRequestView(generics.CreateAPIView):
                 return Response(data={"status": "Requested"}, status=status.HTTP_201_CREATED)
 
         return Response(status.HTTP_406_NOT_ACCEPTABLE)
+
+
+class FollowersRequestsView(generics.ListAPIView):
+    """get list of followers requests"""
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.FollowersRequestsSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.FollowRequest.objects.filter(request_to=user)
 
 
 class AnswerFollowRequestView(generics.DestroyAPIView):
