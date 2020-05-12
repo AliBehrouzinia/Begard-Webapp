@@ -20,7 +20,7 @@ urlpatterns = [
     path('followings/requests/<int:id>/', views.DeleteFollowRequestView.as_view()),
     path('followers/', views.FollowersView.as_view()),
     path('followers/requests/', views.FollowersRequestsView.as_view()),
-    path('follow-request/<int:id>/', views.AnswerFollowRequestView.as_view()),
+    path('followers/requests/<int:id>/', views.AnswerFollowRequestView.as_view()),
     path('top-posts/', views.TopPostsView.as_view()),
     path('location-post/', views.LocationPostView.as_view()),
     path('top-planners/', views.TopPlannerView.as_view()),

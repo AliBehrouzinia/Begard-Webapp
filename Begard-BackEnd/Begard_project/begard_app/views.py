@@ -441,7 +441,7 @@ class FollowersRequestsView(generics.ListAPIView):
         return models.FollowRequest.objects.filter(request_to=user)
 
 
-class AnswerFollowRequestView(generics.DestroyAPIView):
+class AnswerFollowRequestView(generics.UpdateAPIView):
     """Accept or reject a follow request"""
     permission_classes = [IsAuthenticated, AnswerFollowRequestPermission]
 
@@ -450,7 +450,7 @@ class AnswerFollowRequestView(generics.DestroyAPIView):
         self.check_object_permissions(request=self.request, obj=follow_request)
         return follow_request
 
-    def destroy(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         follow_request = self.get_object()
 
         action = self.request.query_params.get('action')
@@ -464,7 +464,7 @@ class AnswerFollowRequestView(generics.DestroyAPIView):
             if serializer.is_valid(True):
                 serializer.save()
 
-        self.perform_destroy(follow_request)
+        follow_request.delete()
         return Response()
 
 
