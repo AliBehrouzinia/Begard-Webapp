@@ -10,7 +10,7 @@ import { Profile } from './profile'
 @Injectable({
   providedIn: 'root'
 })
-export class PofileService {
+export class ProfileService {
 
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
@@ -20,7 +20,7 @@ export class PofileService {
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
       return this.http
-        .get<Profile[]>(url, {
+        .get<Profile>(url, {
           observe: 'response',
         })
         .pipe(
