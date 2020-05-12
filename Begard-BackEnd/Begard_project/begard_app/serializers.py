@@ -181,7 +181,7 @@ class CreateLikeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FollowRequestSerializer(serializers.ModelSerializer):
+class FollowingRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowRequest
         fields = '__all__'

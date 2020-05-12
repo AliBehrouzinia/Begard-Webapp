@@ -400,25 +400,20 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class FollowRequestView(generics.ListCreateAPIView):
+class FollowingRequestView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.FollowRequestSerializer
-
-    def get_queryset(self):
-        return models.FollowRequest.objects.filter(request_to=self.request.user)
+    serializer_class = serializers.FollowingRequestSerializer
 
     def post(self, request, *args, **kwargs):
         data = self.request.data
         data['request_from'] = self.request.user.id
 
-        if type(data['request_to']) is not int:
-            return Response({"error": "data is not in valid format."},
-                            status.HTTP_400_BAD_REQUEST)
+        if not (data.get('request_to') and isinstance(data['request_to'], int)):
+            return HttpResponseBadRequest("field 'request_to' with a digit required.")
 
-        following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
-        if following_users.filter(following_user_id=data['request_to']).exists():
-            return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        if models.UserFollowing.objects.filter(user_id=data['request_from'],
+                                               following_user_id=data['request_to']).exists():
+            return HttpResponseBadRequest('this user is followed by you, you can not request to follow this user')
 
         request_to_user = get_object_or_404(models.BegardUser, id=data['request_to'])
 
@@ -429,7 +424,7 @@ class FollowRequestView(generics.ListCreateAPIView):
                 serializer.save()
                 return Response(data={"status": "Followed"}, status=status.HTTP_201_CREATED)
         else:
-            serializer = serializers.FollowRequestSerializer(data=data)
+            serializer = serializers.FollowingRequestSerializer(data=data)
             if serializer.is_valid(True):
                 serializer.save()
                 return Response(data={"status": "Requested"}, status=status.HTTP_201_CREATED)
