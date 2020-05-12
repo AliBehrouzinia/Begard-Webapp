@@ -9,12 +9,13 @@ import { FormControl } from '@angular/forms';
 })
 export class PostLocationComponent implements OnInit {
   images = []
+  imageStrings = []
   imagePath;
   message;
   imgURL;
 
-  plans = [1,2,3]
-  locations = [1,2,4]
+  plans = [1, 2, 3]
+  locations = [1, 2, 4]
 
   public planControl: FormControl = new FormControl('');
   public locationControl: FormControl = new FormControl('');
@@ -24,6 +25,10 @@ export class PostLocationComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  _handleReaderLoaded(readerEvt) {
+    this.imageStrings.push(readerEvt.target.result);
   }
 
   preview(files) {
@@ -42,22 +47,15 @@ export class PostLocationComponent implements OnInit {
     reader.onload = (_event) => {
       this.imgURL = reader.result;
       this.images.push(this.imgURL);
-
     }
 
     var file = files[0];
 
     if (files && file) {
       var binaryReader = new FileReader();
+      binaryReader.onload = this._handleReaderLoaded.bind(this);
       binaryReader.readAsDataURL(file);
     }
   }
 
-    clearPhoto(i){
-      this.images.splice(i,1);
-    }
-
-    post(){
-      console.log("plan : " + this.planControl.value + "loc : " + this.locationControl.value + " desc : " + this.descControl.value)
-    }
 }
