@@ -9,8 +9,8 @@
 				<mat-label>plan</mat-label>
 				<mat-select [formControl]="planControl" style="font-size: 17px;"
 					(selectionChange)="onPlanChange($event.value)">
-					<mat-option *ngFor="let p of plans" [value]="p">
-						{{p}}
+					<mat-option *ngFor="let p of plans" [value]="p.destination_city">
+						{{p.destination_city}}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>

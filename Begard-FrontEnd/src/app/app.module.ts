@@ -60,6 +60,7 @@ import { PostLocationComponent } from './post-location/post-location.component';
 
 import { PostLocationService } from './post-location.service';
 
+import { MyPlanService } from './my-plan.service';
 
 
 @NgModule({
@@ -109,7 +110,7 @@ import { PostLocationService } from './post-location.service';
       MDBBootstrapModule
 
    ],
-   providers: [DataStorageService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
+   providers: [DataStorageService, MyPlanService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],

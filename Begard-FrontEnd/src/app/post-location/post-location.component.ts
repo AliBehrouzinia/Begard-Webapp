@@ -2,6 +2,8 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PostLocationService } from '../post-location.service';
 import { PostLocation, Image } from './../post-location'
+import { MyPlanService } from '../my-plan.service';
+import { MyPlan } from '../my-plan';
 
 
 
@@ -18,7 +20,7 @@ export class PostLocationComponent implements OnInit {
   imgURL;
 
   postDisabled = true;
-  plans = [1, 2, 3]
+  plans = []
   locations = [1, 2, 4]
 
   public planControl: FormControl = new FormControl('');
@@ -26,9 +28,14 @@ export class PostLocationComponent implements OnInit {
   public descControl: FormControl = new FormControl('');
 
 
-  constructor(private postLocationService: PostLocationService) { }
+  constructor(private postLocationService: PostLocationService, private myPlanService: MyPlanService) { }
 
   ngOnInit(): void {
+    this.myPlanService.getMyPlans().subscribe(myPlans => {
+      for (let i = 0; i < myPlans.length; i++) {
+        this.plans.push(myPlans[i])
+      }
+    })
   }
 
   _handleReaderLoaded(readerEvt) {
@@ -65,7 +72,7 @@ export class PostLocationComponent implements OnInit {
 
   clearPhoto(i) {
     this.images.splice(i, 1);
-    this.imageStrings.splice(i,1);
+    this.imageStrings.splice(i, 1);
     this.updatePostButtonDisabled()
   }
 
