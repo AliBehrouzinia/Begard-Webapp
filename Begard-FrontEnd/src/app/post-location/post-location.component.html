@@ -5,21 +5,21 @@
 			<div style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px">Ahmad Ahmadi</div>
 		</div>
 		<div style="float:right;width:70%;justify-content:end">
+			<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
+				<mat-label>location</mat-label>
+				<mat-select [formControl]="locationControl" style="font-size: 17px;"
+					(selectionChange)="onLocationChange($event.value)">
+					<mat-option *ngFor="let l of locations" [value]="l">
+						{{l.place_name}}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
 			<mat-form-field style="width:auto;float:right">
 				<mat-label>plan</mat-label>
 				<mat-select [formControl]="planControl" style="font-size: 17px;"
 					(selectionChange)="onPlanChange($event.value)">
 					<mat-option *ngFor="let p of plans" [value]="p">
 						{{p.destination_city}}
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
-			<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
-				<mat-label>location</mat-label>
-				<mat-select [formControl]="locationControl" style="font-size: 17px;"
-					(selectionChange)="onLocationChange($event.value)">
-					<mat-option *ngFor="let l of locations" [value]="l">
-						{{l}}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
