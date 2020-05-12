@@ -19,7 +19,6 @@ export class MyPlanComponent implements OnInit {
       for (let i = 0; i < myPlans.length; i++) {
         this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city, this.setDate(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
       };
-      console.log(myPlans[0].id + "  " + myPlans[0].destination_city + "  " + this.setDate(myPlans[0].creation_date) + "  " + this.setCoverUrl(myPlans[0].cover));
     })
     
   }

@@ -4,25 +4,23 @@
     <mat-card class="pro-info shadow-lg">
         <mat-grid-list class="gird-list" cols="6" rowHeight="50%">
             <mat-grid-tile [colspan]="1" [rowspan]="2">
-                <img style="width: 150px;height: 150px; border-radius: 100%;margin-left: 10px;"
-                    src='../../assets/b.jpg'>
+                <img style="width: 80%; border-radius: 50%;margin-left: 20%;" src='{{imgUrl}}'>
             </mat-grid-tile>
-            <mat-grid-tile [colspan]="3" [rowspan]="1">
-                <div style="font-size: 30px;margin-left: 3%;">Ali Behroozi</div>
+            <mat-grid-tile style="font-size: 30px;margin-left: 3%;" [colspan]="3" [rowspan]="1">{{userName}}
             </mat-grid-tile>
             <mat-grid-tile [colspan]="2" [rowspan]="1">
-
+                
             </mat-grid-tile>
             <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <div style="margin-left: 20%;"> <b>posts<br>
-                        <div>12</div>
+                <div style="margin-left: 20%;"> <b> posts<br>
+                        <div>{{postNum}}</div>
                     </b> </div>
             </mat-grid-tile>
-            <mat-grid-tile style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>plans <br>
-                    <div class="number">12</div>
+            <mat-grid-tile style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>followrs <br>
+                    <div (click)="openDialog()" class="number">{{follwersNum}}</div>
                 </b></mat-grid-tile>
-            <mat-grid-tile style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>destinations<br>
-                    <div class="number">20</div>
+            <mat-grid-tile style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>followings <br>
+                    <div (click)="openDialog()" class="number">{{follwingsNum}}</div>
                 </b></mat-grid-tile>
 
 
@@ -39,11 +37,11 @@
                 <p class="underline" style="margin-left: 10px;margin-top: 3px;">My plans</p>
 
             </a>
-            <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+            <a (click)="goToHome()" style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
                 <mat-icon>home</mat-icon>
                 <p class="underline" style="margin-left: 10px;margin-top: 3px;">Home</p>
             </a>
-            <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+            <a  style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
                 <mat-icon>person_outline</mat-icon>
                 <p class="underline" style="margin-left: 10px;margin-top: 3px;">Profile</p>
             </a>

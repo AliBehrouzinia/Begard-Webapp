@@ -13,7 +13,7 @@ import { MyPlanComponent } from './my-plan/my-plan.component';
 
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+    { path: '', redirectTo: '/myPlans', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'search', component: SearchComponent },
