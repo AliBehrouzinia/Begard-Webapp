@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MyPlanService } from './../my-plan.service'
 import { ProfileService } from './../profile.service'
 import { MyPlan } from '../my-plan';
-import { Profile } from '../profile';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 
 @Component({
@@ -13,19 +14,22 @@ import { Profile } from '../profile';
 export class MyPlanComponent implements OnInit {
   myPlans = [];
   SERVER_URL = 'http://127.0.0.1:8000';
+  username
   profileImage;
   plansCount;
   followersCount;
   followingCount;
 
   //todo : get this from api
-  USER_ID = 3;
+  USER_ID = 8;
 
-  constructor(private myPlanService: MyPlanService, private profileService: ProfileService) { }
+  constructor(private myPlanService: MyPlanService, private profileService: ProfileService, private router: Router, private route: ActivatedRoute,
+  ) { }
 
   ngOnInit(): void {
 
     this.profileService.getProfile(this.USER_ID).subscribe(profile => {
+      this.username = profile.username;
       this.profileImage = profile.profile_image;
       this.followersCount = profile.followers_count;
       this.followingCount = profile.followings_count;
@@ -48,7 +52,8 @@ export class MyPlanComponent implements OnInit {
   setCoverUrl(url) {
     return this.SERVER_URL + url;
   }
-
-  
+  goToHome() {
+    this.router.navigate(['/homepage']);
+  }
 }
 
