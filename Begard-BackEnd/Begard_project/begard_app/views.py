@@ -45,11 +45,11 @@ class SuggestListView(generics.ListAPIView):
         return queryset
 
 
-class SuggestPlanView(APIView):
+class SuggestPlanView(generics.RetrieveAPIView):
     """Get a plan suggestion to user"""
     permission_classes = [AllowAny]
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         dest_city = models.City.objects.get(pk=self.kwargs.get('id'))
         start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
         finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
