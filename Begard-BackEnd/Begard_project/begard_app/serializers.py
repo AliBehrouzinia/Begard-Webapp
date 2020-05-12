@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from .models import *
 from .models import BegardUser
 from drf_extra_fields.fields import Base64ImageField
@@ -182,10 +183,23 @@ class CreateLikeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FollowRequestSerializer(serializers.ModelSerializer):
+class FollowingRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowRequest
         fields = '__all__'
+
+
+class FollowersRequestsSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(FollowersRequestsSerializer, self).to_representation(instance)
+        from_user = instance.request_from
+        result['profile_img'] = from_user.profile_img.url
+        result['username'] = from_user.email
+        return result
+
+    class Meta:
+        model = FollowRequest
+        fields = ['id', 'request_from', 'date']
 
 
 class TopPostSerializer(serializers.ModelSerializer):
@@ -249,3 +263,13 @@ class UserPlansSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = ['id', 'destination_city', 'creation_date', 'user']
+class TopPlannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BegardUser
+        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Token
+        fields = ('key', 'user_id')

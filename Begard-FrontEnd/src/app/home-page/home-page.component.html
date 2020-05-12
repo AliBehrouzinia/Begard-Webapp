@@ -7,12 +7,28 @@
 </mat-grid-list>
 
 <div style="display:flex;justify-content: center">
-   <div style="width: 60%;">
+    <div style="display:flex;justify-content: center;width: 30%;">
+        <mat-card class="side-section"> left </mat-card>
+    </div>
+   <div style="width: 50%;">
     <mat-card class="child-card">
-        <mat-card-title>Top Posts</mat-card-title>
-        <app-horizontl-list [planOverviews]="planOverviews"></app-horizontl-list>
+        <mat-card-title style="display:flex;justify-content: center;">Top Posts</mat-card-title>
+        <app-horizontl-list style="margin-top: 20px;" [planOverviews]="planOverviews"></app-horizontl-list>
     </mat-card>
    </div>
+   <div style="display:flex;justify-content: center;width: 30%;">
+       <mat-card class="side-section"> 
+           <mat-card-title  style="display:flex;justify-content: center; width: 75%;">
+                Top Planners
+            </mat-card-title>
+            <mat-card-content style="margin-top: 40px;">
+                <div *ngFor="let tp of topPlanners;">
+                    <app-top-planners [username]="tp.username" [email]="tp.email" [profileImg]="tp.profile_img"
+                        [rate]="tp.average_rate" [isPublic]="tp.is_public"></app-top-planners>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>
 
 <div style="display:flex; justify-content: center; ">
