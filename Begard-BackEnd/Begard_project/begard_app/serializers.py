@@ -81,7 +81,7 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
-        fields = ('email',)
+        fields = ('email', 'pk')
         read_only_fields = ('email',)
 
 
@@ -254,9 +254,3 @@ class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
         fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
-
-
-class TokenSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Token
-        fields = ('key', 'user_id')
