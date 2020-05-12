@@ -46,3 +46,17 @@ class LikeAndCommentOnPostPermission(permissions.BasePermission):
             return True
 
         return False
+
+
+class AllowGetUserPosts(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        target_user = get_object_or_404(models.BegardUser, id=view.kwargs.get('id'))
+        source_user = request.user
+
+        if not target_user.is_public:
+            if not models.UserFollowing.objects.filter(user_id=source_user.id,
+                                                       following_user_id=target_user.id).exists():
+                return False
+
+        return True
