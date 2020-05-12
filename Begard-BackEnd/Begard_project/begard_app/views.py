@@ -14,7 +14,7 @@ from .permissions import *
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
-    ImageSerializer, TopPlannerSerializer
+    ImageSerializer, TopPlannerSerializer, UserPlansSerializer
 
 
 class CitiesListView(generics.ListAPIView):
@@ -526,9 +526,9 @@ class ProfileDetailsView(generics.RetrieveAPIView):
         data['followings_count'] = models.UserFollowing.objects.filter(user_id=target_user).count()
         data['followers_count'] = models.UserFollowing.objects.filter(following_user_id=target_user).count()
 
-        if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+        if models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user).exists():
             following_state = 'Following'
-        elif models.FollowRequest.objects.filter(request_from=source_user, request_to=target_user).exists():
+        elif models.FollowRequest.objects.filter(request_from=source_user.id, request_to=target_user).exists():
             following_state = 'Requested'
         else:
             following_state = 'Follow'
@@ -580,6 +580,8 @@ class UserPostsView(generics.ListAPIView):
                 serializer_data[i]['following_state'] = 'Follow'
 
         return Response(serializer_data, status.HTTP_200_OK)
+
+
 class TopPlannerView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = TopPlannerSerializer
@@ -605,3 +607,21 @@ class TopPlannerView(generics.ListAPIView):
         sorted_list = sorted(users_list, key=lambda x: x.average_rate)
         sorted_list.reverse()
         return sorted_list
+
+
+class UserPlansView(generics.ListAPIView):
+    serializer_class = UserPlansSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user_pk = self.kwargs.get('id')
+        self_user = self.request.user.id
+        followings = models.UserFollowing.objects.filter(user_id=self_user)
+        followings_list = list(followings)
+        following_id = []
+        for item in followings_list:
+            following_id.append(item.following_user_id.id)
+        plans = models.Plan.objects.filter(Q(user_id__in=following_id) & Q(user_id=user_pk) |
+                                           Q(user__is_public=True) & Q(user_id=user_pk))
+        data = serializers.UserPlansSerializer(instance=plans, many=True).data
+        return Response(data=data, status=status.HTTP_200_OK)
