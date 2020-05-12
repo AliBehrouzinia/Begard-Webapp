@@ -73,9 +73,9 @@ class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPI
 
     def post(self, request, *args, **kwargs):
         if not request.data.get('plan_items'):
-            return HttpResponseBadRequest("Error : The plan items doesn't exist.", status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponseBadRequest("Error : The plan items doesn't exist.")
         if not request.data.get('image'):
-            return HttpResponseBadRequest("Error : The cover image doesn't exist.", status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponseBadRequest("Error : The cover image doesn't exist.")
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
         post = self.save_post(request.data, plan.id)
@@ -244,14 +244,15 @@ class ShowPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get_queryset(self):
-        pass
-
-    def get(self, request, *args, **kwargs):
         user = self.request.user.id
         following_users = [item['following_user_id'] for item in
                            models.UserFollowing.objects.filter(user_id=user).values('following_user_id')]
+        return following_users
+
+    def get(self, request, *args, **kwargs):
+        following_users = self.get_queryset()
         if not self.request.query_params.get('page').isdigit():
-            return HttpResponseBadRequest("Error : the page number is not correct.", status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponseBadRequest("Error : the page number is not correct.")
         page_number = int(self.request.query_params.get('page'))
         posts = models.Post.objects.filter(Q(user__in=following_users) |
                                            Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
@@ -278,8 +279,7 @@ class SearchPostView(generics.ListAPIView):
     serializer_class = ShowPostSerializer
 
     def get(self, request, *args, **kwargs):
-        user = self.request.user.id
-        user_following = models.UserFollowing.objects.filter(user_id=user)
+        user_following = self.get_queryset()
         if not (self.request.query_params.get('city')).isdigit():
             return Response(data={"error: ": "the page number is not correct."}, status=status.HTTP_400_BAD_REQUEST)
         city = self.request.query_params.get('city', None)
@@ -289,7 +289,9 @@ class SearchPostView(generics.ListAPIView):
         return Response(data=queryset, status=status.HTTP_200_OK)
 
     def get_queryset(self):
-        pass
+        user = self.request.user.id
+        user_following = models.UserFollowing.objects.filter(user_id=user)
+        return user_following
 
 
 class CommentsOnPostView(generics.ListCreateAPIView):
@@ -338,7 +340,7 @@ class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
         user_id = self.request.user.id
         data = request.data
         if not self.request.data.get('following_id'):
-            return HttpResponseBadRequest("the following_ID does not exists.", status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponseBadRequest("the following_ID does not exists.")
         following_id = data['following_id']
         models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
         return Response(status=status.HTTP_200_OK)
