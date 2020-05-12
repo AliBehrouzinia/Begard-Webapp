@@ -246,4 +246,4 @@ class TopPlannerSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
-        fields = ('key', 'user')
+        fields = ('key', 'user_id')
