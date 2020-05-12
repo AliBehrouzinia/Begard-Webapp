@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { PostLocationService } from '../post-location.service';
+import { PostLocation, Image } from './../post-location'
+
 
 
 @Component({
@@ -9,7 +12,7 @@ import { FormControl } from '@angular/forms';
 })
 export class PostLocationComponent implements OnInit {
   images = []
-  imageStrings = []
+  imageStrings: Image[] = []
   imagePath;
   message;
   imgURL;
@@ -23,13 +26,15 @@ export class PostLocationComponent implements OnInit {
   public descControl: FormControl = new FormControl('');
 
 
-  constructor() { }
+  constructor(private postLocationService: PostLocationService) { }
 
   ngOnInit(): void {
   }
 
   _handleReaderLoaded(readerEvt) {
-    this.imageStrings.push(readerEvt.target.result);
+    console.log("a : "+this.imageStrings.length)
+    this.imageStrings.push({ image: readerEvt.target.result });
+    console.log("b : "+this.imageStrings.length)
     this.updateSaveButtonDisabled();
   }
 
@@ -66,24 +71,31 @@ export class PostLocationComponent implements OnInit {
 
   post() {
     console.log("plan : " + this.planControl.value + "loc : " + this.locationControl.value + " desc : " + this.descControl.value)
+    this.postLocationService.sendPostLocation(new PostLocation(
+      'location_post',
+      this.descControl.value,
+      '1',
+      this.locationControl.value,
+      this.imageStrings
+    ))
   }
 
-  updateSaveButtonDisabled(){
-    if (this.descControl.value != undefined ){
-      if (this.descControl.value.length > 0 && this.imageStrings.length > 0){
+  updateSaveButtonDisabled() {
+    if (this.descControl.value != undefined) {
+      if (this.descControl.value.length > 0 && this.imageStrings.length > 0) {
         this.postDisabled = false;
       }
-      else{
+      else {
         this.postDisabled = true;
       }
     }
-    else{
+    else {
       this.postDisabled = true;
     }
   }
 
-  onChange(e){
-      this.updateSaveButtonDisabled;
+  onChange(e) {
+    this.updateSaveButtonDisabled;
 
   }
 }

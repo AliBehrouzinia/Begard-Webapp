@@ -10,7 +10,7 @@ export class PostLocationService {
 
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
-  private sendPostLocation(postLocation) {
+  sendPostLocation(postLocation) {
     console.log(JSON.stringify(postLocation))
     const url = 'http://127.0.0.1:8000/location-post/';
 

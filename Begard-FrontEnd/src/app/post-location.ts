@@ -14,6 +14,6 @@ export class PostLocation {
         this.content = content;
         this.place_id = place_id;
         this.place_name = place_name;
-        this.image = this.image;
+        this.image = images;
     }
 }
