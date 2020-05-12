@@ -60,7 +60,7 @@
 	</div>
 
 	<mat-card-actions align="end">
-		<button mat-raised-button color='primary' (click)="post()"
+		<button mat-raised-button color='primary' (click)="post()" [disabled]="postDisabled"
 			style="margin-top:10px; min-width: 100px; margin-right: 8px;margin-bottom: -23px;font-size: 17px;">post</button>
 	</mat-card-actions>
 
