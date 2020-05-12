@@ -255,6 +255,7 @@ class ShowPostView(generics.ListAPIView):
         return following_users
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user.id
         following_users = self.get_queryset()
         if not self.request.query_params.get('page').isdigit():
             return HttpResponseBadRequest("Error : the page number is not correct.")
