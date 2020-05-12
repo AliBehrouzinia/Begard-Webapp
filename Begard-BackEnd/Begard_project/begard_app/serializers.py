@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from .models import *
 from .models import BegardUser
 from drf_extra_fields.fields import Base64ImageField
@@ -253,3 +254,9 @@ class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
         fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Token
+        fields = ('key', 'user_id')
