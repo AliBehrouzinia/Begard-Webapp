@@ -9,6 +9,8 @@ import { MyPlan } from '../my-plan';
 })
 export class MyPlanComponent implements OnInit {
   myPlans = [];
+  SERVER_URL = 'http://127.0.0.1:8000';
+
 
   constructor(private myPlanService: MyPlanService) { }
 
@@ -28,7 +30,7 @@ export class MyPlanComponent implements OnInit {
   }
 
   setCoverUrl(url) {
-    return '127.0.0.1:8000' + url;
+    return this.SERVER_URL + url;
   }
 }
 
