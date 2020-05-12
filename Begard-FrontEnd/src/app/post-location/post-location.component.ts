@@ -19,10 +19,11 @@ export class PostLocationComponent implements OnInit {
   imagePath;
   message;
   imgURL;
+  locationDisabled = true;
 
   postDisabled = true;
   plans = []
-  locations = []
+  locations = [4]
 
   public planControl: FormControl = new FormControl('');
   public locationControl: FormControl = new FormControl('');
@@ -115,11 +116,14 @@ export class PostLocationComponent implements OnInit {
     console.log("p" + JSON.stringify(plan))
     if (plan != undefined) {
       this.updatePostButtonDisabled()
+      this.locationDisabled = false;
       this.myLocationService.getMyLocations(plan.id).subscribe(myLocations => {
         for (let i = 0; i < myLocations.length; i++) {
           this.plans.push(myLocations[i])
         }
       })
+    } else {
+      this.locationDisabled = true;
     }
   }
 
