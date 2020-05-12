@@ -13,7 +13,7 @@
     </div>
     
 
-    <mat-icon matBadge="15" matBadgeColor="accent" matBadgeSize="small" class="notif" (click)="onNotif()">notifications</mat-icon>
+    <mat-icon matBadge="15" matBadgeColor="accent" matBadgeSize="small" class="notif" (click)=" openDialog($event)">notifications</mat-icon>
 
 
     <div *ngIf="(loginStatus$ | async)" >
