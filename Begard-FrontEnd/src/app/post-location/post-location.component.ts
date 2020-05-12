@@ -14,6 +14,7 @@ export class PostLocationComponent implements OnInit {
   message;
   imgURL;
 
+  postDisabled = true;
   plans = [1, 2, 3]
   locations = [1, 2, 4]
 
@@ -29,6 +30,7 @@ export class PostLocationComponent implements OnInit {
 
   _handleReaderLoaded(readerEvt) {
     this.imageStrings.push(readerEvt.target.result);
+    this.updateSaveButtonDisabled();
   }
 
   preview(files) {
@@ -58,4 +60,30 @@ export class PostLocationComponent implements OnInit {
     }
   }
 
+  clearPhoto(i) {
+    this.images.splice(i, 1);
+  }
+
+  post() {
+    console.log("plan : " + this.planControl.value + "loc : " + this.locationControl.value + " desc : " + this.descControl.value)
+  }
+
+  updateSaveButtonDisabled(){
+    if (this.descControl.value != undefined ){
+      if (this.descControl.value.length > 0 && this.imageStrings.length > 0){
+        this.postDisabled = false;
+      }
+      else{
+        this.postDisabled = true;
+      }
+    }
+    else{
+      this.postDisabled = true;
+    }
+  }
+
+  onChange(e){
+      this.updateSaveButtonDisabled;
+
+  }
 }
