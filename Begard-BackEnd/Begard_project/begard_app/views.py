@@ -4,6 +4,7 @@ from itertools import chain
 
 from django.db.models import Q
 from django.http import JsonResponse
+from django.http.response import HttpResponseBadRequest
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -15,6 +16,11 @@ from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
     ImageSerializer, TopPlannerSerializer
+
+
+class ActionOnFollowRequestType(enum.Enum):
+    accept = 1,
+    reject = 2
 
 
 class CitiesListView(generics.ListAPIView):
@@ -428,38 +434,41 @@ class FollowRequestView(generics.ListCreateAPIView):
         return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
-    """Accept or Reject or delete a follow request"""
-    permission_classes = [IsAuthenticated, ActionOnFollowRequestPermission]
+class AnswerFollowRequestView(generics.DestroyAPIView):
+    """Accept or reject a follow request"""
+    permission_classes = [IsAuthenticated, AnswerFollowRequestPermission]
 
-    def get(self, request, *args, **kwargs):
+    def get_object(self):
         follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
+        self.check_object_permissions(request=self.request, obj=follow_request)
+        return follow_request
 
-        self.check_object_permissions(request, follow_request)
+    def destroy(self, request, *args, **kwargs):
+        follow_request = self.get_object()
 
         action = self.request.query_params.get('action')
 
-        if not ((action == 'accept') or (action == 'reject')):
-            return Response({"error: ": "you need 'action' query params with 'accept' or 'reject' value."},
-                            status.HTTP_400_BAD_REQUEST)
+        if not ((action == ActionOnFollowRequestType.accept.name) or (action == ActionOnFollowRequestType.reject.name)):
+            return HttpResponseBadRequest("error: problem in query params.")
 
-        if action == 'accept':
+        if action == ActionOnFollowRequestType.accept.name:
             data = {'user_id': follow_request.request_from_id, 'following_user_id': follow_request.request_to_id}
             serializer = serializers.FollowingsSerializer(data=data)
             if serializer.is_valid(True):
                 serializer.save()
-        else:
-            follow_request.delete()
 
-        return Response(status=status.HTTP_200_OK)
+        self.perform_destroy(follow_request)
+        return Response()
 
-    def delete(self, request, *args, **kwargs):
+
+class DeleteFollowRequestView(generics.DestroyAPIView):
+    """Delete a follow request"""
+    permission_classes = [IsAuthenticated, DeleteFollowRequestPermission]
+
+    def get_object(self):
         follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
-
-        self.check_object_permissions(request, follow_request)
-        follow_request.delete()
-
-        return Response(status=status.HTTP_200_OK)
+        self.check_object_permissions(request=self.request, obj=follow_request)
+        return follow_request
 
 
 class TopPostsView(generics.ListAPIView):
