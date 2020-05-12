@@ -145,3 +145,11 @@ body {
 .login-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix {
   padding: 0.8375em 0;
 }
+
+.mat-grid-tile .mat-figure {
+  justify-content: flex-start !important ;
+  
+}
+/* .red-class.mat-grid-tile .mat-figure{
+  justify-content: flex-start !important ;
+} */

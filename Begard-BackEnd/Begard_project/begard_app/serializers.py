@@ -251,6 +251,12 @@ class ImageSerializer(serializers.ModelSerializer):
         return Image.objects.create(post=data, image=image)
 
 
+class TopPlannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BegardUser
+        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
+
 class UserPlansSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):

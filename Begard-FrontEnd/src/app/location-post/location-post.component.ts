@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList,Input } from '@angular/core';
 import { LocationPostService, PostRes } from './location-post.service';
 import { ThemePalette } from '@angular/material/core';
 import { CommentComponent, Comment } from './comment/comment.component';
 import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 class Post {
   constructor(
@@ -21,6 +22,8 @@ class Post {
   ) { }
 }
 
+
+
 @Component({
   selector: 'app-location-post',
   templateUrl: './location-post.component.html',
@@ -28,6 +31,7 @@ class Post {
 })
 export class LocationPostComponent implements OnInit {
 
+  @Input() currentUrl ;
   commentFc = new FormControl()
 
   @ViewChildren(CommentComponent) child: QueryList<CommentComponent>;
@@ -45,13 +49,26 @@ export class LocationPostComponent implements OnInit {
   radius: number;
   color: ThemePalette = "primary";
 
-  constructor(private postservice: LocationPostService) { }
+  constructor(private postservice: LocationPostService,
+    private router: Router) { 
+     
+     
+    }
 
   ngOnInit(): void {
-    this.postservice.getPostData().subscribe(resdata => {
-      this.setPostData(resdata);
-      console.log(resdata);
-    });
+    if(this.router.url==='/homepage'){
+      this.postservice.getPostData().subscribe(resdata => {
+        this.setPostData(resdata);
+      });
+    }
+    else {
+      this.postservice.getProfilePostData(this.currentUrl).subscribe(resdata => {
+        this.setPostData(resdata);
+      })
+    }
+  
+    
+    
 
   }
 

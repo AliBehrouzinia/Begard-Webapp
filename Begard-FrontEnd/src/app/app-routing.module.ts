@@ -9,6 +9,7 @@ import { CalenderComponent } from './calender/calender.component';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LocationPostComponent } from './location-post/location-post.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 const appRoutes: Routes = [
@@ -19,7 +20,8 @@ const appRoutes: Routes = [
     { path: 'homepage', component: HomePageComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } },
     { path: 'postlocatio', component: LocationPostComponent },
-  
+    { path: 'profile/:id', component: ProfileComponent }
+
 ]
 
 @NgModule({
