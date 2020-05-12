@@ -58,9 +58,9 @@
                     <div style="display:flex">
                         <mat-icon class="location-icon">location_on</mat-icon>
                         <span #city class="city"><strong>{{plan.destination_city}}</strong></span>
-                        <span class="date">{{plan.date}}</span>
+                        <span class="date">,created {{plan.creation_date}}</span>
                     </div>
-                    <img class="im" mat-card-image />
+                    <img class="im" mat-card-image [src]="plan.cover" />
                 </mat-card>
             </mat-grid-tile>
             <mat-grid-tile>

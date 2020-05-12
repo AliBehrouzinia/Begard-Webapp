@@ -15,9 +15,11 @@ export class MyPlanComponent implements OnInit {
   ngOnInit(): void {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       for (let i = 0; i < myPlans.length; i++) {
-        this.myPlans.push(new MyPlan(myPlans[i].id , myPlans[i].destinaion_city , this.setDate(myPlans[i].creation_date) ,this.setCoverUrl(myPlans[i].cover)))
+        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city, this.setDate(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
       };
+      console.log(myPlans[0].id + "  " + myPlans[0].destination_city + "  " + this.setDate(myPlans[0].creation_date) + "  " + this.setCoverUrl(myPlans[0].cover));
     })
+    
   }
 
   setDate(date) {
@@ -25,8 +27,8 @@ export class MyPlanComponent implements OnInit {
     return "" + d.getFullYear() + "/" + d.getUTCMonth() + "/" + d.getUTCDate();
   }
 
-  setCoverUrl(url){
-    return '127.0.0.1:8000/' + url;
+  setCoverUrl(url) {
+    return '127.0.0.1:8000' + url;
   }
 }
 
