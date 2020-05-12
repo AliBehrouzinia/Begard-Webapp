@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PostLocationService } from '../post-location.service';
 import { PostLocation, Image } from './../post-location'
@@ -32,10 +32,8 @@ export class PostLocationComponent implements OnInit {
   }
 
   _handleReaderLoaded(readerEvt) {
-    console.log("a : "+this.imageStrings.length)
     this.imageStrings.push({ image: readerEvt.target.result });
-    console.log("b : "+this.imageStrings.length)
-    this.updateSaveButtonDisabled();
+    this.updatePostButtonDisabled();
   }
 
   preview(files) {
@@ -67,10 +65,11 @@ export class PostLocationComponent implements OnInit {
 
   clearPhoto(i) {
     this.images.splice(i, 1);
+    this.imageStrings.splice(i,1);
+    this.updatePostButtonDisabled()
   }
 
   post() {
-    console.log("plan : " + this.planControl.value + "loc : " + this.locationControl.value + " desc : " + this.descControl.value)
     this.postLocationService.sendPostLocation(new PostLocation(
       'location_post',
       this.descControl.value,
@@ -80,9 +79,17 @@ export class PostLocationComponent implements OnInit {
     ))
   }
 
-  updateSaveButtonDisabled() {
+  updatePostButtonDisabled() {
+    console.log("u" + this.descControl.value.length + "  "
+      + this.imageStrings.length + "  "
+      + this.planControl.value + "  "
+      + this.locationControl.value)
+
     if (this.descControl.value != undefined) {
-      if (this.descControl.value.length > 0 && this.imageStrings.length > 0) {
+      if (this.descControl.value.length > 0
+        && this.imageStrings.length > 0
+        && this.planControl.value
+        && this.locationControl.value) {
         this.postDisabled = false;
       }
       else {
@@ -94,8 +101,17 @@ export class PostLocationComponent implements OnInit {
     }
   }
 
-  onChange(e) {
-    this.updateSaveButtonDisabled;
+  onPlanChange(value) {
+    console.log("p" + value)
+    if (value != undefined) {
+      this.updatePostButtonDisabled()
+    }
+  }
 
+  onLocationChange(value) {
+    console.log("l" + value)
+    if (value != undefined) {
+      this.updatePostButtonDisabled()
+    }
   }
 }

@@ -7,16 +7,18 @@
 		<div style="float:right;width:70%;justify-content:end">
 			<mat-form-field style="width:auto;float:right">
 				<mat-label>plan</mat-label>
-				<mat-select [formControl]="planControl" style="font-size: 17px;" >
-					<mat-option *ngFor="let p of plans"[value]="p">
+				<mat-select [formControl]="planControl" style="font-size: 17px;"
+					(selectionChange)="onPlanChange($event.value)">
+					<mat-option *ngFor="let p of plans" [value]="p">
 						{{p}}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
 			<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">
 				<mat-label>location</mat-label>
-				<mat-select [formControl]="locationControl" style="font-size: 17px;">
-					<mat-option *ngFor="let l of locations" [value]="l" >
+				<mat-select [formControl]="locationControl" style="font-size: 17px;"
+					(selectionChange)="onLocationChange($event.value)">
+					<mat-option *ngFor="let l of locations" [value]="l">
 						{{l}}
 					</mat-option>
 				</mat-select>
@@ -27,7 +29,7 @@
 	<form class="example-form" style="margin-top: 15px;">
 		<mat-form-field class="example-full-width">
 			<mat-label>Leave a comment</mat-label>
-			<textarea matInput [formControl]="descControl" style="font-size: 20px;"></textarea>
+			<textarea matInput [formControl]="descControl" (input)="updatePostButtonDisabled()" style="font-size: 20px;"></textarea>
 		</mat-form-field>
 	</form>
 
