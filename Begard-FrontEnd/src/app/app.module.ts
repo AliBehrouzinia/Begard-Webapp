@@ -56,6 +56,9 @@ import { LocationPostService } from './location-post/location-post.service';
 import { TopPlannersComponent } from './top-planners/top-planners.component';
 import { MyPlanComponent } from './my-plan/my-plan.component';
 
+import { MyPlanService } from './my-plan.service';
+
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -103,7 +106,7 @@ import { MyPlanComponent } from './my-plan/my-plan.component';
       MDBBootstrapModule
       
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService,LocationPostService],
+   providers: [DataStorageService,MyPlanService ,UserService, LocationService, DynamicSearchService, CalenderResolver,MapLocationService,NavBarService,LocationPostService],
    bootstrap: [
       AppComponent
    ],

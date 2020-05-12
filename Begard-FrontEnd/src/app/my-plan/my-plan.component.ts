@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
+import { MyPlanService } from './../my-plan.service'
+import { MyPlan } from '../my-plan';
 
 @Component({
   selector: 'app-my-plan',
@@ -13,18 +8,16 @@ export interface Tile {
   styleUrls: ['./my-plan.component.css']
 })
 export class MyPlanComponent implements OnInit {
-  tiles: Tile[] = [
-    {text: 'One', cols: 1, rows: 1, color: 'lightblue'},
-    {text: 'One', cols: 1, rows: 1, color: 'lightblue'},
-    {text: 'Two', cols: 1, rows: 1, color: 'lightgreen'},
-    {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
-    {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
-    {text: 'Two', cols: 1, rows: 1, color: 'lightgreen'},
-  ];
-  constructor() {}
+  myPlans = [];
+
+  constructor(private myPlanService: MyPlanService) { }
 
   ngOnInit(): void {
+    this.myPlanService.getMyPlans().subscribe(myPlans => {
+      for (let i = 0; i < myPlans.length; i++) {
+        this.myPlans.push(new MyPlan(myPlans[i].id , myPlans[i].destinaion_city , myPlans[i].creation_date ,myPlans[i].cover))
+      };
+    })
   }
-
 }
 

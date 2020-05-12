@@ -53,12 +53,12 @@
 
     <div style="width: 50%; min-width: 500px; margin-left: 5%;">
         <mat-grid-list cols="3" rowHeight="200px">
-            <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows">
+            <mat-grid-tile *ngFor="let plan of myPlans">
                 <mat-card style="box-shadow: 4px 4px 9px #888888; width: 90%;height: 85%;">
                     <div style="display:flex">
                         <mat-icon class="location-icon">location_on</mat-icon>
-                        <span #city class="city"><strong>Tehran</strong></span>
-                        <span class="date">,created Today</span>
+                        <span #city class="city"><strong>{{plan.destination_city}}</strong></span>
+                        <span class="date">{{plan.date}}</span>
                     </div>
                     <img class="im" mat-card-image />
                 </mat-card>
