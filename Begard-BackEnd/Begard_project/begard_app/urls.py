@@ -21,4 +21,5 @@ urlpatterns = [
     path('top-posts/', views.TopPostsView.as_view()),
     path('location-post/', views.LocationPostView.as_view()),
     path('top-planners/', views.TopPlannerView.as_view()),
+    path('plans/<int:id>/locations/', views.LocationsOfPlanView.as_view()),
 ]
