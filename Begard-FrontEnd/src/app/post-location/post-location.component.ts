@@ -23,7 +23,7 @@ export class PostLocationComponent implements OnInit {
 
   postDisabled = true;
   plans = []
-  locations = [4]
+  locations = []
 
   public planControl: FormControl = new FormControl('');
   public locationControl: FormControl = new FormControl('');
@@ -84,18 +84,13 @@ export class PostLocationComponent implements OnInit {
     this.postLocationService.sendPostLocation(new PostLocation(
       'location_post',
       this.descControl.value,
-      '1',
-      this.locationControl.value,
+      this.planControl.value.place_id,
+      this.locationControl.value.place_name,
       this.imageStrings
     ))
   }
 
   updatePostButtonDisabled() {
-    console.log("u" + this.descControl.value.length + "  "
-      + this.imageStrings.length + "  "
-      + this.planControl.value + "  "
-      + this.locationControl.value)
-
     if (this.descControl.value != undefined) {
       if (this.descControl.value.length > 0
         && this.imageStrings.length > 0
@@ -113,13 +108,12 @@ export class PostLocationComponent implements OnInit {
   }
 
   onPlanChange(plan) {
-    console.log("p" + JSON.stringify(plan))
     if (plan != undefined) {
       this.updatePostButtonDisabled()
       this.locationDisabled = false;
       this.myLocationService.getMyLocations(plan.id).subscribe(myLocations => {
         for (let i = 0; i < myLocations.length; i++) {
-          this.plans.push(myLocations[i])
+          this.locations.push(myLocations[i])
         }
       })
     } else {
@@ -128,7 +122,6 @@ export class PostLocationComponent implements OnInit {
   }
 
   onLocationChange(location) {
-    console.log("l" + location)
     if (location != undefined) {
       this.updatePostButtonDisabled()
     }
