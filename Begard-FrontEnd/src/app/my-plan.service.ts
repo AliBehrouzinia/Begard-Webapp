@@ -17,7 +17,7 @@ export class MyPlanService {
     const url = 'http://127.0.0.1:8000/plans/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + '9501647d8fb5b2a108c2881364ac44f4300b42f9';
+      var token = 'token ' + user.token;
       return this.http
         .get<MyPlan[]>(url, {
           observe: 'response',
