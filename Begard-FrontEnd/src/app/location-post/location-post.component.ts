@@ -66,7 +66,7 @@ export class LocationPostComponent implements OnInit {
         this.setPostData(resdata);
       })
     }
-    // console.log(this.router.url);
+  
     
     
 
