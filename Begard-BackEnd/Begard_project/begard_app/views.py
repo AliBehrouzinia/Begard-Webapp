@@ -326,21 +326,24 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
+class ListOfFollowingsView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = FollowingsSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get_queryset(self):
         user = self.request.user.id
-        models.UserFollowing.objects.filter(user_id=user)
-        return Response(status=status.HTTP_200_OK)
+        return models.UserFollowing.objects.filter(user_id=user)
+
+
+class DeleteFollowingsView(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
 
     def delete(self, request, *args, **kwargs):
         user_id = self.request.user.id
-        data = request.data
-        following_id = data['following_id']
-        models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
-        return Response(status=status.HTTP_200_OK)
+        following_user_id = self.kwargs.get('id')
+        instance = get_object_or_404(models.UserFollowing, user_id=user_id, following_user_id=following_user_id)
+        instance.delete()
+        return Response()
 
 
 class FollowersView(generics.ListAPIView):
