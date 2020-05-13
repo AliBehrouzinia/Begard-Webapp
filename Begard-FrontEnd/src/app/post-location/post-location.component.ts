@@ -88,6 +88,15 @@ export class PostLocationComponent implements OnInit {
       this.locationControl.value.place_name,
       this.imageStrings
     ))
+    this.clear();
+  }
+
+  clear(){
+    this.images = []
+    this.imageStrings = []
+    this.planControl.setValue('')
+    this.locationControl.setValue('')
+    this.descControl.setValue('')
   }
 
   updatePostButtonDisabled() {
