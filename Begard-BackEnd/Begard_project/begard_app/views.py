@@ -138,6 +138,9 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         return Response(data=plan_details)
 
     def patch(self, request, *args, **kwargs):
+        if not self.request.data.get('plan_items'):
+            return HttpResponseBadRequest("error: field 'plan_items' is required.")
+        
         plan_items = self.request.data['plan_items']
         plan_id = self.kwargs.get('id')
         plan = get_object_or_404(models.Plan, id=plan_id)
@@ -148,7 +151,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         plan_detail.pop('plan_items')
 
         plan_serializer = serializers.UpdatePlanSerializer(instance=plan, data=plan_detail)
-        if plan_serializer.is_valid():
+        if plan_serializer.is_valid(True):
             plan_serializer.save()
 
         plan_items_create_data = []
@@ -167,20 +170,20 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
         serializer = serializers.PatchPlanItemSerializer(instance=instances,
                                                          data=plan_items_update_data, many=True)
-        if serializer.is_valid():
+        if serializer.is_valid(True):
             serializer.save()
 
         models.PlanItem.objects.filter(plan=plan_id).exclude(id__in=plan_items_update_id).delete()
 
         serializer = serializers.PatchPlanItemSerializer(data=plan_items_create_data, many=True)
-        if serializer.is_valid():
+        if serializer.is_valid(True):
             serializer.save()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response()
 
     def delete(self, request, *args, **kwargs):
         models.Plan.objects.filter(pk=self.kwargs.get('id')).delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response()
 
 
 class GlobalSearchList(generics.ListAPIView):
