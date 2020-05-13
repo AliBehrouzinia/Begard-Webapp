@@ -14,7 +14,7 @@ import { ProfileComponent } from './profile/profile.component';
 
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: '/myPlans', pathMatch: 'full' },
+    { path: '', redirectTo: '/homepage', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'search', component: SearchComponent },
