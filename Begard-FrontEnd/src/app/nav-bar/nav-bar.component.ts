@@ -5,8 +5,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from "@angular/platform-browser";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take, exhaustMap } from 'rxjs/operators';
+import { ReqUser, NotifService } from './notificaton.service';
 
 export interface DialogData {
   animal: string;
@@ -31,7 +32,8 @@ export class NavBarComponent implements OnInit {
 
   constructor(public authService: AuthService, public matIconRegistry: MatIconRegistry, public domSanitizer: DomSanitizer,
     public dialog: MatDialog,
-    public http: HttpClient) {
+    public http: HttpClient,
+    private notifService: NotifService) {
     //to add custom icon
     this.matIconRegistry.addSvgIcon(
       "begard_logo",
@@ -41,20 +43,9 @@ export class NavBarComponent implements OnInit {
   public notfiNums;
 
   ngOnInit(): void {
-
-    this.authService.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
-      return this.http.get<ReqUser[]>('http://127.0.0.1:8000/followers/requests/',
-        {
-          headers: new HttpHeaders({ 'Authorization': token })
-        }
-      );
-    })).subscribe(res => {
-       console.log(res);
-       this.notfiNums= res.length;
-       
+    this.notifService.getFollowRequests().subscribe(res => {
+      this.notfiNums = res.length;
     });
-
     this.loginStatus$ = this.authService.isLogedIn;
     this.userEmail$ = this.authService.userEmail;
   }
@@ -63,13 +54,7 @@ export class NavBarComponent implements OnInit {
     this.authService.logout();
   }
 
-  onNotif() {
-
-  }
-
   openDialog(event: Event): void {
-
-
     const dialogRef = this.dialog.open(NotifComponent, {
       width: '250px',
       height: '300px',
@@ -81,22 +66,15 @@ export class NavBarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
       this.animal = result;
     });
   }
 }
 
-interface ReqUser {
-  id: number,
-  request_from: number,
-  date: string,
-  profile_img: string,
-  username: string
-}
-class FollowReq{
-  constructor(public userName : string, public proImg : string, public date : string,
-    public id : number){}
+
+class FollowReq {
+  constructor(public userName: string, public proImg: string, public date: string,
+    public id: number) { }
 }
 
 
@@ -105,62 +83,55 @@ class FollowReq{
   templateUrl: './dialog-overview-example-dialog.html',
 })
 export class NotifComponent implements OnInit {
-  imgUrl = 'https://material.angular.io/assets/img/examples/shiba1.jpg';
-  items: FollowReq[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<NotifComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private http: HttpClient,
-    private auth: AuthService) { }
-  ngOnInit() {
-    
-     this.auth.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
-      return this.http.get<ReqUser[]>('http://127.0.0.1:8000/followers/requests/',
-        {
-          headers: new HttpHeaders({ 'Authorization': token })
-        }
-      );
-    })).subscribe(res => {
-       console.log(res);
-       for(let i=0;i<res.length;i++){
-         this.items.push(new FollowReq(res[i].username,res[i].profile_img,res[i].date,res[i].id))
-       }
-    });
+    private auth: AuthService,
+    private notifService: NotifService) { }
 
+  items: FollowReq[] = [];
+
+
+  ngOnInit() {
+
+    this.notifService.getFollowRequests().subscribe(res => {
+      this.setItems(res);
+    });
+  }
+
+  setItems(res : ReqUser[]){
+    for (let i = 0; i < res.length; i++) {
+      this.items.push(new FollowReq(res[i].username, "http://127.0.0.1:8000" + res[i].profile_img, res[i].date, res[i].id));
+    }
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  onAccept(item : FollowReq){
-
-    this.auth.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
-      var url = 'http://127.0.0.1:8000/followers/requests/' + item.id + '/?action=accept';
-      return this.http.patch(url,{},
-        {
-          headers: new HttpHeaders({ 'Authorization': token })
-        }
-      );
-    })).subscribe();
-    
+  onAccept(item: FollowReq) {
+    this.notifService.onAction('accpet', item.id).subscribe(res => {
+      this.removeItem(item);
+    });
 
   }
-  onDecline(item : FollowReq){
 
-    this.auth.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
-      var url = 'http://127.0.0.1:8000/followers/requests/' + item.id + '/?action=reject';
-      return this.http.patch(url,{},
-        {
-          headers: new HttpHeaders({ 'Authorization': token })
-        }
-      );
-    })).subscribe();
+  onDecline(item: FollowReq) {
+    this.notifService.onAction('reject', item.id).subscribe(res => {
+      this.removeItem(item);
+    });
 
+
+  }
+
+  removeItem(item: FollowReq) {
+    for (var i = 0; i < this.items.length; i++) {
+      if (this.items[i].id == item.id) {
+        this.items.splice(i, 1);
+      }
+    }
   }
 
 }

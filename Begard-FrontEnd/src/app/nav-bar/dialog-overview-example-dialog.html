@@ -4,7 +4,7 @@
   <div *ngIf="!item.disable">
     <mat-grid-list cols="9"  rowHeight="50px" style="margin-left: -10px;margin-right: -10px;">
       <mat-grid-tile  [colspan]="2" >
-        <img mat-card-avatar style="transform: scale(1.2);" src='{{imgUrl}}'>
+        <img mat-card-avatar style="transform: scale(1.2);" src='{{item.proImg}}'>
       </mat-grid-tile>
       <mat-grid-tile class="username" [colspan]="5">{{item.userName}}</mat-grid-tile>
       <mat-grid-tile class="req-icons"  [colspan]="2">
