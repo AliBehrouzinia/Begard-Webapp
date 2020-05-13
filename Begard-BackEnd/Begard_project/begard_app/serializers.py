@@ -82,7 +82,7 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
-        fields = ('email',)
+        fields = ('email', 'pk')
         read_only_fields = ('email',)
 
 
