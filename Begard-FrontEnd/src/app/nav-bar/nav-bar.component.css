@@ -52,3 +52,12 @@
 .mat-button-focus-overlay {
     background-color: transparent!important;
 }
+
+.notif{
+    transform: scale(1.25);
+}
+
+.notif:hover{
+    cursor: pointer;
+    transform: scale(1.35);
+}
