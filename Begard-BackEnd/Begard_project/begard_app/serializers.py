@@ -4,6 +4,7 @@ from .models import *
 from .models import BegardUser
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+
 from django.shortcuts import get_object_or_404
 
 from django.core.files.base import ContentFile
@@ -255,6 +256,33 @@ class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
         fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
+
+class LocationOfPlanSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        result = super(LocationOfPlanSerializer, self).to_representation(instance)
+        place_id = result['place_id']
+
+        places = list(Restaurant.objects.filter(place_id=place_id))
+
+        places += list(Hotel.objects.filter(place_id=place_id))
+        places += list(Museum.objects.filter(place_id=place_id))
+        places += list(TouristAttraction.objects.filter(place_id=place_id))
+        places += list(RecreationalPlace.objects.filter(place_id=place_id))
+        places += list(Cafe.objects.filter(place_id=place_id))
+        places += list(ShoppingMall.objects.filter(place_id=place_id))
+
+        if len(places) == 0:
+            raise NotFound("any Location not found.")
+
+        result['place_name'] = places[0].name
+
+        return result
+
+    class Meta:
+        model = PlanItem
+        fields = ['id', 'place_id']
 
 
 class UserPlansSerializer(serializers.ModelSerializer):

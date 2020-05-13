@@ -673,3 +673,12 @@ class TopPlannerView(generics.ListAPIView):
         sorted_list = sorted(users_list, key=lambda x: x.average_rate)
         sorted_list.reverse()
         return sorted_list
+
+
+class LocationsOfPlanView(generics.ListAPIView):
+    """List of locations of a plan according to 'id'"""
+    permission_classes = [IsAuthenticated, IsPlanOwner]
+    serializer_class = serializers.LocationOfPlanSerializer
+
+    def get_queryset(self):
+        return models.PlanItem.objects.filter(plan=self.kwargs.get('id'))
