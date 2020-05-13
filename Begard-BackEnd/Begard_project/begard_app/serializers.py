@@ -4,6 +4,7 @@ from .models import *
 from .models import BegardUser
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
 
 from django.core.files.base import ContentFile
 import base64
@@ -254,3 +255,27 @@ class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
         fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
+
+class UserPlansSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        result = super(UserPlansSerializer, self).to_representation(instance)
+        post = get_object_or_404(Post, plan_id=result['id'], type='plan_post')
+        image = get_object_or_404(Image, post=post)
+        result['cover'] = image.image.url
+        return result
+
+    class Meta:
+        model = Plan
+        fields = ['id', 'destination_city', 'creation_date', 'user']
+class TopPlannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BegardUser
+        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Token
+        fields = ('key', 'user_id')

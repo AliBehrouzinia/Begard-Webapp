@@ -22,3 +22,10 @@
     margin: 20px;    
 }
 
+
+.underline:hover{
+    text-decoration: underline;
+}
+.input{
+    border-radius: 10px;
+}

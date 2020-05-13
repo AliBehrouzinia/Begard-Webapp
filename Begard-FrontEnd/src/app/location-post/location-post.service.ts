@@ -28,6 +28,18 @@ export class LocationPostService {
     constructor(private http: HttpClient,
         private authService: AuthService) { }
 
+    getProfilePostData(id : string){
+        return this.authService.user.pipe(take(1), exhaustMap(user => {
+            var token = 'token ' + user.token;
+            var url = "http://127.0.0.1:8000/profile/"+id+"/posts/";
+            return this.http.get<PostRes[]>(url,
+                {
+                    headers: new HttpHeaders({ 'Authorization': token })
+                }
+            );
+        }));
+    }
+
     getPostData() {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
@@ -37,7 +49,7 @@ export class LocationPostService {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
-        }))
+        }));
     }
 
     onLike(id: number) {
