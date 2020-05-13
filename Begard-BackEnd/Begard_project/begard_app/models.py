@@ -93,7 +93,7 @@ class Image(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
-    content = models.TextField(default="no content added", max_length=200)
+    content = models.TextField(max_length=200)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
 

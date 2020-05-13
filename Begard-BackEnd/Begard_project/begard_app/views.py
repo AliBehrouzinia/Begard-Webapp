@@ -140,6 +140,9 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         return Response(data=plan_details)
 
     def patch(self, request, *args, **kwargs):
+        if not self.request.data.get('plan_items'):
+            return HttpResponseBadRequest("error: field 'plan_items' is required.")
+        
         plan_items = self.request.data['plan_items']
         plan_id = self.kwargs.get('id')
         plan = get_object_or_404(models.Plan, id=plan_id)
@@ -150,7 +153,7 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         plan_detail.pop('plan_items')
 
         plan_serializer = serializers.UpdatePlanSerializer(instance=plan, data=plan_detail)
-        if plan_serializer.is_valid():
+        if plan_serializer.is_valid(True):
             plan_serializer.save()
 
         plan_items_create_data = []
@@ -169,20 +172,20 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
 
         serializer = serializers.PatchPlanItemSerializer(instance=instances,
                                                          data=plan_items_update_data, many=True)
-        if serializer.is_valid():
+        if serializer.is_valid(True):
             serializer.save()
 
         models.PlanItem.objects.filter(plan=plan_id).exclude(id__in=plan_items_update_id).delete()
 
         serializer = serializers.PatchPlanItemSerializer(data=plan_items_create_data, many=True)
-        if serializer.is_valid():
+        if serializer.is_valid(True):
             serializer.save()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response()
 
     def delete(self, request, *args, **kwargs):
         models.Plan.objects.filter(pk=self.kwargs.get('id')).delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response()
 
 
 class GlobalSearchList(generics.ListAPIView):
@@ -324,15 +327,16 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         post = get_object_or_404(models.Post, id=data['post'])
 
         comment_serializer = serializers.CreateCommentSerializer(data=data)
-        if comment_serializer.is_valid():
+        comment = None
+        if comment_serializer.is_valid(True):
             comment = comment_serializer.save()
-            comment_data = serializers.CreateCommentSerializer(instance=comment).data
-            user = get_object_or_404(models.BegardUser, id=comment_data['user'])
-            comment_data['user_name'] = user.email
-            comment_data['user_profile_img'] = user.profile_img.url
-            return Response(data=comment_data, status=status.HTTP_201_CREATED)
 
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        comment_data = serializers.CreateCommentSerializer(instance=comment).data
+        user = get_object_or_404(models.BegardUser, id=comment_data['user'])
+        comment_data['user_name'] = user.email
+        comment_data['user_profile_img'] = user.profile_img.url
+
+        return Response(data=comment_data, status=status.HTTP_201_CREATED)
 
 
 class ListOfFollowingsView(generics.ListAPIView):
@@ -386,8 +390,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
 
         exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
         if exist_like:
-            return Response(data={"warning": "this post is liked by you.now you are trying to like again."},
-                            status=status.HTTP_406_NOT_ACCEPTABLE)
+            return HttpResponseBadRequest("this post is liked by you.now you are trying to like again.")
 
         serializer = serializers.CreateLikeSerializer(data=data)
         if serializer.is_valid(True):
@@ -406,7 +409,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         if like.exists():
             like.delete()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response()
 
 
 class FollowingRequestView(generics.CreateAPIView):
