@@ -18,6 +18,11 @@ from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSeriali
     ImageSerializer, TopPlannerSerializer
 
 
+class ActionOnFollowRequestType(enum.Enum):
+    accept = 1,
+    reject = 2
+
+
 class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
@@ -40,11 +45,11 @@ class SuggestListView(generics.ListAPIView):
         return queryset
 
 
-class SuggestPlanView(APIView):
+class SuggestPlanView(generics.RetrieveAPIView):
     """Get a plan suggestion to user"""
     permission_classes = [AllowAny]
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         dest_city = models.City.objects.get(pk=self.kwargs.get('id'))
         start_day = datetime.datetime.strptime(self.request.query_params.get('start_date'), "%Y-%m-%dT%H:%MZ")
         finish_day = datetime.datetime.strptime(self.request.query_params.get('finish_date'), "%Y-%m-%dT%H:%MZ")
@@ -250,6 +255,7 @@ class ShowPostView(generics.ListAPIView):
         return following_users
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user.id
         following_users = self.get_queryset()
         if not self.request.query_params.get('page').isdigit():
             return HttpResponseBadRequest("Error : the page number is not correct.")
@@ -327,23 +333,24 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class FollowingsView(generics.RetrieveUpdateDestroyAPIView):
+class ListOfFollowingsView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = FollowingsSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get_queryset(self):
         user = self.request.user.id
-        models.UserFollowing.objects.filter(user_id=user)
-        return Response(status=status.HTTP_200_OK)
+        return models.UserFollowing.objects.filter(user_id=user)
+
+
+class DeleteFollowingsView(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
 
     def delete(self, request, *args, **kwargs):
         user_id = self.request.user.id
-        data = request.data
-        if not self.request.data.get('following_id'):
-            return HttpResponseBadRequest("the following_ID does not exists.")
-        following_id = data['following_id']
-        models.UserFollowing.objects.filter(Q(user_id=user_id) & Q(following_user_id=following_id)).delete()
-        return Response(status=status.HTTP_200_OK)
+        following_user_id = self.kwargs.get('id')
+        instance = get_object_or_404(models.UserFollowing, user_id=user_id, following_user_id=following_user_id)
+        instance.delete()
+        return Response()
 
 
 class FollowersView(generics.ListAPIView):
@@ -400,25 +407,19 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class FollowRequestView(generics.ListCreateAPIView):
+class FollowingRequestView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.FollowRequestSerializer
-
-    def get_queryset(self):
-        return models.FollowRequest.objects.filter(request_to=self.request.user)
 
     def post(self, request, *args, **kwargs):
         data = self.request.data
         data['request_from'] = self.request.user.id
 
-        if type(data['request_to']) is not int:
-            return Response({"error": "data is not in valid format."},
-                            status.HTTP_400_BAD_REQUEST)
+        if not (data.get('request_to') and isinstance(data['request_to'], int)):
+            return HttpResponseBadRequest("field 'request_to' with a digit required.")
 
-        following_users = models.UserFollowing.objects.filter(user_id=data['request_from'])
-        if following_users.filter(following_user_id=data['request_to']).exists():
-            return Response(data={'error': 'this user is followed by you, you can not request to follow this user'},
-                            status=status.HTTP_400_BAD_REQUEST)
+        if models.UserFollowing.objects.filter(user_id=data['request_from'],
+                                               following_user_id=data['request_to']).exists():
+            return HttpResponseBadRequest('this user is followed by you, you can not request to follow this user')
 
         request_to_user = get_object_or_404(models.BegardUser, id=data['request_to'])
 
@@ -429,7 +430,7 @@ class FollowRequestView(generics.ListCreateAPIView):
                 serializer.save()
                 return Response(data={"status": "Followed"}, status=status.HTTP_201_CREATED)
         else:
-            serializer = serializers.FollowRequestSerializer(data=data)
+            serializer = serializers.FollowingRequestSerializer(data=data)
             if serializer.is_valid(True):
                 serializer.save()
                 return Response(data={"status": "Requested"}, status=status.HTTP_201_CREATED)
@@ -437,38 +438,51 @@ class FollowRequestView(generics.ListCreateAPIView):
         return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class ActionOnFollowRequestView(generics.ListAPIView, generics.DestroyAPIView):
-    """Accept or Reject or delete a follow request"""
-    permission_classes = [IsAuthenticated, ActionOnFollowRequestPermission]
+class FollowersRequestsView(generics.ListAPIView):
+    """get list of followers requests"""
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.FollowersRequestsSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get_queryset(self):
+        user = self.request.user
+        return models.FollowRequest.objects.filter(request_to=user)
+
+
+class AnswerFollowRequestView(generics.UpdateAPIView):
+    """Accept or reject a follow request"""
+    permission_classes = [IsAuthenticated, AnswerFollowRequestPermission]
+
+    def get_object(self):
         follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
+        self.check_object_permissions(request=self.request, obj=follow_request)
+        return follow_request
 
-        self.check_object_permissions(request, follow_request)
+    def patch(self, request, *args, **kwargs):
+        follow_request = self.get_object()
 
         action = self.request.query_params.get('action')
 
-        if not ((action == 'accept') or (action == 'reject')):
-            return Response({"error: ": "you need 'action' query params with 'accept' or 'reject' value."},
-                            status.HTTP_400_BAD_REQUEST)
+        if not ((action == ActionOnFollowRequestType.accept.name) or (action == ActionOnFollowRequestType.reject.name)):
+            return HttpResponseBadRequest("error: problem in query params.")
 
-        if action == 'accept':
+        if action == ActionOnFollowRequestType.accept.name:
             data = {'user_id': follow_request.request_from_id, 'following_user_id': follow_request.request_to_id}
             serializer = serializers.FollowingsSerializer(data=data)
             if serializer.is_valid(True):
                 serializer.save()
-        else:
-            follow_request.delete()
 
-        return Response(status=status.HTTP_200_OK)
-
-    def delete(self, request, *args, **kwargs):
-        follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
-
-        self.check_object_permissions(request, follow_request)
         follow_request.delete()
+        return Response()
 
-        return Response(status=status.HTTP_200_OK)
+
+class DeleteFollowRequestView(generics.DestroyAPIView):
+    """Delete a follow request"""
+    permission_classes = [IsAuthenticated, DeleteFollowRequestPermission]
+
+    def get_object(self):
+        follow_request = get_object_or_404(models.FollowRequest, id=self.kwargs.get('id'))
+        self.check_object_permissions(request=self.request, obj=follow_request)
+        return follow_request
 
 
 class TopPostsView(generics.ListAPIView):
