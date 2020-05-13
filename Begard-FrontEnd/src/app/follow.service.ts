@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { PostLocation } from './post-location'
 
 export interface FollowRequest{
   request_to
@@ -14,7 +13,7 @@ export class FollowService {
 
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
-  private sendFollowRequest(followRequest) {
+  sendFollowRequest(followRequest) {
     const url = 'http://127.0.0.1:8000/followings/requests/';
 
     this.authservice.user.subscribe(user => {
