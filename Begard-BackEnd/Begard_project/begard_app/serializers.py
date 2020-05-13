@@ -316,15 +316,3 @@ class UserPlansSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = ['id', 'destination_city', 'creation_date', 'user']
-
-
-class TopPlannerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BegardUser
-        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
-
-
-class TokenSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Token
-        fields = ('key', 'user_id')
