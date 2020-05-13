@@ -316,6 +316,8 @@ class UserPlansSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = ['id', 'destination_city', 'creation_date', 'user']
+
+
 class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
