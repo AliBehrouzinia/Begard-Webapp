@@ -58,7 +58,7 @@ SITE_ID = 1
 AUTH_USER_MODEL = 'begard_app.BegardUser'
 
 REST_AUTH_SERIALIZERS = {
- 'USER_DETAILS_SERIALIZER': 'begard_app.serializers.CustomUserDetailsSerializer',
+    'USER_DETAILS_SERIALIZER': 'begard_app.serializers.CustomUserDetailsSerializer',
 }
 
 REST_FRAMEWORK = {
@@ -162,3 +162,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+MEDIA_URL = '/media/'

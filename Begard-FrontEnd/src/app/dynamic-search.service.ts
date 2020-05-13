@@ -10,8 +10,6 @@ import { AuthService } from './auth.service';
 })
 export class DynamicSearchService {
 
-  TOKEN = 'token 4bb36e54a6b609331ece4205ae436027f92652f3';
-
   constructor(private http: HttpClient, private authservice: AuthService
   ) { }
 

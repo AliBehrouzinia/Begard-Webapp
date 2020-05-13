@@ -1,7 +1,10 @@
 
   .search-wrapper{
+  
     height: 100%;
-    background: #cce6ff;
+    margin-right: 10%;
+    margin-left: 10%;
+    width: 80%;
   }
   .search-wrapper mat-card-header {
     text-align: center;
@@ -21,7 +24,7 @@
     top: 0;
     opacity: 1;
     float: left;
-    padding: 60px 50px 40px 50px;
+    padding: 2%;
     width: 100%;
     background: #fff;
     border-radius: 10px;
@@ -29,7 +32,7 @@
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     z-index: 5;
-    max-width: 1000px;
+    
   }
   .search-box.back{
     transform: scale(.95);
@@ -60,20 +63,25 @@
     width: 50%;
   }
   .search-wrapper .example-quart-width {
-    margin-left: 20px;
-    margin-top: 50px;
-    width: 20%;
+    margin-left: 1%;
+    margin-top: 30px;
+    width: 22%;
   }
-
   .search-wrapper .btn-block {
     width: 30%;
-    margin: 0 auto;
-    display: block;
-    margin-top: 70px;
+    font-size: 18px;
+    
+    transform: scale(0.70);
   }
+  /* .search-wrapper .btn-block {
+    width: 50%;
+   
+    display: block;
+    margin-top: 7px;
+  } */
 
   .search-wrapper .mat-card {
-    padding: 40px 70px 50px;
+    /* padding: 40px 70px 50px; */
   }
 
 

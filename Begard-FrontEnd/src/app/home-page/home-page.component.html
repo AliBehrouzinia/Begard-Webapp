@@ -1,0 +1,60 @@
+<div style="background-color: #f7f8fd;">
+    <mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
+
+        <mat-grid-tile class="tile" rowspan=2 colspan=5>
+            <app-search class="search"></app-search>
+        </mat-grid-tile>
+
+    </mat-grid-list>
+
+    <div style="display:flex;justify-content: center">
+        <div style="width: 25% ;margin-left: 50px;">
+            <mat-card class="shadow-lg" style="height: auto;margin: 20px;;border-radius: 10px">
+                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+                    <mat-icon>date_range</mat-icon>
+                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">My plans</p>
+                </a>
+                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+                    <mat-icon>home</mat-icon>
+                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">Home</p>
+                </a>
+                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+                    <mat-icon>person_outline</mat-icon>
+                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">Profile</p>
+                </a>
+            </mat-card>
+        </div>
+
+        <div style="width: 50%;">
+            <mat-card class="shadow-lg" style="margin: 20px;border-radius: 10px">
+                <app-post-location></app-post-location>
+            </mat-card>
+            <mat-card class="shadow-lg" style="border-radius: 10px;box-shadow: 0px 5px 13px #e6e6e6;margin: 20px;">
+                <mat-card-title style="display:flex;justify-content: center;">Top Plans</mat-card-title>
+                <app-horizontl-list style="margin-top: 20px;" [planOverviews]="planOverviews"></app-horizontl-list>
+            </mat-card>
+        </div>
+
+        <div style="width: 25%;margin-right: 50px;">
+            <mat-card class="shadow-lg" style="margin: 20px;;border-radius: 10px">
+                <mat-card-title style="display:flex;justify-content: center; width: 100%;">
+                    Top Planners
+                </mat-card-title>
+                <mat-card-content style="margin-top: 40px;">
+                    <div *ngFor="let tp of topPlanners;">
+                        <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email" [profileImg]="tp.profile_img"
+                            [rate]="tp.average_rate" [isPublic]="tp.is_public"></app-top-planners>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <div style="display:flex; justify-content: center; ">
+        <div style="width: 50%; min-width: 500px; ">
+            <app-location-post [currentUrl]="currentUrl"></app-location-post>
+        </div>
+    </div>
+
+    <router-outlet></router-outlet>
+</div>

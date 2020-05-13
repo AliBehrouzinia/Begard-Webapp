@@ -28,6 +28,9 @@ export interface Plan {
 
 export class DataStorageService {
     public planUrl: string = '';
+    start_date;
+    finish_date;
+    city;
 
     constructor(
         private http: HttpClient,
@@ -49,16 +52,44 @@ export class DataStorageService {
 
     getCities() {
 
-        return this.authservice.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
-            return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
-                {
-                    headers: new HttpHeaders({ 'Authorization': token })
-                }
-            );
-        }));
+        // return this.authservice.user.pipe(take(1), exhaustMap(user => {
+        //     var token = 'token ' + user.token;
+        //     return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
+        //         {
+        //             headers: new HttpHeaders({ 'Authorization': token })
+        //         }
+        //     );
+        // }));
+        return this.http.get<City[]>('http://127.0.0.1:8000/cities/');
 
     }
 
+    getPlanUrl(){
+        return this.planUrl;
+    }
+
+    setStartDate(sd){
+        this.start_date = sd; 
+    }
+
+    setEndDate(ed){
+        this.finish_date = ed; 
+    }
+
+    setCity(c){
+        this.city = c; 
+    }
+
+    getStartDate(){
+        return this.start_date; 
+    }
+
+    getEndDate(){
+        return this.finish_date; 
+    }
+
+    getCity(){
+        return this.city; 
+    }
 
 }

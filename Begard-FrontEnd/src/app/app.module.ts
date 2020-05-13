@@ -13,6 +13,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { AngularMaterialModule } from './angular-material.module';
 import { HttpClientModule } from '@angular/common/http';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
 
 
 import { AppComponent } from './app.component';
@@ -20,18 +21,15 @@ import { MapComponent } from './map/map.component';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { LocationListComponent } from './map/location-list/location-list.component';
-import { LocationItemComponent } from './map/location-list/location-item/location-item.component';
-import { LocationDetailComponent } from './map/location-detail/location-detail.component';
 import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataStorageService } from './data-storage.service';
 import { AppRoutingModule } from './app-routing.module';
-import { LocationDetailStartComponent } from './map/location-detail-start/location-detail-start.component';
 import { LocationService } from './map/location.service';
 import { DynamicSearchService } from './dynamic-search.service';
 import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, DragAndDropService, ResizeService } from '@syncfusion/ej2-angular-schedule';
 import { CalenderComponent } from './calender/calender.component';
+import { NavBarService } from './nav-bar.service'
 
 import { GridModule, RowDDService, EditService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
@@ -40,8 +38,35 @@ import { DynamicSearchComponent } from './dynamic-search/dynamic-search.componen
 
 import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
+import { HomePageComponent } from './home-page/home-page.component';
+import { NavBarComponent, NotifComponent } from './nav-bar/nav-bar.component';
+import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
+import { NguCarouselModule } from '@ngu/carousel';
+import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
+import { PostDialogComponent } from './post-dialog/post-dialog.component';
 
 
+import { MapLocationService } from './map-locations.service';
+import { LocationPostComponent } from './location-post/location-post.component';
+import { CommentComponent } from './location-post/comment/comment.component';
+import { LocationCarouselComponent } from './location-post/location-carousel/location-carousel.component';
+
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { LocationPostService } from './location-post/location-post.service';
+import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile.component';
+import { TopPlannersComponent } from './top-planners/top-planners.component';
+import { MyPlanComponent } from './my-plan/my-plan.component';
+
+import { MyPlanService } from './my-plan.service';
+import { ProfileService } from './profile.service';
+
+
+import { TopPlannersService } from './top-planners.service';
+import { PostLocationComponent } from './post-location/post-location.component';
+
+import { PostLocationService } from './post-location.service';
+
+import { MyLocationService } from './my-location.service';
 
 
 @NgModule({
@@ -51,14 +76,23 @@ import { CalenderResolver } from './calender-resolver.service';
       HeaderComponent,
       LoginComponent,
       RegisterComponent,
-      LocationListComponent,
-      LocationItemComponent,
-      LocationDetailComponent,
-      LocationDetailStartComponent,
       SearchComponent,
       CalenderComponent,
-      DynamicSearchComponent
-
+      DynamicSearchComponent,
+      HomePageComponent,
+      NavBarComponent,
+      HorizontlListComponent,
+      PlanOverviewComponent,
+      PostDialogComponent,
+      LocationPostComponent,
+      CommentComponent,
+      LocationCarouselComponent,
+      TopPlannersComponent,
+      MyPlanComponent,
+      ProfileComponent,
+      DialogOverviewExampleDialog,
+      PostLocationComponent,
+      NotifComponent
    ],
    imports: [
       BrowserModule,
@@ -80,8 +114,13 @@ import { CalenderResolver } from './calender-resolver.service';
       GridModule,
       DropDownListModule,
       DateTimePickerModule,
+      NguCarouselModule,
+      TabModule,
+      MDBBootstrapModule
+
    ],
-   providers: [DataStorageService, UserService, LocationService, DynamicSearchService, CalenderResolver],
+
+   providers: [DataStorageService, MyPlanService, MyLocationService,ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],

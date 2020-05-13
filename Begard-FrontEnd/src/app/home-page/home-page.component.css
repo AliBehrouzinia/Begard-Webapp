@@ -1,0 +1,31 @@
+.grid-parent{
+    position: relative;
+    z-index: 50;
+}
+
+.search{
+    margin-top: 50px;
+    width: 100% ;
+}
+
+.tile{
+    position: relative;
+    background-image: url('../../assets/back.jpg');
+}
+
+.child-card{
+    margin: 20px;
+}
+
+.side-section{
+    width: 70%;
+    margin: 20px;    
+}
+
+
+.underline:hover{
+    text-decoration: underline;
+}
+.input{
+    border-radius: 10px;
+}

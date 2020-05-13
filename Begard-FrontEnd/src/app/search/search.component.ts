@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { ReplaySubject, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { City } from '../city.model';
 import { LocationService } from '../map/location.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataStorageService } from '../data-storage.service';
+import { inArray } from '@syncfusion/ej2-angular-grids';
 
 
 @Component({
@@ -17,8 +18,8 @@ import { DataStorageService } from '../data-storage.service';
 })
 export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public startdate: FormControl = new FormControl();
-  public enddate: FormControl = new FormControl();
+  startDateControl: FormControl = new FormControl('', [Validators.required]);
+  endDateControl: FormControl = new FormControl('', [Validators.required]);
 
   endDateDisable = true;
   endDateMin: Date;
@@ -26,22 +27,22 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   startDate: Date;
   endDate: Date;
 
-
+  suggestButtonDisabled = true;
 
   /** list of cities */
   protected cities: City[] = [];
 
 
   /** control for the selected city */
-  public cityCtrl: FormControl = new FormControl();
+  public cityCtrl: FormControl = new FormControl('', [Validators.required]);
 
   /** control for the MatSelect filter keyword */
-  public cityFilterCtrl: FormControl = new FormControl();
+  public cityFilterCtrl: FormControl = new FormControl('', [Validators.required]);
 
   /** list of cities filtered by search keyword */
   public filteredCities: ReplaySubject<City[]> = new ReplaySubject<City[]>(1);
 
-  @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+  @ViewChild('citySelect', { static: true }) citySelect: MatSelect;
 
   /** Subject that emits when the component has been destroyed. */
   protected _onDestroy = new Subject<void>();
@@ -93,7 +94,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         // the form control (i.e. _initializeSelection())
         // this needs to be done after the filteredCities are loaded initially
         // and after the mat-option elements are available
-        this.singleSelect.compareWith = (a: City, b: City) => a && b && a.id === b.id;
+        this.citySelect.compareWith = (a: City, b: City) => a && b && a.id === b.id;
       });
   }
 
@@ -116,14 +117,22 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSearch() {
-    var startdate = new Date(this.startdate.value);
-    var enddate = new Date(this.enddate.value);
+    if (!this.startDateControl.valid || !this.endDateControl.valid || !this.isDestinationValid()) {
+      console.log("zart");
+      console.log(this.startDateControl.valid + "  " + this.endDateControl.valid + "  " + this.isDestinationValid())
+      return;
+    }
+    var startdate = new Date(this.startDateControl.value);
+    var enddate = new Date(this.endDateControl.value);
     var startday: string = startdate.getFullYear() + '-' + (+startdate.getMonth() + 1) + '-' +
       startdate.getDate() + 'T0:0Z';
     var endday: string = enddate.getFullYear() + '-' + (+enddate.getMonth() + 1) + '-' +
       enddate.getDate() + 'T0:0Z';
     this.dataStorageService.planUrl = 'http://127.0.0.1:8000/cities/' + this.cityCtrl.value?.id + '/suggest-plan/?start_date=' +
       startday + '&finish_date=' + endday;
+    this.dataStorageService.setStartDate(startday);
+    this.dataStorageService.setEndDate(endday);
+    this.dataStorageService.setCity(this.cityCtrl.value?.id);
   }
 
 
@@ -158,6 +167,19 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onEndDateChanged(endDate) {
     this.endDate = endDate;
+    this.updateSuggestButtonEnabled();
   }
 
+  updateSuggestButtonEnabled() {
+    this.suggestButtonDisabled = !(this.cityCtrl.valid && this.startDateControl.valid && this.endDateControl.valid)
+  }
+
+  isDestinationValid() {
+    //TODO : check the entry with list of cities. we have to find the best practice. this is temporary
+    return this.cityCtrl.valid;
+  }
+
+  onSelectionChanged(){
+    this.updateSuggestButtonEnabled()
+  }
 }
