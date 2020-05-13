@@ -322,15 +322,16 @@ class CommentsOnPostView(generics.ListCreateAPIView):
         post = get_object_or_404(models.Post, id=data['post'])
 
         comment_serializer = serializers.CreateCommentSerializer(data=data)
-        if comment_serializer.is_valid():
+        comment = None
+        if comment_serializer.is_valid(True):
             comment = comment_serializer.save()
-            comment_data = serializers.CreateCommentSerializer(instance=comment).data
-            user = get_object_or_404(models.BegardUser, id=comment_data['user'])
-            comment_data['user_name'] = user.email
-            comment_data['user_profile_img'] = user.profile_img.url
-            return Response(data=comment_data, status=status.HTTP_201_CREATED)
 
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        comment_data = serializers.CreateCommentSerializer(instance=comment).data
+        user = get_object_or_404(models.BegardUser, id=comment_data['user'])
+        comment_data['user_name'] = user.email
+        comment_data['user_profile_img'] = user.profile_img.url
+
+        return Response(data=comment_data, status=status.HTTP_201_CREATED)
 
 
 class ListOfFollowingsView(generics.ListAPIView):
@@ -384,8 +385,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
 
         exist_like = models.Like.objects.filter(Q(user=data['user']) & Q(post=data['post'])).exists()
         if exist_like:
-            return Response(data={"warning": "this post is liked by you.now you are trying to like again."},
-                            status=status.HTTP_406_NOT_ACCEPTABLE)
+            return HttpResponseBadRequest("this post is liked by you.now you are trying to like again.")
 
         serializer = serializers.CreateLikeSerializer(data=data)
         if serializer.is_valid(True):
@@ -404,7 +404,7 @@ class LikeOnPostView(generics.ListCreateAPIView, generics.DestroyAPIView):
         if like.exists():
             like.delete()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response()
 
 
 class FollowingRequestView(generics.CreateAPIView):
