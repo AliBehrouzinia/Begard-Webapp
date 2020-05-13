@@ -55,6 +55,11 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
 import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile.component';
 import { TopPlannersComponent } from './top-planners/top-planners.component';
+import { MyPlanComponent } from './my-plan/my-plan.component';
+
+import { MyPlanService } from './my-plan.service';
+import { ProfileService } from './profile.service';
+
 
 import { TopPlannersService } from './top-planners.service';
 import { PostLocationComponent } from './post-location/post-location.component';
@@ -84,10 +89,10 @@ import { MyLocationService } from './my-location.service';
       CommentComponent,
       LocationCarouselComponent,
       TopPlannersComponent,
-      PostLocationComponent
+      MyPlanComponent
       ProfileComponent,
       DialogOverviewExampleDialog,
-      
+      PostLocationComponent
 
    ],
    imports: [
@@ -115,7 +120,8 @@ import { MyLocationService } from './my-location.service';
       MDBBootstrapModule
 
    ],
-   providers: [DataStorageService, MyPlanService, MyLocationService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
+
+   providers: [DataStorageService, MyPlanService, MyLocationService,ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],

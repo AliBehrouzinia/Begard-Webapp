@@ -258,6 +258,23 @@ class TopPlannerSerializer(serializers.ModelSerializer):
         fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
 
 
+class MyPlansSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        ret = super(MyPlansSerializer, self).to_representation(instance)
+
+        post = get_object_or_404(Post, plan_id=ret['id'], type='plan_post')
+        image = get_object_or_404(Image, post=post)
+        ret['cover'] = image.image.url
+        ret['destination_city'] = instance.destination_city.name
+
+        return ret
+
+    class Meta:
+        model = Plan
+        fields = ['id', 'destination_city', 'creation_date']
+
+
 class LocationOfPlanSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):

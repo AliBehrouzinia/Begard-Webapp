@@ -9,6 +9,7 @@ import { CalenderComponent } from './calender/calender.component';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LocationPostComponent } from './location-post/location-post.component';
+import { MyPlanComponent } from './my-plan/my-plan.component';
 import { ProfileComponent } from './profile/profile.component';
 
 
@@ -17,6 +18,7 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'search', component: SearchComponent },
+    { path: 'myPlans', component: MyPlanComponent },
     { path: 'homepage', component: HomePageComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } },
     { path: 'postlocatio', component: LocationPostComponent },

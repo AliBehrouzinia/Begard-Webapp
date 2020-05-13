@@ -69,13 +69,15 @@ class SuggestPlanView(generics.RetrieveAPIView):
         return plan
 
 
-class SavePlanView(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
+class PlansView(generics.ListCreateAPIView):
     serializer_class = serializers.PlanSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get_queryset(self):
-        user = self.request.user
-        return models.Plan.objects.filter(user=user)
+    def get(self, request, *args, **kwargs):
+        plans = models.Plan.objects.filter(user=self.request.user)
+        data = serializers.MyPlansSerializer(instance=plans, many=True).data
+
+        return Response(data=data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         if not request.data.get('plan_items'):
