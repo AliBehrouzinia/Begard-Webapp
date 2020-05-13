@@ -84,7 +84,8 @@ export class PostLocationComponent implements OnInit {
     this.postLocationService.sendPostLocation(new PostLocation(
       'location_post',
       this.descControl.value,
-      this.planControl.value.place_id,
+      this.planControl.value.id,
+      this.locationControl.value.place_id,
       this.locationControl.value.place_name,
       this.imageStrings
     ))
