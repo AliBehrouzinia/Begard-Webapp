@@ -120,12 +120,8 @@ import { MyLocationService } from './my-location.service';
       MDBBootstrapModule
 
    ],
-<<<<<<< Begard-FrontEnd/src/app/app.module.ts
 
-   providers: [DataStorageService, TopPlannersService,ProfileService,MyPlanService ,UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
-=======
-   providers: [DataStorageService, MyPlanService, MyLocationService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
->>>>>>> Begard-FrontEnd/src/app/app.module.ts
+   providers: [DataStorageService, MyPlanService, MyLocationService,ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],
