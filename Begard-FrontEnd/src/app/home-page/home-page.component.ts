@@ -4,8 +4,10 @@ import { Observable } from '../../../node_modules/rxjs';
 import { AuthService } from '../auth.service'
 import { User } from '../user.model'
 import { PlanOverviewService } from '../plan-overview.service';
+import { TopPlannersService } from '../top-planners.service';
 import { PlanOverView } from '../plan-overview';
-
+import { TopPlanner } from '../top-planner';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -14,12 +16,17 @@ import { PlanOverView } from '../plan-overview';
 })
 export class HomePageComponent implements OnInit {
   planOverviews;
-  
-  constructor(public planOverviewService: PlanOverviewService) {
+  topPlanners: TopPlanner[];
+  currentUrl: any ;
+
+  constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
+    private router: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.planOverviews = this.planOverviewService.getPlanOverviews()
+    this.TopPlannersService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
+    this.currentUrl=this.router.url;
   }
-  
+
 }

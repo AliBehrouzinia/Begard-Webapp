@@ -1,41 +1,54 @@
-<mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
+<div style="background-color: #f7f8fd;">
+    <mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
 
-    <mat-grid-tile class="tile" rowspan=2 colspan=5>
-        <app-search class="search"></app-search>
-    </mat-grid-tile>
-
-</mat-grid-list>
-
-<div style="display:flex;justify-content: center">
-    <div style="display:flex;justify-content: center;width: 30%;">
-        <mat-card class="side-section"> left </mat-card>
+        <mat-grid-tile class="tile" rowspan=2 colspan=5>
+            <app-search class="search"></app-search>
+        </mat-grid-tile>
+    
+    </mat-grid-list>
+    
+    <div style="display:flex;justify-content: center">
+        <div style="width: 20% ;">
+            <mat-card  class="shadow-lg" style="height: 300px;margin: 20px;">
+                <a  style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+                        <mat-icon>date_range</mat-icon>
+                        <p class="underline" style="margin-left: 10px;margin-top: 3px;">My plans</p>
+                    
+                </a>
+                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+                    <mat-icon>home</mat-icon>
+                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">Home</p>
+                </a>
+                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
+                    <mat-icon>person_outline</mat-icon>
+                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">Profile</p>
+                </a>
+                
+    
+    
+    
+            </mat-card>
+    
+        </div>
+        <div style="width: 60%;">
+            <mat-card class="child-card">
+                <mat-card-title>Top Posts</mat-card-title>
+                <app-horizontl-list [planOverviews]="planOverviews"></app-horizontl-list>
+            </mat-card>
+        </div>
+        <div style="width: 20%  ;">
+            <mat-card style="height: 300px;margin: 20px;">
+               
+            </mat-card>
+    
+        </div>
     </div>
-   <div style="width: 50%;">
-    <mat-card class="child-card">
-        <mat-card-title style="display:flex;justify-content: center;">Top Posts</mat-card-title>
-        <app-horizontl-list style="margin-top: 20px;" [planOverviews]="planOverviews"></app-horizontl-list>
-    </mat-card>
-   </div>
-   <div style="display:flex;justify-content: center;width: 30%;">
-       <mat-card class="side-section"> 
-           <mat-card-title  style="display:flex;justify-content: center;">
-                Top Planners
-           </mat-card-title>
-           <mat-card-content style="margin-top: 40px;">
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-            <app-top-planners></app-top-planners>   
-        </mat-card-content>
-        </mat-card>
-   </div>
-</div>
-
-<div style="display:flex; justify-content: center; ">
-    <div style="width: auto;">
-        <app-location-post></app-location-post>
+    
+    <div style="display:flex; justify-content: center; ">
+        <div style="width: 50%; min-width: 500px; ">
+            <app-location-post [currentUrl]="currentUrl"></app-location-post>
+        </div>
     </div>
+    
+    <router-outlet></router-outlet>
 </div>
-
-<router-outlet></router-outlet>
