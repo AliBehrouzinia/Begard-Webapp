@@ -97,6 +97,7 @@ export class PostLocationComponent implements OnInit {
     this.planControl.setValue('')
     this.locationControl.setValue('')
     this.descControl.setValue('')
+    this.updatePostButtonDisabled()
   }
 
   updatePostButtonDisabled() {
