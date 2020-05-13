@@ -6,7 +6,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from django.shortcuts import get_object_or_404
-=
+
 from django.core.files.base import ContentFile
 import base64
 import six
