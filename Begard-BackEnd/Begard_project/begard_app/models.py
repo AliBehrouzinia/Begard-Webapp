@@ -14,7 +14,7 @@ class BegardUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
     is_public = models.BooleanField(default=True)
-    profile_img = models.ImageField(upload_to='profiles', null=True)
+    profile_img = models.ImageField(default='profiles/defaults/user-profile-image.jpg', upload_to='profiles', null=True)
     average_rate = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
     username = models.TextField(max_length=50, null=True, blank=True)
     is_admin = True
