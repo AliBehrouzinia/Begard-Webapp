@@ -62,6 +62,12 @@ import { ProfileService } from './profile.service';
 
 
 import { TopPlannersService } from './top-planners.service';
+import { PostLocationComponent } from './post-location/post-location.component';
+
+import { PostLocationService } from './post-location.service';
+
+import { MyPlanService } from './my-plan.service';
+import { MyLocationService } from './my-location.service';
 
 
 @NgModule({
@@ -86,6 +92,7 @@ import { TopPlannersService } from './top-planners.service';
       MyPlanComponent
       ProfileComponent,
       DialogOverviewExampleDialog,
+      PostLocationComponent
 
    ],
    imports: [
@@ -113,8 +120,12 @@ import { TopPlannersService } from './top-planners.service';
       MDBBootstrapModule
 
    ],
+<<<<<<< Begard-FrontEnd/src/app/app.module.ts
 
    providers: [DataStorageService, TopPlannersService,ProfileService,MyPlanService ,UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
+=======
+   providers: [DataStorageService, MyPlanService, MyLocationService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
+>>>>>>> Begard-FrontEnd/src/app/app.module.ts
    bootstrap: [
       AppComponent
    ],
