@@ -253,4 +253,4 @@ class ImageSerializer(serializers.ModelSerializer):
 class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
-        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public', 'pk']
