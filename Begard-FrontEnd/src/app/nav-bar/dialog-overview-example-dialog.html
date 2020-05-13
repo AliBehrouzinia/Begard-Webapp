@@ -6,11 +6,10 @@
       <mat-grid-tile  [colspan]="2" >
         <img mat-card-avatar style="transform: scale(1.2);" src='{{imgUrl}}'>
       </mat-grid-tile>
-      <mat-grid-tile class="username" [colspan]="4">{{item.userName}}</mat-grid-tile>
-      <mat-grid-tile class="req-icons"  [colspan]="3">
-        <mat-icon class="check" color="primary" style="transform: scale(0.75); ">check</mat-icon>
-        <mat-icon class="block" color="warn" style="transform: scale(0.75);">block</mat-icon>
-        <mat-icon (click)="onClear(item)" class="clear" style="transform: scale(0.75);"> clear</mat-icon>
+      <mat-grid-tile class="username" [colspan]="5">{{item.userName}}</mat-grid-tile>
+      <mat-grid-tile class="req-icons"  [colspan]="2">
+        <mat-icon (click)="onAccept(item)" class="check" color="primary" style="transform: scale(0.75); ">check</mat-icon>
+        <mat-icon (click)="onDecline(item)" class="block" color="warn" style="transform: scale(0.75);">block</mat-icon>
       </mat-grid-tile>
     </mat-grid-list>
     <hr>

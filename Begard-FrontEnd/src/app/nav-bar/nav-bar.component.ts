@@ -30,15 +30,31 @@ export class NavBarComponent implements OnInit {
 
 
   constructor(public authService: AuthService, public matIconRegistry: MatIconRegistry, public domSanitizer: DomSanitizer,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    public http: HttpClient) {
     //to add custom icon
     this.matIconRegistry.addSvgIcon(
       "begard_logo",
       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/begard_icon.svg")
     );
   }
+  public notfiNums;
 
   ngOnInit(): void {
+
+    this.authService.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      return this.http.get<ReqUser[]>('http://127.0.0.1:8000/followers/requests/',
+        {
+          headers: new HttpHeaders({ 'Authorization': token })
+        }
+      );
+    })).subscribe(res => {
+       console.log(res);
+       this.notfiNums= res.length;
+       
+    });
+
     this.loginStatus$ = this.authService.isLogedIn;
     this.userEmail$ = this.authService.userEmail;
   }
@@ -78,6 +94,10 @@ interface ReqUser {
   profile_img: string,
   username: string
 }
+class FollowReq{
+  constructor(public userName : string, public proImg : string, public date : string,
+    public id : number){}
+}
 
 
 @Component({
@@ -86,16 +106,15 @@ interface ReqUser {
 })
 export class NotifComponent implements OnInit {
   imgUrl = 'https://material.angular.io/assets/img/examples/shiba1.jpg';
-  items: ReqUser[] = [];
+  items: FollowReq[] = [];
 
-  onClear(item: ReqUser) {
-  }
   constructor(
     public dialogRef: MatDialogRef<NotifComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private http: HttpClient,
     private auth: AuthService) { }
   ngOnInit() {
+    
      this.auth.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
       return this.http.get<ReqUser[]>('http://127.0.0.1:8000/followers/requests/',
@@ -105,12 +124,43 @@ export class NotifComponent implements OnInit {
       );
     })).subscribe(res => {
        console.log(res);
+       for(let i=0;i<res.length;i++){
+         this.items.push(new FollowReq(res[i].username,res[i].profile_img,res[i].date,res[i].id))
+       }
     });
 
   }
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  onAccept(item : FollowReq){
+
+    this.auth.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      var url = 'http://127.0.0.1:8000/followers/requests/' + item.id + '/?action=accept';
+      return this.http.patch(url,
+        {
+          headers: new HttpHeaders({ 'Authorization': token })
+        }
+      );
+    })).subscribe();
+    
+
+  }
+  onDecline(item : FollowReq){
+
+    this.auth.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      var url = 'http://127.0.0.1:8000/followers/requests/' + item.id + '/?action=reject';
+      return this.http.patch(url,{},
+        {
+          headers: new HttpHeaders({ 'Authorization': token })
+        }
+      );
+    })).subscribe();
+
   }
 
 }
