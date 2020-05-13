@@ -1,18 +1,17 @@
-<div class="example-card">
-    <div class="wrapper" >
+<div style="display: block;margin: 10px;display: block;margin: 10px;">
+  <div style="display: flex;justify-content: center;">
+    <div style="display: flex;width: 60%;">
       <img mat-card-avatar class="example-header-image" [src]="profileImg">
-      <div class="title">
-        <div class="name">{{email}}</div>
-        <div class="trip"><strong>{{rate}}</strong></div>
+      <div style="font-size: 18px;;overflow: hidden;margin-top: 7px;">
+        <div style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-left: 10px;">{{email}}</div>
+        <div style="margin-left: 10px;margin-top: 3px;font-size: 14px"><strong>{{rate}}</strong></div>
       </div>
     </div>
-         
-    <button mat-raised-button class="follow" color="primary"><mat-icon style="font-size: 18px; margin-top: 3px; margin-left: -6px;">person_add</mat-icon><span style="margin-left: 3px;">follow</span></button>
 
-    <hr class=hr>
-
-  
+    <button mat-raised-button class="follow" color="primary">
+      <mat-icon style="font-size: 18px; margin-top: 3px; margin-left: -6px;">person_add</mat-icon><span
+        style="margin-left: 3px;">follow</span>
+    </button>
+  </div>
+  <hr class=hr style="margin-top:10px">
 </div>
-  
-  
-  

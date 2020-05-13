@@ -39,7 +39,7 @@ import { DynamicSearchComponent } from './dynamic-search/dynamic-search.componen
 import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { NavBarComponent, NotifComponent } from './nav-bar/nav-bar.component';
 import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
@@ -53,9 +53,20 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
+import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile.component';
 import { TopPlannersComponent } from './top-planners/top-planners.component';
+import { MyPlanComponent } from './my-plan/my-plan.component';
+
+import { MyPlanService } from './my-plan.service';
+import { ProfileService } from './profile.service';
+
 
 import { TopPlannersService } from './top-planners.service';
+import { PostLocationComponent } from './post-location/post-location.component';
+
+import { PostLocationService } from './post-location.service';
+
+import { MyLocationService } from './my-location.service';
 
 
 @NgModule({
@@ -76,8 +87,12 @@ import { TopPlannersService } from './top-planners.service';
       LocationPostComponent,
       CommentComponent,
       LocationCarouselComponent,
-      TopPlannersComponent
-
+      TopPlannersComponent,
+      MyPlanComponent,
+      ProfileComponent,
+      DialogOverviewExampleDialog,
+      PostLocationComponent,
+      NotifComponent
    ],
    imports: [
       BrowserModule,
@@ -104,7 +119,8 @@ import { TopPlannersService } from './top-planners.service';
       MDBBootstrapModule
 
    ],
-   providers: [DataStorageService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
+
+   providers: [DataStorageService, MyPlanService, MyLocationService,ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],

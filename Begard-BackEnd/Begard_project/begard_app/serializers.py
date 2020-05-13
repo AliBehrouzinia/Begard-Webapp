@@ -1,9 +1,13 @@
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import NotFound
+
 from .models import *
 from .models import BegardUser
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+
+from django.shortcuts import get_object_or_404
 
 from django.core.files.base import ContentFile
 import base64
@@ -254,3 +258,71 @@ class TopPlannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
         fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public', 'pk']
+
+
+class MyPlansSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        ret = super(MyPlansSerializer, self).to_representation(instance)
+
+        post = get_object_or_404(Post, plan_id=ret['id'], type='plan_post')
+        image = get_object_or_404(Image, post=post)
+        ret['cover'] = image.image.url
+        ret['destination_city'] = instance.destination_city.name
+
+        return ret
+
+    class Meta:
+        model = Plan
+        fields = ['id', 'destination_city', 'creation_date']
+
+
+class LocationOfPlanSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        result = super(LocationOfPlanSerializer, self).to_representation(instance)
+        place_id = result['place_id']
+
+        places = list(Restaurant.objects.filter(place_id=place_id))
+
+        places += list(Hotel.objects.filter(place_id=place_id))
+        places += list(Museum.objects.filter(place_id=place_id))
+        places += list(TouristAttraction.objects.filter(place_id=place_id))
+        places += list(RecreationalPlace.objects.filter(place_id=place_id))
+        places += list(Cafe.objects.filter(place_id=place_id))
+        places += list(ShoppingMall.objects.filter(place_id=place_id))
+
+        if len(places) == 0:
+            raise NotFound("any Location not found.")
+
+        result['place_name'] = places[0].name
+
+        return result
+
+    class Meta:
+        model = PlanItem
+        fields = ['id', 'place_id']
+
+
+class UserPlansSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        result = super(UserPlansSerializer, self).to_representation(instance)
+        post = get_object_or_404(Post, plan_id=result['id'], type='plan_post')
+        image = get_object_or_404(Image, post=post)
+        result['cover'] = image.image.url
+        return result
+
+    class Meta:
+        model = Plan
+        fields = ['id', 'destination_city', 'creation_date', 'user']
+class TopPlannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BegardUser
+        fields = ['email', 'average_rate', 'username', 'profile_img', 'is_public']
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Token
+        fields = ('key', 'user_id')
