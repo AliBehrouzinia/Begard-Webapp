@@ -652,6 +652,8 @@ class UserPlansView(generics.ListAPIView):
                                            Q(user__is_public=True) & Q(user_id=user_pk))
         data = serializers.UserPlansSerializer(instance=plans, many=True).data
         return Response(data=data, status=status.HTTP_200_OK)
+
+
 class TopPlannerView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = TopPlannerSerializer
