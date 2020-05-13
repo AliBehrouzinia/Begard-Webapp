@@ -15,8 +15,14 @@
         <a mat-raised-button color="basic" routerLink="login" routerLinkActive="active">Login</a>
         <a mat-button mat-raised-button color="accent" routerLink="register" routerLinkActive="active">Register</a>
     </div>
+    
+
+    <mat-icon *ngIf="notfiNums>0" matBadge="{{notfiNums}}" matBadgeColor="accent" matBadgeSize="small" class="notif" (click)=" openDialog($event)">notifications</mat-icon>
+    <mat-icon *ngIf="notfiNums===0"  class="notif" (click)=" openDialog($event)">notifications</mat-icon>
+
 
     <div *ngIf="(loginStatus$ | async)" >
+        
         <button mat-button color="primary" *ngIf="(userEmail$ | async) as userEmail" class="font" [matMenuTriggerFor]="accountOptions">{{userEmail}}<mat-icon class="white-icon">account_circle</mat-icon></button>
 
         <mat-menu #accountOptions >
@@ -24,6 +30,7 @@
         </mat-menu>
     </div>
 
+   
 
 
 </mat-toolbar>

@@ -39,7 +39,7 @@ import { DynamicSearchComponent } from './dynamic-search/dynamic-search.componen
 import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { NavBarComponent, NotifComponent } from './nav-bar/nav-bar.component';
 import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
@@ -91,8 +91,8 @@ import { MyLocationService } from './my-location.service';
       MyPlanComponent,
       ProfileComponent,
       DialogOverviewExampleDialog,
-      PostLocationComponent
-
+      PostLocationComponent,
+      NotifComponent
    ],
    imports: [
       BrowserModule,
