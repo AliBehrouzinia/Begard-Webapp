@@ -24,6 +24,7 @@ export class PostLocationComponent implements OnInit {
   postDisabled = true;
   plans = []
   locations = []
+  planId 
 
   public planControl: FormControl = new FormControl('');
   public locationControl: FormControl = new FormControl('');
@@ -84,7 +85,7 @@ export class PostLocationComponent implements OnInit {
     this.postLocationService.sendPostLocation(new PostLocation(
       'location_post',
       this.descControl.value,
-      this.planControl.value.id,
+      this.planId,
       this.locationControl.value.place_id,
       this.locationControl.value.place_name,
       this.imageStrings
@@ -119,6 +120,7 @@ export class PostLocationComponent implements OnInit {
   }
 
   onPlanChange(plan) {
+    this.planId = plan.id
     if (plan != undefined) {
       this.updatePostButtonDisabled()
       this.locationDisabled = false;
