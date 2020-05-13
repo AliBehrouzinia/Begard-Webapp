@@ -140,7 +140,7 @@ export class NotifComponent implements OnInit {
     this.auth.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
       var url = 'http://127.0.0.1:8000/followers/requests/' + item.id + '/?action=accept';
-      return this.http.patch(url,
+      return this.http.patch(url,{},
         {
           headers: new HttpHeaders({ 'Authorization': token })
         }
