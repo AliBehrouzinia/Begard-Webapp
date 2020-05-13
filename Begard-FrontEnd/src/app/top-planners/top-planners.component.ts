@@ -9,6 +9,7 @@ import { FollowService,FollowRequest } from '../follow.service';
 export class TopPlannersComponent implements OnInit {
   SERVER_URL = 'http://127.0.0.1:8000';
 
+  @Input() userId
   @Input() email;
   @Input() username;
   @Input() rate;
@@ -19,12 +20,14 @@ export class TopPlannersComponent implements OnInit {
   constructor(private followService:FollowService) { }
 
   ngOnInit(): void {
+    console.log("us : " +this.username + "  id" +this.userId)
     this.email = this.email.substring(0, this.email.search('@'));
 
   }
 
   onFollow(){
-    this.followService.sendFollowRequest({request_to:6})
+    console.log(this.userId)
+    this.followService.sendFollowRequest({request_to:this.userId})
   }
 
 }
