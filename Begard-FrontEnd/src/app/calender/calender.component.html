@@ -74,7 +74,7 @@
                         <div> Map </div>
                     </ng-template>
                     <ng-template #content>
-                        <app-map ></app-map>
+                        <app-map></app-map>
 
                     </ng-template>
                 </e-tabitem>
@@ -94,9 +94,9 @@
                     [allowRowDragAndDrop]="true" [editSettings]='editSettings' [rowDropSettings]="srcDropOptions"
                     (rowDrop)="onDragStop($event)" (rowDrag)="onRowDrag($event)">
                     <e-columns>
-                    
+
                         <e-column field='placeName' headerText='Name' width='70'></e-column>
-                        
+
                     </e-columns>
                 </ejs-grid>
             </div>

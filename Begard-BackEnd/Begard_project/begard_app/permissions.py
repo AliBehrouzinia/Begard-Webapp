@@ -3,14 +3,16 @@ from rest_framework import permissions
 from . import models
 
 
-class ActionOnFollowRequestPermission(permissions.BasePermission):
+class DeleteFollowRequestPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        if request.method == 'DELETE':
-            return request.user == obj.request_from
+        return obj.request_from == request.user
 
-        if request.method == 'GET':
-            return request.user == obj.request_to
+
+class AnswerFollowRequestPermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj.request_to == request.user
 
 
 class GetUpdateDeletePlanPermission(permissions.BasePermission):
