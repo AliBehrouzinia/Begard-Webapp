@@ -25,7 +25,6 @@ export class ProfileService {
         })
         .pipe(
           map(res => {
-            console.log("fuckin : " + res.body)
             return res.body;
           })
         );
