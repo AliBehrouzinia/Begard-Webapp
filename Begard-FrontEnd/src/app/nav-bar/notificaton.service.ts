@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { exhaustMap, take } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -17,6 +17,8 @@ export interface ReqUser {
 export class NotifService {
     constructor(private authService: AuthService,
         private http: HttpClient) { }
+
+    NotifNumUpdated = new EventEmitter();
 
     getFollowRequests() {
         return this.authService.user.pipe(take(1), exhaustMap(user => {

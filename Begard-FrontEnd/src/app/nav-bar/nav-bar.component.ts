@@ -39,6 +39,9 @@ export class NavBarComponent implements OnInit {
       "begard_logo",
       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/begard_icon.svg")
     );
+    this.notifService.NotifNumUpdated.subscribe(res => {
+      this.notfiNums--;
+    });
   }
   public notfiNums;
 
@@ -130,6 +133,7 @@ export class NotifComponent implements OnInit {
     for (var i = 0; i < this.items.length; i++) {
       if (this.items[i].id == item.id) {
         this.items.splice(i, 1);
+        this.notifService.NotifNumUpdated.emit();
       }
     }
   }
