@@ -214,7 +214,7 @@ class TopPostSerializer(serializers.ModelSerializer):
 class LocationPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ['plan_id']
+        fields = '__all__'
 
 
 class Base64ImageField(serializers.ImageField):
