@@ -66,7 +66,6 @@ import { PostLocationComponent } from './post-location/post-location.component';
 
 import { PostLocationService } from './post-location.service';
 
-import { MyPlanService } from './my-plan.service';
 import { MyLocationService } from './my-location.service';
 
 
@@ -89,7 +88,7 @@ import { MyLocationService } from './my-location.service';
       CommentComponent,
       LocationCarouselComponent,
       TopPlannersComponent,
-      MyPlanComponent
+      MyPlanComponent,
       ProfileComponent,
       DialogOverviewExampleDialog,
       PostLocationComponent
