@@ -5,6 +5,9 @@ import { PostLocation, Image } from './../post-location'
 import { MyPlanService } from '../my-plan.service';
 import { MyPlan } from '../my-plan';
 import { MyLocationService } from '../my-location.service';
+import { ProfileService } from '../profile/profile.service';
+import { UserService } from '../user.service';
+import { exhaustMap } from 'rxjs/operators';
 
 
 
@@ -32,7 +35,8 @@ export class PostLocationComponent implements OnInit {
 
   constructor(private postLocationService: PostLocationService
     , private myPlanService: MyPlanService
-    , private myLocationService: MyLocationService) { }
+    , private myLocationService: MyLocationService
+    , private userService: UserService) { }
 
   ngOnInit(): void {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
@@ -40,6 +44,10 @@ export class PostLocationComponent implements OnInit {
         this.plans.push(myPlans[i])
       }
     })
+
+    this.userService.getUserId().subscribe(user => { 
+        
+     })
   }
 
   _handleReaderLoaded(readerEvt) {
@@ -92,7 +100,7 @@ export class PostLocationComponent implements OnInit {
     this.clear();
   }
 
-  clear(){
+  clear() {
     this.images = []
     this.imageStrings = []
     this.planControl.setValue('')
