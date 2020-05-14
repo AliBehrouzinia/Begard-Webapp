@@ -22,13 +22,11 @@ export class TopPlannersComponent implements OnInit {
   constructor(private followService: FollowService) { }
 
   ngOnInit(): void {
-    console.log("us : " + this.username + "  id" + this.userId)
     this.email = this.email.substring(0, this.email.search('@'));
 
   }
 
   onFollow() {
-    console.log(this.userId)
     if (this.allowFollowRequest) {
       this.followService.sendFollowRequest({ request_to: this.userId }).subscribe(res => {
         console.log(JSON.stringify(res))
