@@ -22,6 +22,7 @@ export class MyPlanComponent implements OnInit {
   followersCount;
   followingCount;
   topPlanners 
+  userId
 
 
   constructor(private myPlanService: MyPlanService, private profileService: ProfileService
@@ -31,6 +32,7 @@ export class MyPlanComponent implements OnInit {
 
   ngOnInit(): void {
     this.user.getUserId().subscribe(user => {
+      this.userId = user.pk;
       this.profileService.getProfile(user.pk).subscribe(profile => {
         this.username = profile.username;
         this.profileImage = this.SERVER_URL + profile.profile_image;
@@ -60,6 +62,9 @@ export class MyPlanComponent implements OnInit {
   }
   goToHome() {
     this.router.navigate(['/homepage']);
+  }
+  goToProfile() {
+    this.router.navigate(['/profile' , this.userId]);
   }
 }
 
