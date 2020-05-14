@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FollowService,FollowRequest } from '../follow.service';
+import { FollowService, FollowRequest } from '../follow.service';
 
 @Component({
   selector: 'app-top-planners',
@@ -17,17 +17,19 @@ export class TopPlannersComponent implements OnInit {
   @Input() isPublic;
 
 
-  constructor(private followService:FollowService) { }
+  constructor(private followService: FollowService) { }
 
   ngOnInit(): void {
-    console.log("us : " +this.username + "  id" +this.userId)
+    console.log("us : " + this.username + "  id" + this.userId)
     this.email = this.email.substring(0, this.email.search('@'));
 
   }
 
-  onFollow(){
+  onFollow() {
     console.log(this.userId)
-    this.followService.sendFollowRequest({request_to:this.userId})
+    this.followService.sendFollowRequest({ request_to: this.userId }).subscribe(status => {
+      console.log(JSON.stringify(status))
+    })
   }
 
 }
