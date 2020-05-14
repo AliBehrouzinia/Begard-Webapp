@@ -30,6 +30,7 @@ export class PostLocationComponent implements OnInit {
   postDisabled = true;
   plans = []
   locations = []
+  planId 
 
   username;
   profileImage = "";
@@ -137,6 +138,7 @@ export class PostLocationComponent implements OnInit {
   }
 
   onPlanChange(plan) {
+    this.planId = plan.id
     if (plan != undefined) {
       this.updatePostButtonDisabled()
       this.locationDisabled = false;
