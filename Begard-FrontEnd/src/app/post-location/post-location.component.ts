@@ -141,6 +141,7 @@ export class PostLocationComponent implements OnInit {
   onPlanChange(plan) {
     this.planId = plan.id
     if (plan != undefined) {
+      this.locations = []
       this.updatePostButtonDisabled()
       this.locationDisabled = false;
       this.myLocationService.getMyLocations(plan.id).subscribe(myLocations => {
