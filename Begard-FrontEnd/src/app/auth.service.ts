@@ -80,6 +80,7 @@ export class AuthService {
   logout(){
     localStorage.removeItem('userData');
     this.loginStatus.next(false);
+    this.user.next(null);
   }
 
   getUserEmail() {
