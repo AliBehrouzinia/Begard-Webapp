@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PostPlanService } from '../post-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SearchComponent } from '../search/search.component';
 
 export interface PlanDetail {
   description: string;
@@ -41,8 +40,8 @@ export class PostDialogComponent implements OnInit {
 
   onPost() {
     this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
+      .subscribe(status => this.handleRequestResponse(status))
     this.dialogRef.close();
-    this.openSnackBar()
   }
 
   _handleReaderLoaded(readerEvt) {
@@ -94,11 +93,20 @@ export class PostDialogComponent implements OnInit {
     this.updateSaveButtonDisabled;
   }
 
-  openSnackBar() {
+  openSnackBar(message) {
     this.snackBar.open(
-      "plan saved successfully!", "", {
+      message, "", {
       duration: 3 * 1000
     }
     );
+  }
+
+  handleRequestResponse(status) {
+    if (status == "200") {
+      this.openSnackBar("plan saved successfully!")
+    }
+    else {
+      this.openSnackBar("somethins went wrong!")
+    }
   }
 }
