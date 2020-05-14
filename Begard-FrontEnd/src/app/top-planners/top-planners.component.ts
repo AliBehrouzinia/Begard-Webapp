@@ -16,6 +16,8 @@ export class TopPlannersComponent implements OnInit {
   @Input() profileImg;
   @Input() isPublic;
 
+  followButtonTitle = "Follow"
+  allowFollowRequest = true;
 
   constructor(private followService: FollowService) { }
 
@@ -27,9 +29,23 @@ export class TopPlannersComponent implements OnInit {
 
   onFollow() {
     console.log(this.userId)
-    this.followService.sendFollowRequest({ request_to: this.userId }).subscribe(status => {
-      console.log(JSON.stringify(status))
-    })
+    if (this.allowFollowRequest) {
+      this.followService.sendFollowRequest({ request_to: this.userId }).subscribe(res => {
+        console.log(JSON.stringify(res))
+        this.handleResponse(res.status)
+      })
+    }
+  }
+
+  handleResponse(status) {
+    if (status == "Requested") {
+      this.followButtonTitle = "Requested"
+      this.allowFollowRequest = false
+    }
+    else if (status == "Followed") {
+      this.followButtonTitle = "Following"
+      this.allowFollowRequest = false
+    }
   }
 
 }

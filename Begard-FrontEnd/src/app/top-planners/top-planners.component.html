@@ -8,9 +8,13 @@
       </div>
     </div>
 
-    <button mat-raised-button class="follow" color="primary">
+    <button *ngIf="allowFollowRequest" mat-raised-button class="follow" color="primary" style="width: 30%;">
       <mat-icon style="font-size: 18px; margin-top: 3px; margin-left: -6px;">person_add</mat-icon><span
-        style="margin-left: 3px;" (click)="onFollow()">follow</span>
+        style="margin-left: 3px;" (click)="onFollow()">{{followButtonTitle}}</span>
+    </button>
+    <button *ngIf="!allowFollowRequest" mat-raised-button class="follow" color="basic" style="width: 30%;">
+      <mat-icon style="font-size: 18px; margin-top: 3px; margin-left: -6px;">person</mat-icon><span
+        style="margin-left: 3px;" (click)="onFollow()">{{followButtonTitle}}</span>
     </button>
   </div>
   <hr class=hr style="margin-top:10px">
