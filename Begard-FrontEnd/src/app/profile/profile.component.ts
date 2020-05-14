@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject , HostListener} from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -6,6 +6,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { take, exhaustMap } from 'rxjs/operators';
 import { ProfileService, ProfileHeader } from './profile.service';
+import { TopPlannersService } from '../top-planners.service';
+import { TopPlanner } from '../top-planner';
+import { UserService } from '../user.service';
 
 
 export interface DialogData {
@@ -21,7 +24,14 @@ export interface DialogData {
 export class ProfileComponent implements OnInit {
 
 
+  topPlanners: TopPlanner[];
+  proUrl : string;
+
   ngOnInit(): void {
+    this.user.getUserId().subscribe(res => {
+        this.proUrl = '/profile/'+ res.pk;
+    })
+    this.topPlaners.getTopPlanners().subscribe(tp=>{this.topPlanners =tp;});
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
@@ -54,7 +64,9 @@ export class ProfileComponent implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private router: Router,
-    private profileService: ProfileService) { }
+    private profileService: ProfileService,
+    private topPlaners : TopPlannersService,
+    private user : UserService) { }
 
 
   onFollow() {
@@ -76,6 +88,27 @@ export class ProfileComponent implements OnInit {
 
   goToHome() {
     this.router.navigate(['/homepage']);
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(e) {
+     if (window.pageYOffset >= 490) {
+       let element1 = document.getElementById('leftbar');
+       element1.classList.add('sticky');
+       let element2 = document.getElementById('rightbar');
+       element2.classList.add('sticky');
+       let element3 = document.getElementById('content');
+       element3.classList.add('sticky');
+     } else {
+      let element = document.getElementById('leftbar');
+        element.classList.remove('sticky'); 
+        
+        let element2 = document.getElementById('rightbar');
+        element2.classList.remove('sticky');
+
+        let element3 = document.getElementById('content');
+        element3.classList.remove('sticky');
+     }
   }
 
 
