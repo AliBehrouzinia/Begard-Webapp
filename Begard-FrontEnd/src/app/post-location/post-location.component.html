@@ -1,8 +1,8 @@
 <div class="example-card">
 	<div style="display:flex;">
 		<div style="width:30%;display:flex;">
-			<div mat-card-avatar class="example-header-image"></div>
-			<div style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px">Ahmad Ahmadi</div>
+			<img mat-card-avatar class="example-header-image" [src]="profileImage"/>
+			<div style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px">{{username}}</div>
 		</div>
 		<div style="float:right;width:70%;justify-content:end">
 			<mat-form-field style="width:auto;height:10px;margin-left:5px;margin-right:5px;float:right">

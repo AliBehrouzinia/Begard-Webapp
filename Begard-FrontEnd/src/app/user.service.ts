@@ -39,7 +39,7 @@ export class UserService {
         .pipe(
           map(res => {
             console.log(JSON.stringify(res))
-            return res;
+            return res.body;
           })
         );
     }));
