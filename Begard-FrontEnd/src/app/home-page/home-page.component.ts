@@ -18,15 +18,18 @@ export class HomePageComponent implements OnInit {
   planOverviews;
   topPlanners: TopPlanner[];
   currentUrl: any ;
+  loginStatus$: Observable<boolean>;
+
 
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
-    private router: ActivatedRoute) {
+    private router: ActivatedRoute,private authService:AuthService) {
   }
 
   ngOnInit() {
     this.planOverviews = this.planOverviewService.getPlanOverviews()
     this.TopPlannersService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
     this.currentUrl=this.router.url;
+    this.loginStatus$ = this.authService.isLogedIn;
   }
 
 }
