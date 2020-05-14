@@ -107,9 +107,9 @@ export class PostLocationComponent implements OnInit {
       this.locationControl.value.place_id,
       this.locationControl.value.place_name,
       this.imageStrings
-    ))
-    this.clear();
-    this.openSnackBar()
+    )).subscribe(status => {
+      this.handleRequest(status);
+    })
   }
 
   clear() {
@@ -160,11 +160,20 @@ export class PostLocationComponent implements OnInit {
     }
   }
 
-  openSnackBar() {
+  openSnackBar(message) {
     this.snackBar.open(
-      "post saved successfully!", "", {
+      message, "", {
       duration: 3 * 1000
     }
     );
+  }
+
+  handleRequest(status) {
+    if (status == "200") {
+      this.clear()
+      this.openSnackBar("post saved successfully!")
+    } else {
+      this.openSnackBar("something went wrong!")
+    }
   }
 }
