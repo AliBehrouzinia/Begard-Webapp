@@ -8,6 +8,7 @@ import { TopPlannersService } from '../top-planners.service';
 import { PlanOverView } from '../plan-overview';
 import { TopPlanner } from '../top-planner';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home-page',
@@ -18,12 +19,17 @@ export class HomePageComponent implements OnInit {
   planOverviews;
   topPlanners: TopPlanner[];
   currentUrl: any ;
+  userPro: string;
 
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
-    private router: ActivatedRoute) {
+    private router: ActivatedRoute,
+    private user : UserService) {
   }
 
   ngOnInit() {
+    this.user.getUserId().subscribe(res => {
+      this.userPro = '/profile/'+ res.pk;
+    });
     this.planOverviews = this.planOverviewService.getPlanOverviews()
     this.TopPlannersService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
     this.currentUrl=this.router.url;
