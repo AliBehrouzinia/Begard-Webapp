@@ -1,4 +1,4 @@
-<div style="background-color: #f7f8fd;">
+<div (scroll)="onWindowScroll($event)" style="background-color: #f7f8fd;">
     <mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
 
         <mat-grid-tile class="tile" rowspan=2 colspan=5>
@@ -7,8 +7,8 @@
 
     </mat-grid-list>
 
-    <div style="display:flex;justify-content: center">
-        <div style="width: 25% ;margin-left: 50px;">
+    <div style="display:flex">
+        <div id="leftbar" >
             <mat-card class="shadow-lg" style="height: auto;margin: 20px;;border-radius: 10px">
                 <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
                     <mat-icon>date_range</mat-icon>
@@ -24,18 +24,28 @@
                 </a>
             </mat-card>
         </div>
+    
+    
+        <div id="content" >
+            
+            <div style="width: 100%;">
+                <mat-card class="shadow-lg" style="margin: 20px;border-radius: 10px">
+                    <app-post-location></app-post-location>
+                </mat-card>
+                <mat-card class="shadow-lg" style="border-radius: 10px;box-shadow: 0px 5px 13px #e6e6e6;margin: 20px;">
+                    <mat-card-title style="display:flex;justify-content: center;">Top Plans</mat-card-title>
+                    <app-horizontl-list style="margin-top: 20px;" [planOverviews]="planOverviews"></app-horizontl-list>
+                </mat-card>
+            </div>
 
-        <div style="width: 50%;">
-            <mat-card class="shadow-lg" style="margin: 20px;border-radius: 10px">
-                <app-post-location></app-post-location>
-            </mat-card>
-            <mat-card class="shadow-lg" style="border-radius: 10px;box-shadow: 0px 5px 13px #e6e6e6;margin: 20px;">
-                <mat-card-title style="display:flex;justify-content: center;">Top Plans</mat-card-title>
-                <app-horizontl-list style="margin-top: 20px;" [planOverviews]="planOverviews"></app-horizontl-list>
-            </mat-card>
+            <div style="display:flex; justify-content: center; ">
+                <div style="width: 100%; margin: 20px">
+                    <app-location-post [currentUrl]="currentUrl"></app-location-post>
+                </div>
+            </div>
         </div>
 
-        <div style="width: 25%;margin-right: 50px;">
+        <div id="rightbar">
             <mat-card class="shadow-lg" style="margin: 20px;;border-radius: 10px">
                 <mat-card-title style="display:flex;justify-content: center; width: 100%;">
                     Top Planners
@@ -48,13 +58,11 @@
                 </mat-card-content>
             </mat-card>
         </div>
+    
+     
+    
     </div>
-
-    <div style="display:flex; justify-content: center; ">
-        <div style="width: 50%; min-width: 500px; ">
-            <app-location-post [currentUrl]="currentUrl"></app-location-post>
-        </div>
-    </div>
-
     <router-outlet></router-outlet>
 </div>
+
+

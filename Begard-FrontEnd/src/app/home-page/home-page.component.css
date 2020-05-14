@@ -1,7 +1,7 @@
-.grid-parent{
+/* .grid-parent{
     position: relative;
     z-index: 50;
-}
+} */
 
 .search{
     margin-top: 50px;
@@ -29,3 +29,38 @@
 .input{
     border-radius: 10px;
 }
+
+#leftbar {
+    width: 20%;   
+}
+
+#content{
+    width: 50%;
+}
+
+#content.sticky{
+    width: 50%;
+    margin-left: 20%;
+}
+
+#leftbar.sticky {
+    width: 20%;
+    position: fixed;  
+    top: 60px;
+}
+
+#rightbar{
+    width: 30%;
+    
+}
+
+#rightbar.sticky{
+    position: fixed;
+    margin-left: 70%;
+    width: 30%;
+    top: 60px
+}
+
+
+
+
