@@ -5,6 +5,10 @@ import { PostLocation, Image } from './../post-location'
 import { MyPlanService } from '../my-plan.service';
 import { MyPlan } from '../my-plan';
 import { MyLocationService } from '../my-location.service';
+import { ProfileService } from '../profile/profile.service';
+import { UserService } from '../user.service';
+import { exhaustMap } from 'rxjs/operators';
+import { Profile } from '../profile';
 
 
 
@@ -14,6 +18,8 @@ import { MyLocationService } from '../my-location.service';
   styleUrls: ['./post-location.component.css']
 })
 export class PostLocationComponent implements OnInit {
+  SERVER_URL = 'http://127.0.0.1:8000';
+
   images = []
   imageStrings: Image[] = []
   imagePath;
@@ -26,6 +32,9 @@ export class PostLocationComponent implements OnInit {
   locations = []
   planId 
 
+  username;
+  profileImage = "";
+
   public planControl: FormControl = new FormControl('');
   public locationControl: FormControl = new FormControl('');
   public descControl: FormControl = new FormControl('');
@@ -33,7 +42,9 @@ export class PostLocationComponent implements OnInit {
 
   constructor(private postLocationService: PostLocationService
     , private myPlanService: MyPlanService
-    , private myLocationService: MyLocationService) { }
+    , private myLocationService: MyLocationService
+    , private userService: UserService
+    , private profileService: ProfileService) { }
 
   ngOnInit(): void {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
@@ -41,6 +52,13 @@ export class PostLocationComponent implements OnInit {
         this.plans.push(myPlans[i])
       }
     })
+
+    this.userService.getUserId().subscribe(user => { 
+        this.profileService.getHeaderData(user.pk).subscribe( profile => {
+          this.username = profile.username
+          this.profileImage += this.SERVER_URL + profile.profile_image;
+        })
+     })
   }
 
   _handleReaderLoaded(readerEvt) {
@@ -85,7 +103,11 @@ export class PostLocationComponent implements OnInit {
     this.postLocationService.sendPostLocation(new PostLocation(
       'location_post',
       this.descControl.value,
+<<<<<<< HEAD
       this.planId,
+=======
+      this.planControl.value.id,
+>>>>>>> 2b389de721e00f69a7011a9442a377ba9de99d35
       this.locationControl.value.place_id,
       this.locationControl.value.place_name,
       this.imageStrings
@@ -93,7 +115,7 @@ export class PostLocationComponent implements OnInit {
     this.clear();
   }
 
-  clear(){
+  clear() {
     this.images = []
     this.imageStrings = []
     this.planControl.setValue('')

@@ -43,7 +43,7 @@
                 <mat-card-content style="margin-top: 40px;">
                     <div *ngFor="let tp of topPlanners;">
                         <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email" [profileImg]="tp.profile_img"
-                            [rate]="tp.average_rate" [isPublic]="tp.is_public"></app-top-planners>
+                            [rate]="tp.average_rate" [isPublic]="tp.is_public" [userId]="tp.pk"></app-top-planners>
                     </div>
                 </mat-card-content>
             </mat-card>

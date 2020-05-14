@@ -10,7 +10,7 @@ export class PostLocation {
     place_name: string;
     image: Image[];
 
-    constructor(type: string, content: string, plan_id: string, place_id: string, place_name: string, images: Image[]) {
+    constructor(type: string, content: string,plan_id:string, place_id: string, place_name: string, images: Image[]) {
         this.type = type;
         this.content = content;
         this.place_id = place_id;
