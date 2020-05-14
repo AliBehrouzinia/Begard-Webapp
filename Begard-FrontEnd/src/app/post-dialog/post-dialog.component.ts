@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PostPlanService } from '../post-plan.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface PlanDetail {
   description: string;
@@ -25,7 +26,8 @@ export class PostDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
-    public postPlanService: PostPlanService
+    public postPlanService: PostPlanService,
+    private snackBar: MatSnackBar
   ) { }
 
 
@@ -38,6 +40,7 @@ export class PostDialogComponent implements OnInit {
 
   onPost() {
     this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
+      .subscribe(status => this.handleRequestResponse(status))
     this.dialogRef.close();
   }
 
@@ -72,22 +75,38 @@ export class PostDialogComponent implements OnInit {
     }
   }
 
-  updateSaveButtonDisabled(){
-    if (this.description != undefined && this.coverBinaryString != undefined){
-      if (this.description.length > 0 && this.coverBinaryString.length > 0){
+  updateSaveButtonDisabled() {
+    if (this.description != undefined && this.coverBinaryString != undefined) {
+      if (this.description.length > 0 && this.coverBinaryString.length > 0) {
         this.saveDisabled = false;
       }
-      else{
+      else {
         this.saveDisabled = true;
       }
     }
-    else{
+    else {
       this.saveDisabled = true;
     }
   }
 
-  onChange(e){
-      this.updateSaveButtonDisabled;
+  onChange(e) {
+    this.updateSaveButtonDisabled;
+  }
 
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+  }
+
+  handleRequestResponse(status) {
+    if (status == "200") {
+      this.openSnackBar("plan saved successfully!")
+    }
+    else {
+      this.openSnackBar("somethins went wrong!")
+    }
   }
 }

@@ -1,4 +1,4 @@
-<div style="background-color: #f7f8fd;">
+<div (scroll)="onWindowScroll($event)" style="background-color: #f7f8fd;">
     <mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
 
         <mat-grid-tile class="tile" rowspan=2 colspan=5>
@@ -7,21 +7,29 @@
 
     </mat-grid-list>
 
-    <div style="display:flex;justify-content: center">
-        <div style="width: 25% ;margin-left: 50px;">
-            <mat-card class="shadow-lg" style="height: auto;margin: 20px;;border-radius: 10px">
-                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
-                    <mat-icon>date_range</mat-icon>
-                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">My plans</p>
-                </a>
-                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
-                    <mat-icon>home</mat-icon>
-                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">Home</p>
-                </a>
-                <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
-                    <mat-icon>person_outline</mat-icon>
-                    <p class="underline" style="margin-left: 10px;margin-top: 3px;">Profile</p>
-                </a>
+
+    <div style="display:flex">
+        <div id="leftbar">
+
+            <mat-card class="shadow-lg " style="height: auto;margin: 20px;;border-radius: 10px">
+
+                <div class="underline">
+                    <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
+                    <p style="margin-left: 10px;margin-top: 10px;">Home</p>
+                </div>
+
+
+                <div routerLink="{{userPro}}" class="underline">
+                    <mat-icon style="margin-left: 10px;margin-top: 7px;">person_outline</mat-icon>
+                    <p style="margin-left: 10px;margin-top: 10px;">Profile</p>
+                </div>
+
+                <div class="underline">
+                    <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
+                    <p style="margin-left: 10px;margin-top: 10px;">My plans</p>
+                </div>
+
+
             </mat-card>
         </div>
 
@@ -38,21 +46,23 @@
             </div>
         </div>
 
-        <div style="width: 25%;margin-right: 50px;">
+        <div id="rightbar">
             <mat-card class="shadow-lg" style="margin: 20px;;border-radius: 10px">
                 <mat-card-title style="display:flex;justify-content: center; width: 100%;">
                     Top Planners
                 </mat-card-title>
                 <mat-card-content style="margin-top: 40px;">
                     <div *ngFor="let tp of topPlanners;">
-                        <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email" [profileImg]="tp.profile_img"
-                            [rate]="tp.average_rate" [isPublic]="tp.is_public" [userId]="tp.pk"></app-top-planners>
+                        <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
+                            [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"
+                            [userId]="tp.pk"></app-top-planners>
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
+
+
+
     </div>
-
-
     <router-outlet></router-outlet>
 </div>

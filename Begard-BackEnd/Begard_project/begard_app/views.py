@@ -83,8 +83,11 @@ class PlansView(generics.ListCreateAPIView):
             return HttpResponseBadRequest("Error : The plan items doesn't exist.")
         if not request.data.get('image'):
             return HttpResponseBadRequest("Error : The cover image doesn't exist.")
+        if not request.data.get('description'):
+            return HttpResponseBadRequest("Error : The description doesn't exist.")
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
+        request.data['content'] = request.data['description']
         post = self.save_post(request.data, plan.id)
         post_id = post.pk
         image = request.data['image']
@@ -631,7 +634,7 @@ class TopPlannerView(generics.ListAPIView):
                 person.average_rate = sum_of_rates / len(posts)
             else:
                 person.average_rate = 0
-        sorted_list = sorted(users_list, key=lambda x: x.average_rate)
+        sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:5]
         sorted_list.reverse()
         return sorted_list
 

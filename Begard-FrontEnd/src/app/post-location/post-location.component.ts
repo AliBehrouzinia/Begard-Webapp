@@ -3,12 +3,10 @@ import { FormControl } from '@angular/forms';
 import { PostLocationService } from '../post-location.service';
 import { PostLocation, Image } from './../post-location'
 import { MyPlanService } from '../my-plan.service';
-import { MyPlan } from '../my-plan';
 import { MyLocationService } from '../my-location.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user.service';
-import { exhaustMap } from 'rxjs/operators';
-import { Profile } from '../profile';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -30,6 +28,7 @@ export class PostLocationComponent implements OnInit {
   postDisabled = true;
   plans = []
   locations = []
+  planId
 
   username;
   profileImage = "";
@@ -43,7 +42,9 @@ export class PostLocationComponent implements OnInit {
     , private myPlanService: MyPlanService
     , private myLocationService: MyLocationService
     , private userService: UserService
-    , private profileService: ProfileService) { }
+    , private profileService: ProfileService
+    , private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
@@ -52,12 +53,12 @@ export class PostLocationComponent implements OnInit {
       }
     })
 
-    this.userService.getUserId().subscribe(user => { 
-        this.profileService.getHeaderData(user.pk).subscribe( profile => {
-          this.username = profile.username
-          this.profileImage += this.SERVER_URL + profile.profile_image;
-        })
-     })
+    this.userService.getUserId().subscribe(user => {
+      this.profileService.getHeaderData(user.pk).subscribe(profile => {
+        this.username = profile.username
+        this.profileImage += this.SERVER_URL + profile.profile_image;
+      })
+    })
   }
 
   _handleReaderLoaded(readerEvt) {
@@ -106,8 +107,9 @@ export class PostLocationComponent implements OnInit {
       this.locationControl.value.place_id,
       this.locationControl.value.place_name,
       this.imageStrings
-    ))
-    this.clear();
+    )).subscribe(status => {
+      this.handleRequest(status);
+    })
   }
 
   clear() {
@@ -137,7 +139,9 @@ export class PostLocationComponent implements OnInit {
   }
 
   onPlanChange(plan) {
+    this.planId = plan.id
     if (plan != undefined) {
+      this.locations = []
       this.updatePostButtonDisabled()
       this.locationDisabled = false;
       this.myLocationService.getMyLocations(plan.id).subscribe(myLocations => {
@@ -153,6 +157,23 @@ export class PostLocationComponent implements OnInit {
   onLocationChange(location) {
     if (location != undefined) {
       this.updatePostButtonDisabled()
+    }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+  }
+
+  handleRequest(status) {
+    if (status == "200") {
+      this.clear()
+      this.openSnackBar("post saved successfully!")
+    } else {
+      this.openSnackBar("something went wrong!")
     }
   }
 }

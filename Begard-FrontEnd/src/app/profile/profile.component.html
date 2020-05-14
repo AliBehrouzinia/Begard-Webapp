@@ -1,90 +1,109 @@
-<mat-card class="cover"></mat-card>
+<div style="background-color: #f7f8fd;">
+    <mat-card class="cover"></mat-card>
 
-<div style="display: flex; justify-content: center;">
-    <mat-card class="pro-info shadow-lg">
-        <mat-grid-list class="gird-list" cols="6" rowHeight="50%">
-            <mat-grid-tile [colspan]="1" [rowspan]="2">
-                <img style="width: 80%; border-radius: 50%;margin-left: 20%;" src='{{imgUrl}}'>
-            </mat-grid-tile>
-            <mat-grid-tile style="font-size: 30px;margin-left: 3%;" [colspan]="3" [rowspan]="1">{{userName}}
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="2" [rowspan]="1">
-                <button (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
-                    <mat-icon>person_add</mat-icon> {{followingState}}
-                </button>
+    <div style="display: flex; justify-content: center;">
+        <mat-card class="pro-info shadow-lg">
+            <mat-grid-list class="gird-list" cols="6" rowHeight="50%">
+                <mat-grid-tile [colspan]="1" [rowspan]="2">
+                    <img style="width: 80%; border-radius: 50%;margin-left: 20%;" src='{{imgUrl}}'>
+                </mat-grid-tile>
+                <mat-grid-tile class="username" style="font-size: 30px;margin-left: 3%;" [colspan]="3" [rowspan]="1">
+                    {{userName}}
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="2" [rowspan]="1">
+                    <button (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
+                        <mat-icon>person_add</mat-icon> {{followingState}}
+                    </button>
 
-                <button mat-button [matMenuTriggerFor]="beforeMenu">
-                    <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #beforeMenu="matMenu" xPosition="before">
-                    <button mat-menu-item>
-                        Block User</button>
-                    <button mat-menu-item>Send Massage</button>
-                </mat-menu>
+                    <button mat-button [matMenuTriggerFor]="beforeMenu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #beforeMenu="matMenu" xPosition="before">
+                        <button mat-menu-item>
+                            Block User</button>
+                        <button mat-menu-item>Send Massage</button>
+                    </mat-menu>
 
-            </mat-grid-tile>
-            <mat-grid-tile [colspan]="1" [rowspan]="1">
-                <div style="margin-left: 20%;"> <b> posts<br>
-                        <div>{{postNum}}</div>
-                    </b> </div>
-            </mat-grid-tile>
-            <mat-grid-tile style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>followrs <br>
-                    <div (click)="openDialog()" class="number">{{follwersNum}}</div>
-                </b></mat-grid-tile>
-            <mat-grid-tile style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>followings <br>
-                    <div (click)="openDialog()" class="number">{{follwingsNum}}</div>
-                </b></mat-grid-tile>
+                </mat-grid-tile>
+                <mat-grid-tile class="username" [colspan]="1" [rowspan]="1">
+                    <div style="margin-left: 20%;"> <b>
+                            <div style="font-size: 20px;">Posts</div>
+                            <div style="margin-top: 5px;">{{postNum}}</div>
+                        </b> </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="username" style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>
+                        <div style="font-size: 20px;">Followers</div>
+                        <div (click)="openDialog()" class="number">{{follwersNum}}</div>
+                    </b></mat-grid-tile>
+                <mat-grid-tile class="username" style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>
+                        <div style="font-size: 20px;">Followings</div>
+                        <div (click)="openDialog()" class="number">{{follwingsNum}}</div>
+                    </b></mat-grid-tile>
 
 
-        </mat-grid-list>
-    </mat-card>
-
-</div>
-
-<div style="display:flex; justify-content: start; margin-top: 30px;margin-left: 5%;">
-    <div style="width: 20%;">
-        <mat-card class="shadow-lg" style="height: 300px; ;">
-            <a style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
-                <mat-icon>date_range</mat-icon>
-                <p class="underline" style="margin-left: 10px;margin-top: 3px;">My plans</p>
-
-            </a>
-            <a (click)="goToHome()" style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
-                <mat-icon>home</mat-icon>
-                <p class="underline" style="margin-left: 10px;margin-top: 3px;">Home</p>
-            </a>
-            <a  style="width : 100%;display:flex; justify-content:flex-start;margin-left: 10px;">
-                <mat-icon>person_outline</mat-icon>
-                <p class="underline" style="margin-left: 10px;margin-top: 3px;">Profile</p>
-            </a>
-
+            </mat-grid-list>
         </mat-card>
+
     </div>
 
-    <div style="width: 50%; min-width: 500px; margin-left: 5%;">
-        <app-location-post [currentUrl]="id"></app-location-post>
-    </div>
-    <!-- <div style="width: 30%; margin-right: 5%;">
-        <mat-card style="padding-left: 0%;">
-            <div mat-ripple class='plan'>
-                <mat-grid-list cols="10" rows="8" rowHeight="10px">
-                    <mat-grid-tile class="red-class" [colspan]=4 [rowspan]=8 >
-                        <img style="width: 70%;margin-left: 20%;" src='{{imgUrl}}'>
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]=6 [rowspan]=4 >
-                        <div style="font-size: 20px;">A good trip to the beaches of hawaiii</div>
+    <div style="display:flex">
+        <div id="leftbar">
 
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]=6 [rowspan]=4 >
-                        <img mat-card-avatar style="" src='{{imgUrl}}'>
-                        <div style="margin-left: 10px;">username</div>
-                    </mat-grid-tile>    
-                </mat-grid-list>
+            <mat-card class="shadow-lg " style="height: auto;margin: 20px;;border-radius: 10px">
+
+                <div routerLink="/homepage" class="underline">
+                    <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
+                    <p style="margin-left: 10px;margin-top: 10px;">Home</p>
+                </div>
 
 
+                <div routerLink='{{proUrl}}' class="underline">
+                    <mat-icon style="margin-left: 10px;margin-top: 7px;">person_outline</mat-icon>
+                    <p style="margin-left: 10px;margin-top: 10px;">Profile</p>
+                </div>
+
+                <div class="underline">
+                    <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
+                    <p style="margin-left: 10px;margin-top: 10px;">My plans</p>
+                </div>
+
+
+            </mat-card>
+        </div>
+
+
+        <div id="content">
+            <div style="display:flex; justify-content: center; ">
+                <div style="width: 100%; margin: 20px">
+                    <app-location-post [currentUrl]="id"></app-location-post>
+                </div>
             </div>
-        </mat-card>
+        </div>
 
-    </div> -->
+        <div id="rightbar">
+            <mat-card class="shadow-lg" style="margin: 20px;;border-radius: 10px">
+                <mat-card-title style="display:flex;justify-content: center; width: 100%;">
+                    Top Planners
+                </mat-card-title>
+                <mat-card-content style="margin-top: 40px;">
+                    <div *ngFor="let tp of topPlanners;">
+                        <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
+                            [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"
+                            [userId]="tp.pk"></app-top-planners>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
 
+    </div>
+
+   
 </div>
+
+
+
+
+
+
+
+
