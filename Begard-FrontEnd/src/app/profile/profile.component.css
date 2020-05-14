@@ -1,6 +1,7 @@
 .cover{
-  height: 300px;
-  background-image: url('../../assets/back.jpg');;
+  height: 400px;
+  background-image: url('../../assets/back.jpg');
+  background-size: cover;
 }
 
 .pro-info{
@@ -9,10 +10,58 @@
     margin-top: -50px;
     
 }
+.number {
+  margin-top: 5px;
+}
 .number:hover{
     text-decoration: underline;
     cursor: pointer;
     
+}
+
+
+
+#leftbar {
+  width: 20%;   
+}
+
+#content{
+  width: 50%;
+}
+
+#content.sticky{
+  width: 50%;
+  margin-left: 20%;
+}
+
+#leftbar.sticky {
+  width: 20%;
+  position: fixed;  
+  top: 60px;
+}
+
+#rightbar{
+  width: 30%;
+  
+}
+
+#rightbar.sticky{
+  position: fixed;
+  margin-left: 70%;
+  width: 30%;
+  top: 60px
+}
+
+
+.underline {
+  width : 100%;display:flex; justify-content:flex-start;
+  font-size: 20px;
+}
+
+.underline:hover{
+  border-radius: 10px;
+  background-color: #d6d8e2;
+  cursor: pointer;
 }
 
 .grid-container > div {
@@ -21,15 +70,9 @@
     padding: 20px 0;
     font-size: 30px;
   }
-  /* .item{
-    height: 50%;
-  } */
-  
+
   .item1 {
     
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
     grid-row-start: 1;
     grid-row-end: 3;
     grid-column-start: 1;
