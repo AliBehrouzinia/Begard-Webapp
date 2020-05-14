@@ -33,6 +33,9 @@
                 <mat-card-title style="display:flex;justify-content: center;">Top Plans</mat-card-title>
                 <app-horizontl-list style="margin-top: 20px;" [planOverviews]="planOverviews"></app-horizontl-list>
             </mat-card>
+            <div style="width: 100%">
+                <app-location-post style="margin-inline: 20px;" [currentUrl]="currentUrl"></app-location-post>
+            </div>
         </div>
 
         <div style="width: 25%;margin-right: 50px;">
@@ -50,11 +53,6 @@
         </div>
     </div>
 
-    <div style="display:flex; justify-content: center; ">
-        <div style="width: 50%; min-width: 500px; ">
-            <app-location-post [currentUrl]="currentUrl"></app-location-post>
-        </div>
-    </div>
 
     <router-outlet></router-outlet>
 </div>
