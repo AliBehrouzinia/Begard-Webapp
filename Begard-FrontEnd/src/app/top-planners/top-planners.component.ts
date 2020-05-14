@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FollowService, FollowRequest } from '../follow.service';
+import { FollowService } from '../follow.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-top-planners',
@@ -19,7 +21,10 @@ export class TopPlannersComponent implements OnInit {
   followButtonTitle = "Follow"
   allowFollowRequest = true;
 
-  constructor(private followService: FollowService) { }
+  constructor(private followService: FollowService,
+    private route: ActivatedRoute,
+    private router: Router,
+    ) { }
 
   ngOnInit(): void {
     this.email = this.email.substring(0, this.email.search('@'));

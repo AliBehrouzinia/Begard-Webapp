@@ -103,11 +103,7 @@ export class PostLocationComponent implements OnInit {
     this.postLocationService.sendPostLocation(new PostLocation(
       'location_post',
       this.descControl.value,
-<<<<<<< HEAD
-      this.planId,
-=======
       this.planControl.value.id,
->>>>>>> 2b389de721e00f69a7011a9442a377ba9de99d35
       this.locationControl.value.place_id,
       this.locationControl.value.place_name,
       this.imageStrings
