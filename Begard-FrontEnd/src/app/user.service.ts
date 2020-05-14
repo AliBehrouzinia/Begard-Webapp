@@ -22,8 +22,6 @@ export class UserService {
 
   getUserId() {
     const url = 'http://127.0.0.1:8000/rest-auth/user/';
-
-
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
 
       var token = 'token ' + user.token;
