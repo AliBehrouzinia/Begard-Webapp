@@ -23,7 +23,6 @@ export class TopPlannersService {
       })
       .pipe(
         map(res => {
-          console.log("a "+JSON.stringify(res.body))
           return res.body;
         })
       );
