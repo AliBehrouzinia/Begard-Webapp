@@ -3,6 +3,8 @@ import { MyPlanService } from './../my-plan.service'
 import { ProfileService } from './../profile.service'
 import { MyPlan } from '../my-plan';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../user.service';
+import { TopPlannersService } from '../top-planners.service';
 
 
 
@@ -19,21 +21,27 @@ export class MyPlanComponent implements OnInit {
   plansCount;
   followersCount;
   followingCount;
+  topPlanners 
+  userId
 
-  //todo : get this from api
-  USER_ID = 8;
 
-  constructor(private myPlanService: MyPlanService, private profileService: ProfileService, private router: Router, private route: ActivatedRoute,
+  constructor(private myPlanService: MyPlanService, private profileService: ProfileService
+    , private router: Router, private route: ActivatedRoute, private user: UserService
+    , private topPlannerService: TopPlannersService
   ) { }
 
   ngOnInit(): void {
-
-    this.profileService.getProfile(this.USER_ID).subscribe(profile => {
-      this.username = profile.username;
-      this.profileImage = profile.profile_image;
-      this.followersCount = profile.followers_count;
-      this.followingCount = profile.followings_count;
+    this.user.getUserId().subscribe(user => {
+      this.userId = user.pk;
+      this.profileService.getProfile(user.pk).subscribe(profile => {
+        this.username = profile.username;
+        this.profileImage = this.SERVER_URL + profile.profile_image;
+        this.followersCount = profile.followers_count;
+        this.followingCount = profile.followings_count;
+      })
     })
+
+    this.topPlannerService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
 
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
@@ -54,6 +62,9 @@ export class MyPlanComponent implements OnInit {
   }
   goToHome() {
     this.router.navigate(['/homepage']);
+  }
+  goToProfile() {
+    this.router.navigate(['/profile' , this.userId]);
   }
 }
 
