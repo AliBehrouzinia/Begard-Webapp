@@ -4,6 +4,7 @@ import { ProfileService } from './../profile.service'
 import { MyPlan } from '../my-plan';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
+import { TopPlannersService } from '../top-planners.service';
 
 
 
@@ -20,10 +21,12 @@ export class MyPlanComponent implements OnInit {
   plansCount;
   followersCount;
   followingCount;
+  topPlanners 
 
 
   constructor(private myPlanService: MyPlanService, private profileService: ProfileService
     , private router: Router, private route: ActivatedRoute, private user: UserService
+    , private topPlannerService: TopPlannersService
   ) { }
 
   ngOnInit(): void {
@@ -36,6 +39,7 @@ export class MyPlanComponent implements OnInit {
       })
     })
 
+    this.topPlannerService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
 
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
