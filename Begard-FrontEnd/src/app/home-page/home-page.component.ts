@@ -19,11 +19,11 @@ export class HomePageComponent implements OnInit {
   planOverviews;
   topPlanners: TopPlanner[];
   currentUrl: any ;
-  userPro: string;
+  loginStatus$: Observable<boolean>;
+
 
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
-    private router: ActivatedRoute,
-    private user : UserService) {
+    private router: ActivatedRoute,private authService:AuthService) {
   }
 
   ngOnInit() {
@@ -33,6 +33,7 @@ export class HomePageComponent implements OnInit {
     this.planOverviews = this.planOverviewService.getPlanOverviews()
     this.TopPlannersService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
     this.currentUrl=this.router.url;
+    this.loginStatus$ = this.authService.isLogedIn;
   }
 
   @HostListener('window:scroll', ['$event'])
