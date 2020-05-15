@@ -44,3 +44,7 @@
     cursor: pointer;
     color: #c5cae9;
   }
+
+  .comment:hover{
+    cursor: pointer;
+  }

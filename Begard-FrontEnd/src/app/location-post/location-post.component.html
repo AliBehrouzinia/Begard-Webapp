@@ -3,21 +3,24 @@
     <mat-grid-list cols="11" rows="2" rowHeight="40px"
         style="background: #3f51b5;border-top-left-radius: 10px;border-top-right-radius: 10px;">
         <mat-grid-tile [colspan]=2 [rowspan]=2 style="border-top-left-radius: 10px;">
-            <img (click)="goToProfile(post.usrId)" matRipple routerLink="post." mat-card-avatar src="{{'http://127.0.0.1:8000'+post.userProImgSrc}}"
-                class="example-header-image">
+            <img (click)="goToProfile(post.usrId)" matRipple routerLink="post." mat-card-avatar
+                src="{{'http://127.0.0.1:8000'+post.userProImgSrc}}" class="example-header-image">
         </mat-grid-tile>
         <mat-grid-tile class="post-username" [colspan]=6 style="color: white;font-size: 20px;">
-            <div (click)="goToProfile(post.usrId)" class="usernamelink">{{post.userName}}</div></mat-grid-tile>
+            <div (click)="goToProfile(post.usrId)" class="usernamelink">{{post.userName}}</div>
+        </mat-grid-tile>
         <mat-grid-tile class="post-follow" [colspan]=3 style="background: #3f51b5;border-top-right-radius: 10px;">
-            <button (click)="onFollow(post.usrId)" mat-stroked-button color="primary"   style="transform: scale(0.75);background: white;">
+            <button (click)="onFollow(post.usrId)" mat-stroked-button color="primary"
+                style="transform: scale(0.75);background: white;">
                 <mat-icon>person_add </mat-icon> Follow
             </button>
         </mat-grid-tile>
-        <mat-grid-tile class="post-city" [colspan]=6 style="color: white;" >
+        <mat-grid-tile class="post-city" [colspan]=6 style="color: white;">
             <p>in <b class="trip">Trip</b> to {{post.city}}</p>
         </mat-grid-tile>
-        <mat-grid-tile  *ngIf="post.placeName!=null" class="post-place" [colspan]=3 style="color: white;text-overflow: ellipsis;"  >
-           <mat-icon style="transform: scale(0.75);margin-top: -4px;">place</mat-icon> {{post.placeName}}
+        <mat-grid-tile *ngIf="post.placeName!=null" class="post-place" [colspan]=3
+            style="color: white;text-overflow: ellipsis;">
+            <mat-icon style="transform: scale(0.75);margin-top: -4px;">place</mat-icon> {{post.placeName}}
         </mat-grid-tile>
     </mat-grid-list>
 
@@ -30,20 +33,36 @@
 
         <app-location-carousel></app-location-carousel>
 
-        <form class="example-form">
+        <form *ngIf="post.disable" class="example-form">
+           <div style="transform: scale(2); margin-left: 45%; margin-top: 19px;width: 5%;"> <a (click)="onAbleComment(post)" class="comment far fa-comment" ></a></div>
+
+            <a (click)='onLike(post)' mat-icon-button style="width: 5%;" *ngIf="!post.isLiked">
+                <mdb-icon far icon="heart" size="2x"></mdb-icon>
+              
+            </a>
+            <a (click)='onDislike(post)' mat-icon-button color="warn" style="width: 5%;" *ngIf="post.isLiked">
+                <mdb-icon fas icon="heart" color="red" size="2x"></mdb-icon>
+            </a>
+            <b style=" color: black;margin-left: -18px;margin-top: 35px;">{{post.likeNums}}</b>
+
+
+
+        </form>
+
+        <form *ngIf="!post.disable" class="example-form">
 
             <div style="width: 100%;">
                 <mat-form-field class="example-full-width" style="margin-right: 5px;">
                     <mat-label>Leave a comment</mat-label>
                     <textarea [formControl]="commentFc" matInput placeholder="It makes me feel..."></textarea>
                 </mat-form-field>
-                <a (click)="onComment(post)" mat-icon-button style="width:10%; color:#9e9e9e;">
-                    <mdb-icon far icon="paper-plane" size="2x"></mdb-icon>
+                <a (click)="onComment(post)" mat-icon-button style="width:10%;">
+                    <mat-icon>send</mat-icon>
 
 
                 </a>
 
-                <a (click)='onLike(post)' mat-icon-button style="width: 10%;color:#9e9e9e;" *ngIf="!post.isLiked">
+                <a (click)='onLike(post)' mat-icon-button style="width: 10%;" *ngIf="!post.isLiked">
                     <mdb-icon far icon="heart" size="2x"></mdb-icon>
                     <b style="margin-left: 5%; color: black;">{{post.likeNums}}</b>
                 </a>
@@ -60,7 +79,7 @@
         </form>
 
 
-        <app-comment [postId]="post.id"></app-comment>
+        <app-comment *ngIf="!post.disable" [postId]="post.id"></app-comment>
 
     </div>
 

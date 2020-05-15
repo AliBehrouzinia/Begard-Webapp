@@ -18,7 +18,8 @@ class Post {
     public likeNums: number,
     public isLiked: boolean,
     public id: number,
-    public usrId: number
+    public usrId: number,
+    public disable:boolean
   ) { }
 }
 
@@ -86,7 +87,8 @@ export class LocationPostComponent implements OnInit {
         resdata[i].number_of_likes,
         resdata[i].is_liked,
         resdata[i].id,
-        resdata[i].user));
+        resdata[i].user,
+        true));
 
     }
 
@@ -137,6 +139,10 @@ export class LocationPostComponent implements OnInit {
 
   onFollow(id : number ){
     this.postservice.onFollow(id);
+  }
+
+  onAbleComment(post: Post){
+    post.disable = false;
   }
 
 }

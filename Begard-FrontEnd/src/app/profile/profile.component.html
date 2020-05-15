@@ -5,7 +5,7 @@
         <mat-card class="pro-info shadow-lg">
             <mat-grid-list class="gird-list" cols="6" rowHeight="50%">
                 <mat-grid-tile [colspan]="1" [rowspan]="2">
-                    <img style="width: 80%; border-radius: 50%;margin-left: 20%;" src='{{imgUrl}}'>
+                    <img mat-card-avatar style="margin-left: 10%;transform: scale(4);" src='{{imgUrl}}'>
                 </mat-grid-tile>
                 <mat-grid-tile class="username" style="font-size: 30px;margin-left: 3%;" [colspan]="3" [rowspan]="1">
                     {{userName}}
@@ -55,13 +55,12 @@
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">Home</p>
                 </div>
-
-
+                <hr class="hr">
                 <div routerLink='{{proUrl}}' class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">person_outline</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">Profile</p>
                 </div>
-
+                <hr class="hr">
                 <div class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">My plans</p>

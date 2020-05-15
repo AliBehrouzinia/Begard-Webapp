@@ -6,8 +6,11 @@
 
 .pro-info{
     height: 200px;
-    width: 90%;
+    width: 100%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
     margin-top: -50px;
+    border-radius: 10px;
     
 }
 .number {
@@ -56,6 +59,7 @@
 .underline {
   width : 100%;display:flex; justify-content:flex-start;
   font-size: 20px;
+  margin-top: 10px;
 }
 
 .underline:hover{
@@ -101,3 +105,16 @@
     border-radius: 5px;
     margin-left: 10%;
   }
+
+  .hr{
+    background-color: #d2cece;
+
+height: 1px;
+
+width: 171px;
+
+margin-top: 10px;
+
+margin-bottom: 0px;
+
+}
