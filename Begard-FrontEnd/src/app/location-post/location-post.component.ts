@@ -74,6 +74,7 @@ export class LocationPostComponent implements OnInit {
 
   private setPostData(resdata: PostRes[]) {
     for (var i = 0; i < resdata.length; i++) {
+      
       this.posts.push(new Post(resdata[i].type,
         resdata[i].content,
         resdata[i].image,
