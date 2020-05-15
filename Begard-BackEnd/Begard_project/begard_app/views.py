@@ -596,9 +596,9 @@ class UserPostsView(generics.ListAPIView):
 
         for i in range(len(self.queryset)):
             serializer_data[i]['user_name'] = posts[i].user.email
-            serializer_data[i]['user_profile_img'] = posts[i].user.profile_img.url
+            serializer_data[i]['user_profile_image'] = posts[i].user.profile_img.url
             serializer_data[i]['destination_city'] = posts[i].plan_id.destination_city.name
-            serializer_data[i]['number_of_like'] = models.Like.objects.filter(post=posts[i].id).count()
+            serializer_data[i]['number_of_likes'] = models.Like.objects.filter(post=posts[i].id).count()
             serializer_data[i]['is_liked'] = models.Like.objects.filter(post=posts[i].id, user=source_user.id).exists()
 
             images = models.Image.objects.filter(post=posts[i].id)
