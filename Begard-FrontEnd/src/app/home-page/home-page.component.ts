@@ -52,16 +52,7 @@ export class HomePageComponent implements OnInit {
       element2.classList.add('sticky');
       let element3 = document.getElementById('content');
       element3.classList.add('sticky');
-      if (window.pageYOffset > 800) {
-        
-        let element = document.getElementById('');
-        element.classList.add('sticky');
-      }
-      else {
-        let element = document.getElementById('');
-        element.classList.remove('sticky');
-
-      }
+     
     } else {
       let element1 = document.getElementById('leftbar');
       element1.classList.remove('sticky');
