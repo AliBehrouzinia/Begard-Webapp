@@ -1,14 +1,15 @@
 
   .comment{
-    -webkit-box-shadow: inset 0px 0px 20px -5px #0d47a1;
+    /* -webkit-box-shadow: inset 0px 0px 20px -5px #0d47a1;
 -moz-box-shadow: inset 0px 0px 20px -5px #0d47a1;
-box-shadow: inset 0px 0px 10px -5px #0d47a1;
+box-shadow: inset 0px 0px 10px -5px #0d47a1; */
 border-radius: 10px;
+margin-left: 10px;
 margin-top: 2%;
 width: 94%;
+margin-bottom: 5px;
   }
   .example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
     background-size: cover;
     cursor: pointer;
   }
