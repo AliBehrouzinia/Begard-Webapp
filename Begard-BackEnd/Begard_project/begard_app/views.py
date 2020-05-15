@@ -83,8 +83,11 @@ class PlansView(generics.ListCreateAPIView):
             return HttpResponseBadRequest("Error : The plan items doesn't exist.")
         if not request.data.get('image'):
             return HttpResponseBadRequest("Error : The cover image doesn't exist.")
+        if not request.data.get('description'):
+            return HttpResponseBadRequest("Error : The description doesn't exist.")
         plan = self.create_plan(request.data)
         self.create_plan_items(request.data['plan_items'], plan.id)
+        request.data['content'] = request.data['description']
         post = self.save_post(request.data, plan.id)
         post_id = post.pk
         image = request.data['image']
@@ -568,7 +571,7 @@ class ProfileDetailsView(generics.RetrieveAPIView):
 class UserPostsView(generics.ListAPIView):
     """List of posts of a user"""
     serializer_class = serializers.ShowPostSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny, AllowGetUserPosts]
 
     def get_queryset(self):
         target_user = get_object_or_404(models.BegardUser, id=self.kwargs.get('id'))
@@ -577,7 +580,7 @@ class UserPostsView(generics.ListAPIView):
         if target_user.is_public:
             return models.Post.objects.filter(user=target_user)
 
-        if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+        if models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user).exists():
             return models.Post.objects.filter(user=target_user)
 
         return None
@@ -593,15 +596,15 @@ class UserPostsView(generics.ListAPIView):
 
         for i in range(len(self.queryset)):
             serializer_data[i]['user_name'] = posts[i].user.email
-            serializer_data[i]['user_profile_img'] = posts[i].user.profile_img.url
+            serializer_data[i]['user_profile_image'] = posts[i].user.profile_img.url
             serializer_data[i]['destination_city'] = posts[i].plan_id.destination_city.name
-            serializer_data[i]['number_of_like'] = models.Like.objects.filter(post=posts[i].id).count()
-            serializer_data[i]['is_liked'] = models.Like.objects.filter(post=posts[i].id, user=source_user).exists()
+            serializer_data[i]['number_of_likes'] = models.Like.objects.filter(post=posts[i].id).count()
+            serializer_data[i]['is_liked'] = models.Like.objects.filter(post=posts[i].id, user=source_user.id).exists()
 
             images = models.Image.objects.filter(post=posts[i].id)
             serializer_data[i]['images'] = [image.image.url for image in images]
 
-            if models.UserFollowing.objects.filter(user_id=source_user, following_user_id=target_user).exists():
+            if models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user).exists():
                 serializer_data[i]['following_state'] = 'Following'
             else:
                 serializer_data[i]['following_state'] = 'Follow'
