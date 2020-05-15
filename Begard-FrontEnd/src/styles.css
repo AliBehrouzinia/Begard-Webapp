@@ -152,6 +152,30 @@ body {
   font-size: 30;
 }
 
+.post-username.mat-grid-tile .mat-figure{
+  justify-content: flex-start !important;
+  align-items: flex-end !important;
+  padding-bottom: 5px;
+  
+}
+
+.post-city.mat-grid-tile .mat-figure{
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  padding-top: 5px;
+}
+.post-follow.mat-grid-tile .mat-figure {
+  justify-content: flex-end !important;
+  padding-right: 15px;
+  margin-top: 6px;
+}
+.post-place.mat-grid-tile .mat-figure{
+  justify-content: flex-end !important;
+  align-items: flex-start !important;
+  padding-top: 5px;
+  padding-right: 15px !important;
+}
+
 .req-icons.mat-grid-tile .mat-figure{
   justify-content: flex-end !important;
   

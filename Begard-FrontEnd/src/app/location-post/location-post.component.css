@@ -6,6 +6,8 @@
   
   .example-header-image {
     background-size: cover;
+    transform: scale(1.5);
+    margin-left: 10px;
     cursor: pointer; 
   }
 
@@ -26,4 +28,19 @@
   .example-full-width {
     width: 70%;
     
+  }
+
+  .trip{
+    color: rgb(204, 204, 204);
+  }
+
+  .trip:hover {
+    cursor: pointer;
+    color: #7986cb;
+
+  }
+
+  .usernamelink:hover{
+    cursor: pointer;
+    color: #c5cae9;
   }

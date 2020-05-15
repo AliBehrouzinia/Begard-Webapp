@@ -94,4 +94,8 @@ export class LocationPostService {
         }));
 
     }
+
+    onFollow(id: number){
+        
+    }
 }
