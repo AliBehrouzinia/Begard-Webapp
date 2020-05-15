@@ -3,14 +3,16 @@ from rest_framework import permissions
 from . import models
 
 
-class ActionOnFollowRequestPermission(permissions.BasePermission):
+class DeleteFollowRequestPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        if request.method == 'DELETE':
-            return request.user == obj.request_from
+        return obj.request_from == request.user
 
-        if request.method == 'GET':
-            return request.user == obj.request_to
+
+class AnswerFollowRequestPermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj.request_to == request.user
 
 
 class GetUpdateDeletePlanPermission(permissions.BasePermission):
@@ -60,3 +62,11 @@ class AllowGetUserPosts(permissions.BasePermission):
                 return False
 
         return True
+
+
+class IsPlanOwner(permissions.BasePermission):
+    """check that user is owner of plan"""
+
+    def has_permission(self, request, view):
+        plan = get_object_or_404(models.Plan, id=view.kwargs.get('id'))
+        return request.user == plan.user

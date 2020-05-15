@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PostPlan } from './post-plan';
 import { AuthService } from './auth.service';
 import { PlanDetail } from './post-dialog/post-dialog.component'
+import { Observable } from 'rxjs';
+import { map, take, exhaustMap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -18,23 +20,27 @@ export class PostPlanService {
   }
 
   setPostPlanDetail(planDetail: PlanDetail) {
-    console.log("service : " + planDetail);
     this.postPlan.setDescription(planDetail.description + "");
-    console.log("postind data : " + this.postPlan)
-    this.sendPostPlan();
+    this.postPlan.setImage(planDetail.photo + "");
+    return this.sendPostPlan();
   }
 
-  private sendPostPlan() {
+  sendPostPlan(): Observable<string> {
     const url = 'http://127.0.0.1:8000/plans/';
 
-    this.authservice.user.subscribe(user => {
+    return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
-      this.http
-        .post<PostPlan>(url, this.postPlan, {
-          headers: new HttpHeaders({ 'Authorization': token })
-        }).toPromise().then()
-    })
-
+      return this.http
+        .post<string>(url, JSON.stringify(this.postPlan), {
+          observe: 'response',
+          headers: new HttpHeaders({
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          })
+        }).pipe(
+          map(res => res.status.toString()))
+    }))
   }
 
 }

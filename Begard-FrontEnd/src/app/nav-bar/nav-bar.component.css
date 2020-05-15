@@ -52,3 +52,22 @@
 .mat-button-focus-overlay {
     background-color: transparent!important;
 }
+
+.searchinput{
+    border-radius: 10px;
+    margin-left: 40px;
+    width: 300px;
+    cursor: text;
+    display: flex;
+    justify-content: flex-start;
+    height: 40px;
+    background-color: white;
+}
+.notif{
+    transform: scale(1.25);
+}
+
+.notif:hover{
+    cursor: pointer;
+    transform: scale(1.35);
+}

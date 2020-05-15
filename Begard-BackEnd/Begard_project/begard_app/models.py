@@ -14,7 +14,9 @@ class BegardUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
     is_public = models.BooleanField(default=True)
-    profile_img = models.ImageField(upload_to='profiles', null=True)
+    profile_img = models.ImageField(default='profiles/defaults/user-profile-image.jpg', upload_to='profiles', null=True)
+    average_rate = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
+    username = models.TextField(max_length=50, null=True, blank=True)
     is_admin = True
 
     USERNAME_FIELD = 'email'
@@ -91,7 +93,7 @@ class Image(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(BegardUser, on_delete=models.CASCADE)
-    content = models.TextField(default="no content added", max_length=200)
+    content = models.TextField(max_length=200)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
 
 

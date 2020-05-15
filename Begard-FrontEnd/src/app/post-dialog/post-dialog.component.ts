@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PostPlanService } from '../post-plan.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface PlanDetail {
   description: string;
@@ -20,12 +21,14 @@ export class PostDialogComponent implements OnInit {
   public imagePath;
   imgURL: any;
   public message: string;
+  saveDisabled = true;
 
 
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
-    public postPlanService: PostPlanService
-    ) { }
+    public postPlanService: PostPlanService,
+    private snackBar: MatSnackBar
+  ) { }
 
 
   ngOnInit(): void {
@@ -36,14 +39,14 @@ export class PostDialogComponent implements OnInit {
   }
 
   onPost() {
-    console.log("this is description: " + this.description);
-    console.log("this is photo: " + this.coverBinaryString);
     this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
+      .subscribe(status => this.handleRequestResponse(status))
     this.dialogRef.close();
   }
 
   _handleReaderLoaded(readerEvt) {
     this.coverBinaryString = readerEvt.target.result;
+    this.updateSaveButtonDisabled();
   }
 
   preview(files) {
@@ -68,7 +71,42 @@ export class PostDialogComponent implements OnInit {
     if (files && file) {
       var binaryReader = new FileReader();
       binaryReader.onload = this._handleReaderLoaded.bind(this);
-      binaryReader.readAsBinaryString(file);
+      binaryReader.readAsDataURL(file);
+    }
+  }
+
+  updateSaveButtonDisabled() {
+    if (this.description != undefined && this.coverBinaryString != undefined) {
+      if (this.description.length > 0 && this.coverBinaryString.length > 0) {
+        this.saveDisabled = false;
+      }
+      else {
+        this.saveDisabled = true;
+      }
+    }
+    else {
+      this.saveDisabled = true;
+    }
+  }
+
+  onChange(e) {
+    this.updateSaveButtonDisabled;
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+  }
+
+  handleRequestResponse(status) {
+    if (status == "200") {
+      this.openSnackBar("plan saved successfully!")
+    }
+    else {
+      this.openSnackBar("somethins went wrong!")
     }
   }
 }
