@@ -284,6 +284,7 @@ class ShowPostView(generics.ListAPIView):
             data['user_name'] = get_object_or_404(models.BegardUser, id=data['user']).email
             data['user_profile_image'] = get_object_or_404(models.BegardUser, id=data['user']).profile_img.url
             data['number_of_likes'] = models.Like.objects.filter(post=data['id']).count()
+            data['number_of_comments'] = models.Comment.objects.filter(post=data['id']).count()
             data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
             images = models.Image.objects.filter(post=data['id'])
             data['images'] = [image.image.url for image in images]
@@ -551,6 +552,7 @@ class LocationPostView(generics.CreateAPIView):
         images = models.Image.objects.filter(post=post.id)
         data['images'] = [image.image.url for image in images]
         data['following_state'] = FollowingState.Own.name
+        data['number_of_comments'] = models.Comment.objects.filter(post=post.id).count()
         return data
 
     def modify_input_for_multiple_files(self, image, post):
@@ -615,6 +617,7 @@ class UserPostsView(generics.ListAPIView):
             serializer_data[i]['user_profile_image'] = posts[i].user.profile_img.url
             serializer_data[i]['destination_city'] = posts[i].plan_id.destination_city.name
             serializer_data[i]['number_of_likes'] = models.Like.objects.filter(post=posts[i].id).count()
+            serializer_data[i]['number_of_comments'] = models.Comment.objects.filter(post=posts[i].id).count()
             serializer_data[i]['is_liked'] = models.Like.objects.filter(post=posts[i].id, user=source_user.id).exists()
 
             images = models.Image.objects.filter(post=posts[i].id)
