@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList,Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, Input } from '@angular/core';
 import { LocationPostService, PostRes } from './location-post.service';
 import { ThemePalette } from '@angular/material/core';
 import { CommentComponent, Comment } from './comment/comment.component';
@@ -17,8 +17,9 @@ class Post {
     public followingState: string,
     public likeNums: number,
     public isLiked: boolean,
-    public id: number
-
+    public id: number,
+    public usrId: number,
+    public disable:boolean
   ) { }
 }
 
@@ -31,15 +32,15 @@ class Post {
 })
 export class LocationPostComponent implements OnInit {
 
-  @Input() currentUrl ;
+  @Input() currentUrl;
   commentFc = new FormControl()
 
   @ViewChildren(CommentComponent) child: QueryList<CommentComponent>;
 
   public userName: string;
-  
 
-  public defaultValue : string = '';
+
+  public defaultValue: string = '';
 
   public posts: Post[] = [];
   centered = false;
@@ -50,13 +51,13 @@ export class LocationPostComponent implements OnInit {
   color: ThemePalette = "primary";
 
   constructor(private postservice: LocationPostService,
-    private router: Router) { 
-     
-     
-    }
+    private router: Router) {
+
+
+  }
 
   ngOnInit(): void {
-    if(this.router.url==='/homepage'){
+    if (this.router.url === '/homepage') {
       this.postservice.getPostData().subscribe(resdata => {
         this.setPostData(resdata);
       });
@@ -66,14 +67,15 @@ export class LocationPostComponent implements OnInit {
         this.setPostData(resdata);
       })
     }
-  
-    
-    
+
+
+
 
   }
 
   private setPostData(resdata: PostRes[]) {
     for (var i = 0; i < resdata.length; i++) {
+
       this.posts.push(new Post(resdata[i].type,
         resdata[i].content,
         resdata[i].image,
@@ -84,7 +86,9 @@ export class LocationPostComponent implements OnInit {
         resdata[i].following_state,
         resdata[i].number_of_likes,
         resdata[i].is_liked,
-        resdata[i].id));
+        resdata[i].id,
+        resdata[i].user,
+        true));
 
     }
 
@@ -110,22 +114,35 @@ export class LocationPostComponent implements OnInit {
     if (this.commentFc.value != '') {
       for (var i = 0; i < this.child.toArray().length; i++) {
         if (this.child.toArray()[i].postId == post.id) {
-          var commentChild= this.child.toArray()[i];
+          var commentChild = this.child.toArray()[i];
           this.postservice.onComment(this.commentFc.value, post.id).subscribe(resdata => {
             commentChild.updateComment(resdata);
             this.commentFc.reset();
-            
+
           });
-         
+
         }
       }
-    
 
-     
+
+
 
     }
-  
 
+
+
+  }
+
+  goToProfile(id: number) {
+    this.router.navigate(['/profile/' + id])
+  }
+
+  onFollow(id : number ){
+    this.postservice.onFollow(id);
+  }
+
+  onAbleComment(post: Post){
+    post.disable = false;
   }
 
 }

@@ -22,6 +22,7 @@
 .underline {
     width : 100%;display:flex; justify-content:flex-start;
     font-size: 20px;
+    margin-top: 10px;
 }
 
 .underline:hover{
@@ -64,6 +65,27 @@
     top: 60px
 }
 
+.hr{
+    background-color: #d2cece;
 
+height: 1px;
 
+width: 171px;
 
+margin-top: 10px;
+
+margin-bottom: 0px;
+
+}
+
+.add-post {
+    display: flex;
+    justify-content: center;
+    transform: scale(1.25);
+   
+}
+.add-post-fixed {
+    position: fixed;
+    margin-left: 8%;
+    transform: scale(1.25);
+}

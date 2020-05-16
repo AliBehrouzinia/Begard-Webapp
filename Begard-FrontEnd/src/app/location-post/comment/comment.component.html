@@ -7,10 +7,10 @@
     <div style="width: 96%; font-size: smaller;">
   
       <!-- Exaple 1 -->
-      <div  class="card example-1 scrollbar-ripe-malinka shadow-none">
-        <mat-card *ngFor="let comment of comments" class="comment" >
+      <div *ngIf="comments.length>0" class="card example-1 scrollbar-ripe-malinka shadow-none">
+        <mat-card  *ngFor="let comment of comments" class="comment shadow-lg " >
             <div style="display: flex;">
-              <div matRipple mat-card-avatar class="example-header-image"></div>
+              <img matRipple mat-card-avatar src="{{'http://127.0.0.1:8000'+comment.user_profile_img}}" class="example-header-image">
               <div style="margin-left: 10px;margin-top: 10px;"><b>{{comment.user_name}}</b> says :</div>
             </div>
             <mat-card-content style="margin-left: 50px;">{{comment.content}}</mat-card-content>
