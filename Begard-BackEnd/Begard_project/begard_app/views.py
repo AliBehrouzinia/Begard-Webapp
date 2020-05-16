@@ -650,7 +650,7 @@ class TopPlannerView(generics.ListAPIView):
         for item in followers_list:
             following_id.append(item.following_user_id.id)
         for item in follow_requests_list:
-            follow_requests_id.append(item.request_to)
+            follow_requests_id.append(item.request_to.id)
         users = models.BegardUser.objects.exclude(Q(pk__in=following_id) | Q(pk=user_auth) |
                                                   Q(pk__in=follow_requests_id))
         users_list = list(users)
