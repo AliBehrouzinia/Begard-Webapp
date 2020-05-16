@@ -23,6 +23,13 @@ class ActionOnFollowRequestType(enum.Enum):
     reject = 2
 
 
+class FollowingState(enum.Enum):
+    Follow = 1,
+    Following = 2,
+    Requested = 3,
+    Own = 4
+
+
 class CitiesListView(generics.ListAPIView):
     """List of cities in database, include name and id"""
     queryset = models.City.objects.all()
@@ -280,10 +287,12 @@ class ShowPostView(generics.ListAPIView):
             data['is_liked'] = models.Like.objects.filter(Q(user=user) & Q(post=data['id'])).exists()
             images = models.Image.objects.filter(post=data['id'])
             data['images'] = [image.image.url for image in images]
-            if following_users.__contains__(data['user']):
-                data['following_state'] = 'following'
+            if data['user'] == user:
+                data['following_state'] = FollowingState.Own.name
+            elif data['user'] in following_users:
+                data['following_state'] = FollowingState.Following.name
             else:
-                data['following_state'] = 'follow'
+                data['following_state'] = FollowingState.Follow.name
 
         return Response(posts_data, status=status.HTTP_200_OK)
 
@@ -575,15 +584,7 @@ class UserPostsView(generics.ListAPIView):
 
     def get_queryset(self):
         target_user = get_object_or_404(models.BegardUser, id=self.kwargs.get('id'))
-        source_user = self.request.user
-
-        if target_user.is_public:
-            return models.Post.objects.filter(user=target_user)
-
-        if models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user).exists():
-            return models.Post.objects.filter(user=target_user)
-
-        return None
+        return models.Post.objects.filter(user=target_user)
 
     def get(self, request, *args, **kwargs):
         target_user = get_object_or_404(models.BegardUser, id=self.kwargs.get('id'))
@@ -604,10 +605,12 @@ class UserPostsView(generics.ListAPIView):
             images = models.Image.objects.filter(post=posts[i].id)
             serializer_data[i]['images'] = [image.image.url for image in images]
 
-            if models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user).exists():
-                serializer_data[i]['following_state'] = 'Following'
+            if source_user == target_user:
+                serializer_data[i]['following_state'] = FollowingState.Own.name
+            elif models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user).exists():
+                serializer_data[i]['following_state'] = FollowingState.Following.name
             else:
-                serializer_data[i]['following_state'] = 'Follow'
+                serializer_data[i]['following_state'] = FollowingState.Follow.name
 
         return Response(serializer_data, status.HTTP_200_OK)
 
