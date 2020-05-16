@@ -33,12 +33,12 @@
             </p>
         </mat-card-content>
 
-        <app-location-carousel></app-location-carousel>
+        <app-location-carousel [imgSrc]="post.imgSrc"></app-location-carousel>
 
         <form class="example-form">
             <div style=" margin-left: 45%; margin-top: 11px;width: 7%;"> <a
                     (click)="onAbleComment(post)" class="comment far fa-comment" style="color: #616161;transform: scale(2);"></a>
-                    <div style="margin-top: 4px;color: #424242;"><b>{{post.likeNums}}</b></div>
+                    <div style="margin-top: 4px;color: #424242;"><b>{{post.commentNums}}</b></div>
                 </div>
 
             <a (click)='onLike(post)' mat-icon-button style="width: 5%;" *ngIf="!post.isLiked">

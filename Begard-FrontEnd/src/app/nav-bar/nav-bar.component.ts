@@ -64,7 +64,7 @@ export class NavBarComponent implements OnInit {
       data: { name: this.name, animal: this.animal },
       position: {
         top: '50px',
-        left: '70%'
+        left: '80%'
       }
     });
 

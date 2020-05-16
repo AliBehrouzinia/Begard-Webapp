@@ -10,7 +10,7 @@ export interface PostRes {
     "type": string,
     "creation_date": string,
     "content": string,
-    "image": string,
+    "images": string[],
     "place_id": string,
     "place_name": string,
     "rate": string,
@@ -19,6 +19,7 @@ export interface PostRes {
     "destination_city": string,
     "user_name": string,
     "user_profile_image": string,
+    "number_of_comments" : number,
     "number_of_likes": number,
     "is_liked": boolean,
     "following_state": string
