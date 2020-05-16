@@ -1,31 +1,42 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TopPlanner } from './top-planner';
-
+import { AuthService } from './auth.service';
+import { PlanDetail } from './post-dialog/post-dialog.component'
+import { Observable } from 'rxjs';
+import { map, take, exhaustMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TopPlannersService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   getTopPlanners() {
     const url = 'http://127.0.0.1:8000/top-planners/';
 
-    return this.http
-      .get<TopPlanner[]>(url, {
-        observe: 'response',
-        params: {
-          page: '1',
-        }
-      })
-      .pipe(
-        map(res => {
-          return res.body;
-        })
-      );
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      if (user == null) {
+        return this.http
+          .get<TopPlanner[]>(url, {
+            observe: 'response',
+          }).pipe(
+            map(res => res.body))
+      } else {
+        var token = 'token ' + user.token;
+        return this.http
+          .get<TopPlanner[]>(url, {
+            observe: 'response',
+            headers: new HttpHeaders({
+              'Authorization': token,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            })
+          }).pipe(
+            map(res => res.body))
+      }
+    }))
   }
 }
 
