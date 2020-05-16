@@ -275,7 +275,7 @@ class ShowPostView(generics.ListAPIView):
         if not self.request.query_params.get('page').isdigit():
             return HttpResponseBadRequest("Error : the page number is not correct.")
         page_number = int(self.request.query_params.get('page'))
-        posts = models.Post.objects.filter(Q(user__in=following_users) |
+        posts = models.Post.objects.filter(Q(user=user) | Q(user__in=following_users) |
                                            Q(user__is_public=True)).order_by('-creation_date')[(page_number - 1)
                                                                                                * 20:page_number * 20]
         posts_data = serializers.ShowPostSerializer(instance=posts, many=True).data
