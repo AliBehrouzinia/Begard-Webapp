@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { MyPlanService } from './../my-plan.service'
 import { ProfileService } from './../profile.service'
 import { MyPlan } from '../my-plan';
@@ -31,6 +31,25 @@ export class MyPlanComponent implements OnInit {
     , private router: Router, private route: ActivatedRoute, private user: UserService
     , private topPlannerService: TopPlannersService
   ) { }
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll(e) {
+    if (window.pageYOffset >= 490) {
+      let element1 = document.getElementById('leftbar');
+      element1.classList.add('sticky');
+      let element2 = document.getElementById('rightbar');
+      element2.classList.add('sticky');
+      let element3 = document.getElementById('content');
+      element3.classList.add('sticky');
+    } else {
+      let element = document.getElementById('leftbar');
+      element.classList.remove('sticky');
+      let element2 = document.getElementById('rightbar');
+      element2.classList.remove('sticky');
+      let element3 = document.getElementById('content');
+      element3.classList.remove('sticky');
+    }
+  }
 
   ngOnInit(): void {
     this.user.getUserId().subscribe(user => {

@@ -31,7 +31,7 @@
 </div>
 
 <div style="display:flex; justify-content: start; margin-top: 30px; margin-left: 5%;margin-right: 5%;">
-    <div style="width: 25% ;">
+    <div id="leftbar" style="width: 25% ;">
 
         <mat-card class="shadow-lg " style="height: auto;border-radius: 10px">
 
@@ -54,7 +54,7 @@
         </mat-card>
     </div>
 
-<!-- <div style="display: flex; justify-content: center;">
+    <!-- <div style="display: flex; justify-content: center;">
     <mat-card class="pro-info shadow-lg">
         <div style="display:flex;align-items: center;">
             <div style="display: block;width: 10%; margin-left: 2%;">
@@ -104,7 +104,7 @@
         </mat-card>
     </div> -->
 
-    <div style="width: 50%; margin-left: 2%;margin-right: 2%;margin-top: -0.6%;">
+    <div id="content" style="width: 50%; margin-left: 2%;margin-right: 2%;margin-top: -0.6%;">
         <mat-grid-list cols="3" rowHeight="200px">
             <mat-grid-tile *ngFor="let plan of myPlans">
                 <mat-card style="box-shadow: 4px 4px 9px #bdbdbd; width: 90%;height: 85%;">
@@ -129,7 +129,7 @@
         </mat-grid-list>
     </div>
 
-    <div style="width: 25%;">
+    <div id="rightbar" style="width: 25%;">
         <mat-card class="shadow-lg" style="border-radius: 10px">
             <mat-card-title style="display:flex;justify-content: center; width: 100%;">
                 Top Planners
