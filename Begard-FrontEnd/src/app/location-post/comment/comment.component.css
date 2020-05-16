@@ -4,10 +4,9 @@
 -moz-box-shadow: inset 0px 0px 20px -5px #0d47a1;
 box-shadow: inset 0px 0px 10px -5px #0d47a1; */
 border-radius: 10px;
-margin-left: 10px;
-margin-top: 2%;
-width: 94%;
 margin-bottom: 5px;
+margin-left: 1px;
+width: 94%;
   }
   .example-header-image {
     background-size: cover;
@@ -34,7 +33,13 @@ margin-bottom: 5px;
     
     
     .example-1 {
+      padding: 1px 0px 0px 0px;
     position: relative;
     overflow-y: scroll;
     height: 100px;
   margin-left: 10px; }
+
+  .username:hover{
+    cursor: pointer;
+
+  }

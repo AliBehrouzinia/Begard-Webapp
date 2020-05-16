@@ -19,7 +19,7 @@ class Post {
     public isLiked: boolean,
     public id: number,
     public usrId: number,
-    public disable:boolean
+    public disable: boolean
   ) { }
 }
 
@@ -137,12 +137,17 @@ export class LocationPostComponent implements OnInit {
     this.router.navigate(['/profile/' + id])
   }
 
-  onFollow(id : number ){
+  onFollow(id: number) {
     this.postservice.onFollow(id);
   }
 
-  onAbleComment(post: Post){
-    post.disable = false;
+  onAbleComment(post: Post) {
+    if (post.disable == true) {
+      post.disable = false;
+    }
+    else {
+      post.disable = true;
+    }
   }
 
 }
