@@ -88,7 +88,7 @@
 
 .city {
     margin-top: 1px;
-    font-size: 15px;
+    font-size: 12px;
     margin-left: -2px;
 }
 
@@ -98,6 +98,6 @@ mat-card-subtitle {
 
 .date {
     margin-top: 1px;
-    margin-left: 10px;
-    font-size: 15px;
+    margin-left: 3x;
+    font-size: 12px;
 }

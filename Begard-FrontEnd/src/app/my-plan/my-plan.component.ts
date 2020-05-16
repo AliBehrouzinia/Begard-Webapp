@@ -23,6 +23,7 @@ export class MyPlanComponent implements OnInit {
   followingCount;
   topPlanners 
   userId
+  proUrl
 
 
   constructor(private myPlanService: MyPlanService, private profileService: ProfileService
@@ -33,6 +34,7 @@ export class MyPlanComponent implements OnInit {
   ngOnInit(): void {
     this.user.getUserId().subscribe(user => {
       this.userId = user.pk;
+      this.setProUrl(user.pk);
       this.profileService.getProfile(user.pk).subscribe(profile => {
         this.username = profile.username;
         this.profileImage = this.SERVER_URL + profile.profile_image;
@@ -65,6 +67,10 @@ export class MyPlanComponent implements OnInit {
   }
   goToProfile() {
     this.router.navigate(['/profile' , this.userId]);
+  }
+
+  setProUrl(id){
+    this.proUrl = '/profile/'+ id;
   }
 }
 
