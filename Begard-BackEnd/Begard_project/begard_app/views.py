@@ -642,11 +642,17 @@ class TopPlannerView(generics.ListAPIView):
     def get_queryset(self):
         user_auth = self.request.user.id
         followers = models.UserFollowing.objects.filter(user_id=user_auth)
+        follow_requests = models.FollowRequest.objects.filter(request_from=user_auth)
+        follow_requests_list = list(follow_requests)
+        follow_requests_id = []
         followers_list = list(followers)
         following_id = []
         for item in followers_list:
             following_id.append(item.following_user_id.id)
-        users = models.BegardUser.objects.exclude(Q(pk__in=following_id) | Q(pk=user_auth))
+        for item in follow_requests_list:
+            follow_requests_id.append(item.request_to)
+        users = models.BegardUser.objects.exclude(Q(pk__in=following_id) | Q(pk=user_auth) |
+                                                  Q(pk__in=follow_requests_id))
         users_list = list(users)
         for person in users_list:
             posts = models.Post.objects.filter(Q(user_id__in=users) & Q(user_id=person.id))
