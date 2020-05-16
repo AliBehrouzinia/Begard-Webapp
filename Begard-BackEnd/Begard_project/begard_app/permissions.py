@@ -55,6 +55,8 @@ class AllowGetUserPosts(permissions.BasePermission):
     def has_permission(self, request, view):
         target_user = get_object_or_404(models.BegardUser, id=view.kwargs.get('id'))
         source_user = request.user
+        if source_user == target_user:
+            return True
 
         if not target_user.is_public:
             if not models.UserFollowing.objects.filter(user_id=source_user.id,
