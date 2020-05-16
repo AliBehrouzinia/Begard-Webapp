@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { take, exhaustMap } from 'rxjs/operators';
 import { Comment } from './comment/comment.component';
+import { FollowService } from '../follow.service';
 
 export interface PostRes {
     "id": number,
@@ -26,7 +27,8 @@ export interface PostRes {
 @Injectable()
 export class LocationPostService {
     constructor(private http: HttpClient,
-        private authService: AuthService) { }
+        private authService: AuthService,
+        private followServie : FollowService) { }
 
     getProfilePostData(id : string){
         return this.authService.user.pipe(take(1), exhaustMap(user => {
@@ -96,6 +98,7 @@ export class LocationPostService {
     }
 
     onFollow(id: number){
-        
+
+        this.followServie.sendFollowRequest()
     }
 }
