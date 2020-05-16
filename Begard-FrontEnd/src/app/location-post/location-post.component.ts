@@ -137,8 +137,8 @@ export class LocationPostComponent implements OnInit {
     this.router.navigate(['/profile/' + id])
   }
 
-  onFollow(id: number) {
-    this.postservice.onFollow(id);
+  onFollow(post : Post) {
+    this.postservice.onFollow(post.usrId);
   }
 
   onAbleComment(post: Post) {
