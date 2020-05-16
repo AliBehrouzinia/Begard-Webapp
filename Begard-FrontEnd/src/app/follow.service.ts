@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 import { map, take, exhaustMap } from 'rxjs/operators';
+import { type } from 'os';
 
 export interface FollowRequest {
   request_to
@@ -10,6 +11,10 @@ export interface FollowRequest {
 
 export interface FollowResult {
   status
+}
+
+export interface ResFollowReq{
+  status : string;
 }
 
 @Injectable({
@@ -36,4 +41,6 @@ export class FollowService {
           map(res => res.body))
     }))
   }
+
+  
 }

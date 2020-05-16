@@ -99,6 +99,8 @@ export class LocationPostService {
 
     onFollow(id: number){
 
-        this.followServie.sendFollowRequest()
+       return this.followServie.sendFollowRequest({request_to : id});
+
+        
     }
 }

@@ -138,7 +138,18 @@ export class LocationPostComponent implements OnInit {
   }
 
   onFollow(post : Post) {
-    this.postservice.onFollow(post.usrId);
+    if(post.followingState=="Follow")
+    {
+      this.postservice.onFollow(post.usrId).subscribe(res=>{
+        if(res.status == "Followed"){
+          for(var i=0;i<this.posts.length;i++){
+            if(this.posts[i].usrId == post.usrId){
+              this.posts[i].followingState = "Following";
+            }
+          }
+        }
+      });
+    }
   }
 
   onAbleComment(post: Post) {

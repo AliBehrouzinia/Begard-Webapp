@@ -12,7 +12,9 @@
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="2" [rowspan]="1">
                     <button (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
-                        <mat-icon>person_add</mat-icon> {{followingState}}
+                        <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon> 
+                        <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
+                        {{followingState}}
                     </button>
 
                     <button mat-button [matMenuTriggerFor]="beforeMenu">

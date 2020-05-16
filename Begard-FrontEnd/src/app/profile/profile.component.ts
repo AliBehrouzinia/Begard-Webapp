@@ -9,6 +9,7 @@ import { ProfileService, ProfileHeader } from './profile.service';
 import { TopPlannersService } from '../top-planners.service';
 import { TopPlanner } from '../top-planner';
 import { UserService } from '../user.service';
+import { FollowService } from '../follow.service';
 
 
 export interface DialogData {
@@ -66,11 +67,22 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private profileService: ProfileService,
     private topPlaners : TopPlannersService,
-    private user : UserService) { }
+    private user : UserService,
+  ) { }
 
 
   onFollow() {
-    console.log(this.id);
+    this.profileService.onFollow(this.id).subscribe(res =>{
+      if(res.status == 'Followed'){
+        this.followingState = "Following";
+        
+      }
+      else if( res.status== 'Requested'){
+        this.followingState = "Reuested";
+      }
+
+    });
+
   }
 
   openDialog(): void {

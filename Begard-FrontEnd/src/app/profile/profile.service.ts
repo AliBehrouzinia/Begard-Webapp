@@ -2,6 +2,7 @@ import {Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { take, exhaustMap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FollowService } from '../follow.service';
 
 export interface ProfileHeader {
     username: string,
@@ -15,7 +16,8 @@ export interface ProfileHeader {
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
     constructor(private authService : AuthService,
-        private http : HttpClient){
+        private http : HttpClient,
+        private followService : FollowService){
 
     }
     getHeaderData(id : number){
@@ -29,5 +31,12 @@ export class ProfileService {
             );
           }));
     }
+
+    onFollow(id: number){
+      var userid : number = (Number)(id);
+      return this.followService.sendFollowRequest({request_to: userid});
+
+       
+   }
     
 }

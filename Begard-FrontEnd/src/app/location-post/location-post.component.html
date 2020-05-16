@@ -12,7 +12,9 @@
         <mat-grid-tile  class="post-follow" [colspan]=3 style="background: #3f51b5;border-top-right-radius: 10px;">
             <button *ngIf="post.followingState != 'Own'" (click)="onFollow(post)" mat-stroked-button color="primary"
                 style="transform: scale(0.75);background: white;">
-                <mat-icon>person_add </mat-icon> {{post.followingState}}
+                <mat-icon *ngIf="post.followingState=='Follow'">person_add </mat-icon>
+                <mat-icon *ngIf="post.followingState!='Follow'">person</mat-icon>
+                 {{post.followingState}}
             </button>
         </mat-grid-tile>
         <mat-grid-tile class="post-city" [colspan]=6 style="color: white;">
