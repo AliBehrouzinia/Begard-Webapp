@@ -19,7 +19,7 @@
     <div *ngIf="(loginStatus$ | async)" style="display: flex; align-items: center;">
 
         <button mat-button color="primary" *ngIf="(userEmail$ | async) as userEmail" class="font"
-            [matMenuTriggerFor]="accountOptions">{{userEmail}}<mat-icon class="white-icon">account_circle</mat-icon>
+            [matMenuTriggerFor]="accountOptions">{{userEmail}}<mat-icon style="margin-left: 10px;" class="white-icon">account_circle</mat-icon>
         </button>
 
         <div style="display: flex; justify-content: center;margin-top: 5px;">
@@ -31,7 +31,7 @@
 
         <mat-menu #accountOptions>
             <button mat-menu-item routerLink="homepage" routerLinkActive="active" (click)="logout()"
-                class="logout">Logout<mat-icon class="logout-icon">exit_to_app</mat-icon></button>
+                class="logout">Logout<mat-icon  class="logout-icon">exit_to_app</mat-icon></button>
         </mat-menu>
     </div>
 

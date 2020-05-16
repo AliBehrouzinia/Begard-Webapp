@@ -9,7 +9,7 @@ class Post {
   constructor(
     public type: string,
     public description: string,
-    public imgSrc: string,
+    public imgSrc:string[],
     public placeName: string,
     public city: string,
     public userName: string,
@@ -19,7 +19,8 @@ class Post {
     public isLiked: boolean,
     public id: number,
     public usrId: number,
-    public disable: boolean
+    public disable: boolean,
+    public commentNums: number
   ) { }
 }
 
@@ -59,14 +60,19 @@ export class LocationPostComponent implements OnInit {
   ngOnInit(): void {
     if (this.router.url === '/homepage') {
       this.postservice.getPostData().subscribe(resdata => {
+        
         this.setPostData(resdata);
       });
+      console.log(this.posts);
+      
     }
     else {
       this.postservice.getProfilePostData(this.currentUrl).subscribe(resdata => {
         this.setPostData(resdata);
       })
     }
+
+  
 
 
 
@@ -78,7 +84,7 @@ export class LocationPostComponent implements OnInit {
 
       this.posts.push(new Post(resdata[i].type,
         resdata[i].content,
-        resdata[i].image,
+        resdata[i].images,
         resdata[i].place_name,
         resdata[i].destination_city,
         resdata[i].user_name,
@@ -88,7 +94,8 @@ export class LocationPostComponent implements OnInit {
         resdata[i].is_liked,
         resdata[i].id,
         resdata[i].user,
-        true));
+        true,
+        resdata[i].number_of_comments));
 
     }
 
@@ -117,6 +124,7 @@ export class LocationPostComponent implements OnInit {
           var commentChild = this.child.toArray()[i];
           this.postservice.onComment(this.commentFc.value, post.id).subscribe(resdata => {
             commentChild.updateComment(resdata);
+            post.commentNums++;
             this.commentFc.reset();
 
           });
@@ -137,8 +145,19 @@ export class LocationPostComponent implements OnInit {
     this.router.navigate(['/profile/' + id])
   }
 
-  onFollow(id: number) {
-    this.postservice.onFollow(id);
+  onFollow(post : Post) {
+    if(post.followingState=="Follow")
+    {
+      this.postservice.onFollow(post.usrId).subscribe(res=>{
+        if(res.status == "Followed"){
+          for(var i=0;i<this.posts.length;i++){
+            if(this.posts[i].usrId == post.usrId){
+              this.posts[i].followingState = "Following";
+            }
+          }
+        }
+      });
+    }
   }
 
   onAbleComment(post: Post) {

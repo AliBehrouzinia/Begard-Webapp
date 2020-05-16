@@ -2,9 +2,9 @@
   .search-wrapper{
   
     height: 100%;
-    margin-right: 10%;
-    margin-left: 10%;
-    width: 80%;
+    
+    margin-left: 1.5%;
+    width: 97%;
   }
   .search-wrapper mat-card-header {
     text-align: center;

@@ -9,10 +9,12 @@
         <mat-grid-tile class="post-username" [colspan]=6 style="color: white;font-size: 20px;">
             <div (click)="goToProfile(post.usrId)" class="usernamelink">{{post.userName}}</div>
         </mat-grid-tile>
-        <mat-grid-tile class="post-follow" [colspan]=3 style="background: #3f51b5;border-top-right-radius: 10px;">
-            <button (click)="onFollow(post.usrId)" mat-stroked-button color="primary"
+        <mat-grid-tile  class="post-follow" [colspan]=3 style="background: #3f51b5;border-top-right-radius: 10px;">
+            <button *ngIf="post.followingState != 'Own'" (click)="onFollow(post)" mat-stroked-button color="primary"
                 style="transform: scale(0.75);background: white;">
-                <mat-icon>person_add </mat-icon> Follow
+                <mat-icon *ngIf="post.followingState=='Follow'">person_add </mat-icon>
+                <mat-icon *ngIf="post.followingState!='Follow'">person</mat-icon>
+                 {{post.followingState}}
             </button>
         </mat-grid-tile>
         <mat-grid-tile class="post-city" [colspan]=6 style="color: white;">
@@ -31,12 +33,12 @@
             </p>
         </mat-card-content>
 
-        <app-location-carousel></app-location-carousel>
+        <app-location-carousel [imgSrc]="post.imgSrc"></app-location-carousel>
 
         <form class="example-form">
             <div style=" margin-left: 45%; margin-top: 11px;width: 7%;"> <a
                     (click)="onAbleComment(post)" class="comment far fa-comment" style="color: #616161;transform: scale(2);"></a>
-                    <div style="margin-top: 4px;color: #424242;"><b>{{post.likeNums}}</b></div>
+                    <div style="margin-top: 4px;color: #424242;"><b>{{post.commentNums}}</b></div>
                 </div>
 
             <a (click)='onLike(post)' mat-icon-button style="width: 5%;" *ngIf="!post.isLiked">
