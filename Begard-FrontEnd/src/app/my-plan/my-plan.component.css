@@ -4,12 +4,6 @@
     ;
 }
 
-.pro-info {
-    height: 200px;
-    width: 90%;
-    margin-top: -50px;
-}
-
 .number:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -98,6 +92,30 @@ mat-card-subtitle {
 
 .date {
     margin-top: 1px;
-    margin-left: 3x;
+    margin-left: 3px;
     font-size: 12px;
 }
+
+.hr {
+    background-color: #d2cece;
+    width: 80%;
+  }
+
+.pro-info{
+    height: 200px;
+    width: 100%;
+    margin-top: -50px;
+    border-radius: 10px;
+}
+
+.underline {
+    width : 100%;display:flex; justify-content:flex-start;
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  
+  .underline:hover{
+    border-radius: 10px;
+    background-color: #d6d8e2;
+    cursor: pointer;
+  }

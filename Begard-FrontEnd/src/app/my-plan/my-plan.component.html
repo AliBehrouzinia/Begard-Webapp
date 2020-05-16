@@ -1,13 +1,13 @@
 <mat-card class="cover"></mat-card>
 
-<div style="display: flex; justify-content: center;">
+<div style="display: flex; justify-content: center;margin-left: 5%;margin-right: 5%;">
     <mat-card class="pro-info shadow-lg">
         <mat-grid-list class="gird-list" cols="6" rowHeight="50%">
             <mat-grid-tile [colspan]="1" [rowspan]="2">
                 <img mat-card-avatar style="margin-left: 10%;transform: scale(4);" src='{{profileImage}}'>
             </mat-grid-tile>
             <mat-grid-tile class="username" style="font-size: 30px;margin-left: 3%;" [colspan]="3" [rowspan]="1">
-                {{userName}}
+                {{username}}
             </mat-grid-tile>
             <mat-grid-tile [colspan]="2" [rowspan]="1">
             </mat-grid-tile>
@@ -25,17 +25,15 @@
                     <div style="font-size: 20px;">Followings</div>
                     <div (click)="openDialog()" class="number">{{followingCount}}</div>
                 </b></mat-grid-tile>
-
-
         </mat-grid-list>
     </mat-card>
 
 </div>
 
-<div style="display:flex">
-    <div id="leftbar">
+<div style="display:flex; justify-content: start; margin-top: 30px; margin-left: 5%;margin-right: 5%;">
+    <div style="width: 25% ;">
 
-        <mat-card class="shadow-lg " style="height: auto;margin: 20px;;border-radius: 10px">
+        <mat-card class="shadow-lg " style="height: auto;border-radius: 10px">
 
             <div routerLink="/homepage" class="underline">
                 <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
@@ -136,7 +134,7 @@
             <mat-card-title style="display:flex;justify-content: center; width: 100%;">
                 Top Planners
             </mat-card-title>
-            <mat-card-content>
+            <mat-card-content style="margin-top: 40px;">
                 <div *ngFor="let tp of topPlanners;">
                     <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
                         [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"

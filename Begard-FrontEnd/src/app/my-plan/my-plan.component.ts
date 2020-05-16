@@ -5,7 +5,8 @@ import { MyPlan } from '../my-plan';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { TopPlannersService } from '../top-planners.service';
-
+import { MatDialog } from '@angular/material/dialog';
+import { DialogOverviewExampleDialog } from './../profile/profile.component'
 
 
 @Component({
@@ -18,15 +19,15 @@ export class MyPlanComponent implements OnInit {
   SERVER_URL = 'http://127.0.0.1:8000';
   username
   profileImage;
-  plansCount;
-  followersCount;
-  followingCount;
-  topPlanners 
+  plansCount = 0;
+  followersCount = 0;
+  followingCount = 0;
+  topPlanners
   userId
   proUrl
 
 
-  constructor(private myPlanService: MyPlanService, private profileService: ProfileService
+  constructor(public dialog: MatDialog, private myPlanService: MyPlanService, private profileService: ProfileService
     , private router: Router, private route: ActivatedRoute, private user: UserService
     , private topPlannerService: TopPlannersService
   ) { }
@@ -66,11 +67,21 @@ export class MyPlanComponent implements OnInit {
     this.router.navigate(['/homepage']);
   }
   goToProfile() {
-    this.router.navigate(['/profile' , this.userId]);
+    this.router.navigate(['/profile', this.userId]);
   }
 
-  setProUrl(id){
-    this.proUrl = '/profile/'+ id;
+  setProUrl(id) {
+    this.proUrl = '/profile/' + id;
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      height: '400px',
+      width: '600px',
+      data: { name: "", animal: "" }
+    });
+
+    dialogRef.afterClosed().subscribe();
   }
 }
 
