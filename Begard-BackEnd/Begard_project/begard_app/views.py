@@ -536,7 +536,22 @@ class LocationPostView(generics.CreateAPIView):
             serializer = ImageSerializer(data=modified_data)
             if serializer.is_valid(True):
                 serializer.save()
-        return Response(status=status.HTTP_200_OK)
+
+        response_data = self.get_last_post(post)
+        return Response(data=response_data, status=status.HTTP_200_OK)
+
+    def get_last_post(self, post):
+        data = serializers.ShowPostSerializer(instance=post).data
+        data['user_name'] = post.user.email
+        data['user_profile_image'] = post.user.profile_img.url
+        data['destination_city'] = post.plan_id.destination_city.name
+        data['number_of_likes'] = models.Like.objects.filter(post=post.id).count()
+        data['is_liked'] = models.Like.objects.filter(post=post.id, user=self.request.user).exists()
+
+        images = models.Image.objects.filter(post=post.id)
+        data['images'] = [image.image.url for image in images]
+        data['following_state'] = FollowingState.Own.name
+        return data
 
     def modify_input_for_multiple_files(self, image, post):
         list_element = {'post': post, 'image': image}
