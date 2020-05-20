@@ -1,4 +1,4 @@
-<mat-card *ngFor="let post of posts" class="example-card shadow-lg p-3 mb-5 bg-white ">
+<mat-card class="parent" *ngFor="let post of posts" class="example-card shadow-lg p-3 mb-5 bg-white ">
 
     <mat-grid-list cols="11" rows="2" rowHeight="40px"
         style="background: #3f51b5;border-top-left-radius: 10px;border-top-right-radius: 10px;">
@@ -7,14 +7,14 @@
                 src="{{'http://127.0.0.1:8000'+post.userProImgSrc}}" class="example-header-image">
         </mat-grid-tile>
         <mat-grid-tile class="post-username" [colspan]=6 style="color: white;font-size: 20px;">
-            <div (click)="goToProfile(post.usrId)" class="usernamelink">{{post.userName}}</div>
+            <div (click)="goToProfile(post.usrId)" class="usernamelink"><span class="post-username">{{post.userName}}</span></div>
         </mat-grid-tile>
-        <mat-grid-tile  class="post-follow" [colspan]=3 style="background: #3f51b5;border-top-right-radius: 10px;">
+        <mat-grid-tile class="post-follow" [colspan]=3 style="background: #3f51b5;border-top-right-radius: 10px;">
             <button *ngIf="post.followingState != 'Own'" (click)="onFollow(post)" mat-stroked-button color="primary"
                 style="transform: scale(0.75);background: white;">
                 <mat-icon *ngIf="post.followingState=='Follow'">person_add </mat-icon>
                 <mat-icon *ngIf="post.followingState!='Follow'">person</mat-icon>
-                 {{post.followingState}}
+                {{post.followingState}}
             </button>
         </mat-grid-tile>
         <mat-grid-tile class="post-city" [colspan]=6 style="color: white;">
@@ -22,8 +22,16 @@
         </mat-grid-tile>
         <mat-grid-tile *ngIf="post.placeName!=null" class="post-place" [colspan]=3
             style="color: white;text-overflow: ellipsis;">
-            <mat-icon style="transform: scale(0.75);margin-top: -4px;">place</mat-icon> {{post.placeName}}
+            <mat-icon style="transform: scale(0.75);margin-top: -4px;">place</mat-icon><span
+                style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"> {{post.placeName}}</span>
         </mat-grid-tile>
+        <div class="place-content">
+            {{post.placeName}}
+        </div>
+        <div class="user-content">
+            {{post.userName}}
+        </div>
+
     </mat-grid-list>
 
     <div style="padding: 5%;">
@@ -36,10 +44,10 @@
         <app-location-carousel [imgSrc]="post.imgSrc"></app-location-carousel>
 
         <form class="example-form">
-            <div style=" margin-left: 45%; margin-top: 11px;width: 7%;"> <a
-                    (click)="onAbleComment(post)" class="comment far fa-comment" style="color: #616161;transform: scale(2);"></a>
-                    <div style="margin-top: 4px;color: #424242;"><b>{{post.commentNums}}</b></div>
-                </div>
+            <div style=" margin-left: 45%; margin-top: 11px;width: 7%;"> <a (click)="onAbleComment(post)"
+                    class="comment far fa-comment" style="color: #616161;transform: scale(2);"></a>
+                <div style="margin-top: 4px;color: #424242;"><b>{{post.commentNums}}</b></div>
+            </div>
 
             <a (click)='onLike(post)' mat-icon-button style="width: 5%;" *ngIf="!post.isLiked">
                 <mdb-icon far icon="heart" style="color: #616161;" size="2x"></mdb-icon>
@@ -61,7 +69,8 @@
                     <mat-label>Leave a comment</mat-label>
                     <textarea [formControl]="commentFc" matInput placeholder="It makes me feel..."></textarea>
                 </mat-form-field>
-                <button (click)="onComment(post)" mat-stroked-button style="width: 10%;margin-left: 3%;transform: scale(0.9) ;" color="primary">Send</button>
+                <button (click)="onComment(post)" mat-stroked-button
+                    style="width: 10%;margin-left: 3%;transform: scale(0.9) ;" color="primary">Send</button>
             </div>
 
 
