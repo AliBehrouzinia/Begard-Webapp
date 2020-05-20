@@ -107,7 +107,7 @@
     <div id="content" style="width: 55%; margin-left: 2%;margin-right: 2%;margin-top: -0.6%;">
         <mat-grid-list cols="3" rowHeight="200px">
             <mat-grid-tile *ngFor="let plan of myPlans">
-                <mat-card style="box-shadow: 4px 4px 9px #bdbdbd; width: 90%;height: 85%;">
+                <mat-card (click)="goToPlan(plan.id)" style="box-shadow: 4px 4px 9px #bdbdbd; width: 90%;height: 85%;">
                     <div style="display:flex;align-items: center;justify-content: center;">
                         <mat-icon style="display: flex;justify-content: center;align-items: center;" class="location-icon">location_on</mat-icon>
                         <span #city class="city"><strong>{{plan.destination_city}}</strong></span>

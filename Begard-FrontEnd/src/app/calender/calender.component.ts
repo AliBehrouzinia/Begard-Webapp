@@ -157,7 +157,7 @@ export class CalenderComponent implements OnInit {
       this.gridItems[0].startDate
       , this.gridItems[0].finishDate
       , location.name
-      , location.id
+      , location.place_id
     ));
   }
 
