@@ -1,0 +1,43 @@
+<!-- Toolbar -->
+
+<mat-toolbar color="primary" class="nav-bar">
+    <span routerLink="homepage" routerLinkActive="active">
+        <img class="logo" src="../../assets/begrd_icon.svg"> <span class="name">Begard</span>
+    </span>
+
+    <button class="searchinput">
+        <mat-icon style="color: black; font-size: 30px;">search</mat-icon>
+
+    </button>
+    <div class="spacer"></div>
+
+    <div *ngIf="!(loginStatus$ | async)">
+        <a mat-raised-button color="basic" routerLink="login" routerLinkActive="active">Login</a>
+        <a mat-button mat-raised-button color="accent" routerLink="register" routerLinkActive="active">Register</a>
+    </div>
+
+    <div *ngIf="(loginStatus$ | async)" style="display: flex; align-items: center;">
+
+        <button mat-button color="primary" *ngIf="(userEmail$ | async) as userEmail" class="font"
+            [matMenuTriggerFor]="accountOptions">{{userEmail}}<mat-icon style="margin-left: 10px;" class="white-icon">account_circle</mat-icon>
+        </button>
+
+        <div style="display: flex; justify-content: center;margin-top: 5px;">
+            <mat-icon style="font-size: 20px;" *ngIf="notfiNums>0" matBadge="{{notfiNums}}" matBadgeColor="accent"
+                matBadgeSize="small" class="notif" (click)=" openDialog($event)">notifications</mat-icon>
+            <mat-icon style="font-size: 20px;" *ngIf="notfiNums===0" class="notif" (click)=" openDialog($event)">
+                notifications</mat-icon>
+        </div>
+
+        <mat-menu #accountOptions>
+            <button mat-menu-item routerLink="homepage" routerLinkActive="active" (click)="logout()"
+                class="logout">Logout<mat-icon  class="logout-icon">exit_to_app</mat-icon></button>
+        </mat-menu>
+    </div>
+
+
+
+
+</mat-toolbar>
+
+<router-outlet></router-outlet>

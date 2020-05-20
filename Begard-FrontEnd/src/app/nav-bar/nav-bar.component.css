@@ -1,0 +1,73 @@
+.spacer{
+    flex: 1 1 auto;
+}
+
+.white-icon {
+    color: white;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.white-icon svg {
+    fill: white;                                                                                                                                                                                                                                                                                                                                                                                            
+}
+
+.logout{
+    padding-left: 25px;
+    min-width: 70px;
+}
+
+.logout-icon{
+    position: relative;
+    padding-left: 25px;
+    min-width: 70px;
+}
+
+.font{
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    margin-right: 10;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ;
+}
+
+.nav-bar{
+    position: fixed;
+    z-index: 100;
+}
+
+.logo{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.name{
+    color: white;
+    position: relative;
+    margin-left: 10px;
+}
+
+.btn:focus {
+    outline: none;
+  }
+
+.mat-button-focus-overlay {
+    background-color: transparent!important;
+}
+
+.searchinput{
+    border-radius: 10px;
+    margin-left: 40px;
+    width: 300px;
+    cursor: text;
+    display: flex;
+    justify-content: flex-start;
+    height: 40px;
+    background-color: white;
+}
+.notif{
+    transform: scale(1.25);
+}
+
+.notif:hover{
+    cursor: pointer;
+    transform: scale(1.35);
+}
