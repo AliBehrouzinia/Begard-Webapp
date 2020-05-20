@@ -133,7 +133,12 @@ export class CalenderComponent implements OnInit {
           , filteredData[0].placeId + 'a'
         );
         this.scheduleObj.addEvent(newPlan)
-        this.gridObj.deleteRecord(event.data[0]);
+        for (var i = 0; i < this.gridItems.length; i++) {
+          if (this.gridItems[i].placeName == newPlan.placeName) {
+            this.gridItems.splice(i, 1);
+          }
+        }
+        this.gridObj.refresh();
       }
     }
   }
