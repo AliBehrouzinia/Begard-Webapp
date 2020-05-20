@@ -20,3 +20,23 @@
   .input-file{
     display: none;
 }
+
+.user-wrap {
+  position: relative;
+  cursor: pointer;
+}
+.user-wrap .user-content {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  background-color: rgb(250, 250, 250);
+  padding: 5px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border-radius: 2px 6px 6px 6px;
+  font-size: 12px
+}
+.user-wrap:hover .user-content {
+  display: block;
+}
