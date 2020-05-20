@@ -7,5 +7,6 @@ export class PlanningItem{
       public finishDate: string,
       public placeName : string,
       public placeId : string,
+      public id : string
     ) {}
 }
