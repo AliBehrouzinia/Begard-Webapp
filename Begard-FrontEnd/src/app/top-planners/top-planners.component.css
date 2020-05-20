@@ -40,11 +40,14 @@
   width: 80%;
 }
 
-.planner-wrap {
-  position: relative;
+.name {
   cursor: pointer;
 }
-.planner-wrap .planner-content {
+
+.planner-wrap {
+  position: relative;
+}
+.planner-content {
   display: none;
   position: absolute;
   top: 50%;
@@ -54,8 +57,9 @@
   padding-top: 0px;
   padding-bottom: 0px;
   border-radius: 2px 6px 6px 6px;
-  font-size: 12px
+  font-size: 12px;
+  z-index: 30;
 }
-.planner-wrap:hover .planner-content {
+.name:hover + .planner-content {
   display: block;
 }
