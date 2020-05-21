@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { closest } from '@syncfusion/ej2-base';
 import { EventSettingsModel, View, DayService, WeekService, DragAndDropService, ResizeService, ScheduleComponent, CellClickEventArgs, DragEventArgs, ResizeEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { waitingList } from './data';
+
 import { L10n } from '@syncfusion/ej2-base';
 import { DataStorageService, PlanItem, Plan } from '../data-storage.service';
 import { ActivatedRoute } from '@angular/router';
@@ -107,7 +107,6 @@ export class CalenderComponent implements OnInit {
   };
 
   // Grid data
-  public gridDS: Object = waitingList;
   public allowDragAndDrop: boolean = true;
   public srcDropOptions: RowDropSettingsModel = { targetID: 'Schedule' };
   public primaryKeyVal: boolean = true;
