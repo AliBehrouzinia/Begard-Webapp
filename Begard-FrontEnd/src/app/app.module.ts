@@ -67,6 +67,7 @@ import { PostLocationComponent } from './post-location/post-location.component';
 import { PostLocationService } from './post-location.service';
 
 import { MyLocationService } from './my-location.service';
+import { PlanComponent } from './plan/plan.component';
 
 
 
@@ -93,7 +94,8 @@ import { MyLocationService } from './my-location.service';
       ProfileComponent,
       DialogOverviewExampleDialog,
       PostLocationComponent,
-      NotifComponent
+      NotifComponent,
+      PlanComponent
    ],
    imports: [
       BrowserModule,
