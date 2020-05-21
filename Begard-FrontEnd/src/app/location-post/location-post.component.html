@@ -23,14 +23,9 @@
         <mat-grid-tile *ngIf="post.placeName!=null" class="post-place" [colspan]=3
             style="color: white;text-overflow: ellipsis;">
             <mat-icon style="transform: scale(0.75);margin-top: -4px;">place</mat-icon><span
+			matTooltip="{{post.placeName}}"
                 style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"> {{post.placeName}}</span>
         </mat-grid-tile>
-        <div class="place-content">
-            {{post.placeName}}
-        </div>
-        <div class="user-content">
-            {{post.userName}}
-        </div>
 
     </mat-grid-list>
 

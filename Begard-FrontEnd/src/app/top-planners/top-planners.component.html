@@ -1,16 +1,15 @@
 <div style="display: block;margin: 10px;display: block;margin: 10px;">
-  <div class="planner-wrap" style="display: flex;justify-content: center;">
+  <div style="display: flex;justify-content: center;">
     <div style="display: flex;width: 65%;">
       <span style="cursor:pointer" [routerLink]="['/profile', userId]"><img mat-card-avatar class="example-header-image"
           [src]="profileImg"></span>
-      <div style="font-size: 18px;;overflow: hidden;margin-top: 7px;">
+      <div style="font-size: 18px;overflow: hidden;margin-top: 7px;">
         <div
           class="name"
+          matTooltip="{{email}}"
+          matTooltipPosition="after"
           style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-left: 10px;"
           [routerLink]="['/profile', userId]">{{email}}</div>
-          <div class="planner-content">
-            {{email}}
-          </div>
         <div style="margin-left: 10px;margin-top: 3px;font-size: 14px"><strong>{{rate}}</strong></div>
       </div>
     </div>

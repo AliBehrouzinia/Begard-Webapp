@@ -2,12 +2,9 @@
 	<div class="user-wrap" style="display:flex;">
 		<div style="width:70%;display:flex;;overflow: hidden">
 			<img style="cursor: pointer;" mat-card-avatar class="example-header-image" [src]="profileImage" />
-			<div class="name"
-				style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap">
+			<div class="name" matTooltip="{{username}}" matTooltipPosition="after"
+				style="display: flex;align-items: center;margin-left:15px;margin-right:10px;font-size:20px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap">
 				{{username}}</div>
-			<div class="user-content">
-				{{username}}
-			</div>
 		</div>
 		<div style="float:right;width:30%;justify-content:end;display: flex;">
 			<mat-form-field style="width:45%;float:right">
@@ -28,7 +25,7 @@
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
-			
+
 		</div>
 	</div>
 
