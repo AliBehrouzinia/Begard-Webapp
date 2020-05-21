@@ -115,7 +115,7 @@ export class NotifComponent implements OnInit {
   }
 
   onAccept(item: FollowReq) {
-    this.notifService.onAction('accpet', item.id).subscribe(res => {
+    this.notifService.onAction('accept', item.id).subscribe(res => {
       this.removeItem(item);
     });
 
