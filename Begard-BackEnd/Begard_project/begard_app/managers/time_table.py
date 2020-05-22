@@ -1,5 +1,6 @@
 import enum
 import datetime
+from random import shuffle
 from ..models import *
 
 
@@ -9,7 +10,7 @@ class PlanningConstants:
     default_breakfast_time = 8
     default_lunch_time = 14
     default_dinner_time = 22
-    top_place_count = 10
+    top_place_count = 20
 
 
 class Tags(enum.Enum):
@@ -42,7 +43,7 @@ class TimeTable:
         self.finish_date_time = finish
 
     def create_table(self, activity_minute, rest_minute):
-        total_days = self.finish_date_time.day - self.start_date_time.day + 1
+        total_days = (self.finish_date_time - self.start_date_time).days + 1
         slot_count_per_day = (int)(1440 / (activity_minute + rest_minute))
 
         activity_timedelta = datetime.timedelta(minutes=activity_minute)
@@ -56,10 +57,9 @@ class TimeTable:
                 self.table[day].append(Slot(flag, flag + activity_timedelta))
                 flag = flag + activity_timedelta + rest_timedelta
 
-
-
     def set_places(self, dest_city):
-        places = self.top_from_all_models(PlanningConstants.top_place_count, dest_city)
+        days_count = len(self.table)
+        places = self.top_from_all_models(dest_city, days_count * 3)
 
         chosen_so_far = {
             Tags.museum: 0,
@@ -83,31 +83,38 @@ class TimeTable:
                 places = self.select_location[tag](self=self, slot=s_slot, places=places)
 
     @staticmethod
-    def top_from_all_models(n, city_id):
+    def top_from_all_models(city_id, n=PlanningConstants.top_place_count):
         """get top n places from every model in database according to rating"""
         result = {
-            "restaurant": list(Restaurant.objects.filter(city=city_id).order_by('-rating')[0:n] if
-                               Restaurant.objects.count() > n else Restaurant.objects.all()),
+            "restaurant": list(Restaurant.objects.filter(city=city_id).order_by('-rating')[0:n]
+                               if Restaurant.objects.count() > n else Restaurant.objects.all()),
 
-            "museum": list(Museum.objects.filter(city=city_id).order_by('-rating')[0:n] if
-                           Museum.objects.count() > n else Museum.objects.all()),
+            "museum": list(Museum.objects.filter(city=city_id).order_by('-rating')[0:n]
+                           if Museum.objects.count() > n else Museum.objects.all()),
 
-            "tourist_attraction": list(TouristAttraction.objects.filter(city=city_id).order_by('-rating')[0:n] if
-                                       TouristAttraction.objects.count() > n else TouristAttraction.objects.all()),
+            "tourist_attraction": list(TouristAttraction.objects.filter(city=city_id).order_by('-rating')[0:n]
+                                       if TouristAttraction.objects.count() > n else TouristAttraction.objects.all()),
 
-            "recreational_place": list(RecreationalPlace.objects.filter(city=city_id).order_by('-rating')[0:n] if
-                                       RecreationalPlace.objects.count() > n else RecreationalPlace.objects.all()),
+            "recreational_place": list(RecreationalPlace.objects.filter(city=city_id).order_by('-rating')[0:n]
+                                       if RecreationalPlace.objects.count() > n else RecreationalPlace.objects.all()),
 
-            "cafe": list(Cafe.objects.filter(city=city_id).order_by('-rating')[0:n] if
-                         Cafe.objects.count() > n else Cafe.objects.all()),
+            "cafe": list(Cafe.objects.filter(city=city_id).order_by('-rating')[0:n]
+                         if Cafe.objects.count() > n else Cafe.objects.all()),
 
-            "shopping_mall": list(ShoppingMall.objects.filter(city=city_id).order_by('-rating')[0:n] if
-                                  ShoppingMall.objects.count() > n else ShoppingMall.objects.all())
+            "shopping_mall": list(ShoppingMall.objects.filter(city=city_id).order_by('-rating')[0:n]
+                                  if ShoppingMall.objects.count() > n else ShoppingMall.objects.all())
         }
+
+        for value in result.values():
+            shuffle(value)
 
         return result
 
     def choose(self, slot, places, type_of_place):
+        if len(places[type_of_place]) == 0:
+            slot.tags = [Tags.rest]
+            return places
+
         selected_place = places[type_of_place][0]
         slot.place_id = selected_place.place_id
         slot.place_name = selected_place.name
