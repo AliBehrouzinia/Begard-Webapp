@@ -12,7 +12,7 @@ import { ReqUser, NotifService } from './notificaton.service';
 
 class FollowReq {
   constructor(public userName: string, public proImg: string, public date: string,
-    public id: number) { }
+    public id: number,public userId : number) { }
 }
 
 
@@ -65,7 +65,7 @@ export class NavBarComponent implements OnInit {
 
   setItems(res: ReqUser[]) {
     for (let i = 0; i < res.length; i++) {
-      this.items.push(new FollowReq(res[i].username, "http://127.0.0.1:8000" + res[i].profile_img, res[i].date, res[i].id));
+      this.items.push(new FollowReq(res[i].username, "http://127.0.0.1:8000" + res[i].profile_img, res[i].date, res[i].id,res[i].request_from));
     }
   }
 
