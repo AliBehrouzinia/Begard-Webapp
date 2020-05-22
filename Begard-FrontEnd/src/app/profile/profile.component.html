@@ -11,20 +11,14 @@
                     {{userName}}
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="2" [rowspan]="1">
-                    <button (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
-                        <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon> 
+                    <button *ngIf="followingState !='Own'" (click)="onFollow()" style="margin-left: 50%;"
+                        mat-raised-button color="primary">
+                        <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
                         <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
                         {{followingState}}
                     </button>
 
-                    <button mat-button [matMenuTriggerFor]="beforeMenu">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #beforeMenu="matMenu" xPosition="before">
-                        <button mat-menu-item>
-                            Block User</button>
-                        <button mat-menu-item>Send Massage</button>
-                    </mat-menu>
+
 
                 </mat-grid-tile>
                 <mat-grid-tile class="username" [colspan]="1" [rowspan]="1">
@@ -98,13 +92,5 @@
 
     </div>
 
-   
+
 </div>
-
-
-
-
-
-
-
-
