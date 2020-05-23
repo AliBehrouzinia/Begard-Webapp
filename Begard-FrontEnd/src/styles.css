@@ -175,14 +175,3 @@ body {
   padding-right: 15px !important;
 }
 
-
-
-.check:hover{
-  cursor: pointer;
-}
-.block:hover{
-  cursor: pointer;
-}
-.clear:hover{
-  cursor: pointer;
-}
