@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject , HostListener} from '@angular/core';
+import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -26,13 +26,22 @@ export class ProfileComponent implements OnInit {
 
 
   topPlanners: TopPlanner[];
-  proUrl : string;
+  proUrl: string;
+  isOwnPro: boolean;
 
   ngOnInit(): void {
     this.user.getUserId().subscribe(res => {
-        this.proUrl = '/profile/'+ res.pk;
+      this.proUrl = '/profile/' + res.pk;
+      this.route.params.subscribe(params => {
+        if (res.pk == params['id']) {
+          this.isOwnPro = true;
+        }
+        else {
+          this.isOwnPro = false;
+        }
+      })
     })
-    this.topPlaners.getTopPlanners().subscribe(tp=>{this.topPlanners =tp;});
+    this.topPlaners.getTopPlanners().subscribe(tp => { this.topPlanners = tp; });
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
@@ -66,23 +75,23 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private profileService: ProfileService,
-    private topPlaners : TopPlannersService,
-    private user : UserService,
-    private followSerivce : FollowService
+    private topPlaners: TopPlannersService,
+    private user: UserService,
+    private followSerivce: FollowService
   ) {
-    this.followSerivce.updateFollow.subscribe(res=> {
+    this.followSerivce.updateFollow.subscribe(res => {
       this.followingState = res[1];
     })
-   }
+  }
 
 
   onFollow() {
-    this.profileService.onFollow(this.id).subscribe(res =>{
-      if(res.status == 'Followed'){
+    this.profileService.onFollow(this.id).subscribe(res => {
+      if (res.status == 'Followed') {
         this.followingState = "Following";
-        this.followSerivce.updateFollow.emit([this.id,"Following"]);
+        this.followSerivce.updateFollow.emit([this.id, "Following"]);
       }
-      else if( res.status== 'Requested'){
+      else if (res.status == 'Requested') {
         this.followingState = "Reuested";
       }
 
@@ -109,23 +118,23 @@ export class ProfileComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
-     if (window.pageYOffset >= 490) {
-       let element1 = document.getElementById('leftbar');
-       element1.classList.add('sticky');
-       let element2 = document.getElementById('rightbar');
-       element2.classList.add('sticky');
-       let element3 = document.getElementById('content');
-       element3.classList.add('sticky');
-     } else {
+    if (window.pageYOffset >= 490) {
+      let element1 = document.getElementById('leftbar');
+      element1.classList.add('sticky');
+      let element2 = document.getElementById('rightbar');
+      element2.classList.add('sticky');
+      let element3 = document.getElementById('content');
+      element3.classList.add('sticky');
+    } else {
       let element = document.getElementById('leftbar');
-        element.classList.remove('sticky'); 
-        
-        let element2 = document.getElementById('rightbar');
-        element2.classList.remove('sticky');
+      element.classList.remove('sticky');
 
-        let element3 = document.getElementById('content');
-        element3.classList.remove('sticky');
-     }
+      let element2 = document.getElementById('rightbar');
+      element2.classList.remove('sticky');
+
+      let element3 = document.getElementById('content');
+      element3.classList.remove('sticky');
+    }
   }
 
 

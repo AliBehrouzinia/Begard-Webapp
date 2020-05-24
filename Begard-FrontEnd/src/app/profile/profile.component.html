@@ -68,11 +68,23 @@
 
 
         <div id="content">
-            <div style="display:flex; justify-content: center; ">
+            <mat-tab-group *ngIf="!isOwnPro" mat-align-tabs="center">
+                <mat-tab label="Posts">
+                    <div style="display:flex; justify-content: center; ">
+                        <div style="width: 100%; margin: 20px">
+                            <app-location-post [currentUrl]="id"></app-location-post>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Plans"> Content 2 </mat-tab>
+               
+            </mat-tab-group>
+            <div *ngIf="isOwnPro" style="display:flex; justify-content: center; ">
                 <div style="width: 100%; margin: 20px">
                     <app-location-post [currentUrl]="id"></app-location-post>
                 </div>
             </div>
+
         </div>
 
         <div id="rightbar">
