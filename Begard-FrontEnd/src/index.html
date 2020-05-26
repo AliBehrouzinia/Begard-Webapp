@@ -1,3 +1,5 @@
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -23,6 +25,15 @@
 <body class="mat-typography">
   
   <app-root></app-root>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/polyfills-es2015.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/polyfills-es5.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/styles-es5.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/styles-es2015.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/vendor-es2015.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/runtime-es5.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/runtime-es2015.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/main-es5.js' %}"></script>
+  <script type="text/javascript" src="{% static 'BegardApp-SPA/main-es2015.js' %}"></script>
   
 </body>
 </html>
