@@ -12,11 +12,8 @@ import { ReqUser, NotifService } from './notificaton.service';
 
 class FollowReq {
   constructor(public userName: string, public proImg: string, public date: string,
-    public id: number,public userId : number) { }
+    public id: number, public userId: number) { }
 }
-
-
-
 
 @Component({
   selector: 'app-nav-bar',
@@ -26,14 +23,13 @@ class FollowReq {
 
 export class NavBarComponent implements OnInit {
 
-
   loginStatus$: Observable<boolean>;
+
   userEmail$: Observable<string>;
 
   notifDisable: boolean = true;
 
-  notifFlag :boolean = false;
-
+  notifFlag: boolean = false;
 
   constructor(public authService: AuthService, public matIconRegistry: MatIconRegistry, public domSanitizer: DomSanitizer,
     public dialog: MatDialog,
@@ -55,7 +51,6 @@ export class NavBarComponent implements OnInit {
     this.notifService.getFollowRequests().subscribe(res => {
       this.setItems(res);
     });
-
     this.notifService.getFollowRequests().subscribe(res => {
       this.notfiNums = res.length;
     });
@@ -65,7 +60,7 @@ export class NavBarComponent implements OnInit {
 
   setItems(res: ReqUser[]) {
     for (let i = 0; i < res.length; i++) {
-      this.items.push(new FollowReq(res[i].username, "http://127.0.0.1:8000" + res[i].profile_img, res[i].date, res[i].id,res[i].request_from));
+      this.items.push(new FollowReq(res[i].username, "http://127.0.0.1:8000" + res[i].profile_img, res[i].date, res[i].id, res[i].request_from));
     }
   }
 
@@ -74,10 +69,9 @@ export class NavBarComponent implements OnInit {
   }
 
   openDialog(event: Event): void {
- 
     if (this.notifDisable == true) {
       this.notifDisable = false;
-      this.notifFlag =true;
+      this.notifFlag = true;
     }
     else {
       this.notifDisable = true;
@@ -87,19 +81,16 @@ export class NavBarComponent implements OnInit {
     this.notifService.onAction('accept', item.id).subscribe(res => {
       this.removeItem(item);
     });
-
   }
 
-
-  onAllPage(){
-    if(this.notifFlag == false)
-    {
+  onAllPage() {
+    if (this.notifFlag == false) {
       this.notifDisable = true;
     }
     this.notifFlag = false;
   }
 
-  onNotif(){
+  onNotif() {
     this.notifFlag = true;
   }
 
@@ -107,12 +98,7 @@ export class NavBarComponent implements OnInit {
     this.notifService.onAction('reject', item.id).subscribe(res => {
       this.removeItem(item);
     });
-
-
-
   }
-
- 
 
   removeItem(item: FollowReq) {
     for (var i = 0; i < this.items.length; i++) {
