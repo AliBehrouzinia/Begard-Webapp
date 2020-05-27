@@ -15,6 +15,7 @@ import { FollowService } from '../follow.service';
 export interface DialogData {
   userId: string;
   username: string;
+  unfollow: boolean;
 }
 
 @Component({
@@ -95,14 +96,21 @@ export class ProfileComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(UnfollowDialog, {
-      height: 'auto',
-      minWidth: '600px',
-      data: { username: this.userName, userId: this.id }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
+    let dialogRef;
+    alert(this.followingState == 'Requested')
+    if (this.followingState == 'Requested') {
+      dialogRef = this.dialog.open(UnfollowDialog, {
+        height: 'auto',
+        minWidth: '600px',
+        data: { username: this.userName, userId: this.id, unfollow: false }
+      });
+    } else {
+      dialogRef = this.dialog.open(UnfollowDialog, {
+        height: 'auto',
+        minWidth: '600px',
+        data: { username: this.userName, userId: this.id, unfollow: true }
+      });
+    }
   }
 
   goToHome() {
@@ -137,13 +145,18 @@ export class ProfileComponent implements OnInit {
 export class UnfollowDialog {
   username = "";
   userId;
-
+  message;
   constructor(
     public dialogRef: MatDialogRef<UnfollowDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private followServce: FollowService) {
     this.username += data.username;
     this.userId = data.userId;
+    if (data.unfollow) {
+      this.message = "Do you want to unfollow " + this.username + " ?"
+    } else {
+      this.message = "Do you want to remove request for " + this.username + " ?"
+    }
   }
 
   onCancel(): void {
@@ -151,7 +164,10 @@ export class UnfollowDialog {
   }
 
   onUnfollow() {
-    //alert(this.username + "  " + this.userId)
+    if (this.data.unfollow)
+      alert("unfollow")
+    else
+      alert("unrequest")
     this.dialogRef.close();
   }
 }

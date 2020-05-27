@@ -43,6 +43,4 @@ export class FollowService {
           map(res => res.body))
     }))
   }
-
-  
 }
