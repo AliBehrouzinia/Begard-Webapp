@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { TopPlannersService } from '../top-planners.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogOverviewExampleDialog } from './../profile/profile.component'
 
 
 @Component({
@@ -94,13 +93,13 @@ export class MyPlanComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      height: '400px',
-      width: '600px',
-      data: { name: "", animal: "" }
-    });
+  //   const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+  //     height: '400px',
+  //     width: '600px',
+  //     data: { name: "", animal: "" }
+  //   });
 
-    dialogRef.afterClosed().subscribe();
+  //   dialogRef.afterClosed().subscribe();
   }
 }
 

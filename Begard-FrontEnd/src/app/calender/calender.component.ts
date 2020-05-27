@@ -195,7 +195,6 @@ export class CalenderComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('result : ' + result);
     });
   }
 
