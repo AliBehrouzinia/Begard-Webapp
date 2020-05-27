@@ -24,7 +24,7 @@ export interface DialogData {
 })
 export class ProfileComponent implements OnInit {
 
-
+  allowFollowRequest = false;
   topPlanners: TopPlanner[];
   proUrl : string;
 
@@ -44,6 +44,10 @@ export class ProfileComponent implements OnInit {
       this.postNum = res.posts_count;
       this.imgUrl = 'http://127.0.0.1:8000' + res.profile_image;
       this.followingState = res.following_state;
+      alert(this.followingState)
+      if (this.followingState == "Follow"){
+        this.allowFollowRequest = true;
+      }
     });
 
   }
@@ -79,15 +83,15 @@ export class ProfileComponent implements OnInit {
   onFollow() {
     this.profileService.onFollow(this.id).subscribe(res =>{
       if(res.status == 'Followed'){
-        this.followingState = "Following";
-        this.followSerivce.updateFollow.emit([this.id,"Following"]);
+        this.followingState = "Unfollow";
+        this.allowFollowRequest = false;
+        this.followSerivce.updateFollow.emit([this.id,"Unfollow"]);
       }
       else if( res.status== 'Requested'){
         this.followingState = "Reuested";
+        this.allowFollowRequest = false;
       }
-
     });
-
   }
 
   openDialog(): void {
