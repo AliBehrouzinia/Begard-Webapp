@@ -40,31 +40,40 @@ when for first time ,you pull project and want to setup postgresql
 
 at first you must install requirements.txt , then run following commands in order :
 
-	$  sudo apt-get install postgresql postgresql-contrib
+	$	sudo apt-get install postgresql postgresql-contrib
 
-	$  sudo apt-get install libpq-dev python3-dev
+	$	sudo apt-get install libpq-dev python3-dev
 
-	postgres=#  sudo -u postgres psql
+	$	sudo su - postgres psql
 
-	postgres=#  CREATE DATABASE begarddb;
+	postgres=#	CREATE USER begarduser WITH ENCRYPTED PASSWORD 'Begardpass';
 
-	postgres=#  CREATE USER begarduser WITH ENCRYPTED PASSWORD 'Begardpass';
+	postgres=#	CREATE DATABASE begarddb with owner begarduser;
 
-	postgres=#  ALTER ROLE begarduser SET client_encoding TO 'utf8';
+	postgres=#	ALTER ROLE begarduser SET client_encoding TO 'utf8';
 
-	postgres=#  ALTER ROLE begarduser SET default_transaction_isolation TO 'read committed';
+	postgres=#	ALTER ROLE begarduser SET default_transaction_isolation TO 'read committed';
 
-	postgres=#  ALTER ROLE begarduser SET timezone TO 'UTC';
+	postgres=#	ALTER ROLE begarduser SET timezone TO 'UTC';
 
-	postgres=#  GRANT ALL PRIVILEGES ON DATABASE begarddb TO begarduser;
+	postgres=#	GRANT ALL PRIVILEGES ON DATABASE begarddb TO begarduser;
 
-	postgres=#  \q
+	postgres=#	\q
 
+if you are not in first time just run followings :
+
+	$	sudo su - postgres psql
+
+	postgres=#	drop database begarddb;
+
+	postgres=#	create database begarddb with owner begarduser;
+
+	postgres=#	\q
 -----------------------------------------------
 
 for use from backup-vx.sql (x is number of backup file like 'backup-v1.sql')file and set this in your database, run following command :
 
-	$ psql -U postgres begarddb < backup-vx.sql
+	$ pg_restore -d begarddb < /path/to/backup-vx.sql
 
 
 ------------------------------------------------
