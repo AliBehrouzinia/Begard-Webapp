@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -7,7 +8,6 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./plan-overview.component.css']
 })
 export class PlanOverviewComponent implements OnInit {
-  SERVER_URL = 'http://127.0.0.1:8000';
   @Input() plannerUsername;
   @Input() planCity;
   @Input() planCover;
@@ -17,8 +17,8 @@ export class PlanOverviewComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.planCover = this.SERVER_URL + this.planCover;
-    this.plannerProfileCover = this.SERVER_URL + this.plannerProfileCover;
+    this.planCover = environment.baseUrl + this.planCover;
+    this.plannerProfileCover = environment.baseUrl + this.plannerProfileCover;
     this.setDateCreation();
     this.setUserName();
   }

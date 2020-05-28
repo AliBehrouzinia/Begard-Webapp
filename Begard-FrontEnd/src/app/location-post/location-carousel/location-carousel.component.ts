@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-location-carousel',
@@ -7,16 +8,16 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class LocationCarouselComponent implements OnInit {
 
-  @Input() imgSrc : string[];
+  @Input() imgSrc: string[];
 
-  imgUrl :string[] =[];
+  imgUrl: string[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
-   for(var i =0 ;i< this.imgSrc.length;i++){
-     this.imgUrl.push("http://127.0.0.1:8000"+ this.imgSrc[i]);
-   }
+    for (var i = 0; i < this.imgSrc.length; i++) {
+      this.imgUrl.push(environment.baseUrl + this.imgSrc[i]);
+    }
 
   }
 

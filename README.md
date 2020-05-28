@@ -23,6 +23,13 @@ to start the application run the following command from the command line in the 
 -----------------------------------------------------------
 
 your browser should automatically open the project at http://localhost:4200.
+
+-----------------------------------------------------------
+
+to build the project you must run the following command in the command line in the project root folder:
+
+    $ ng build --prod --base-href /static/
+
 # Back-End documention:
 
 you need to install python 3.6 and up.
