@@ -82,12 +82,6 @@ export class LocationPostComponent implements OnInit {
         this.setPostData(resdata);
       })
     }
-
-  
-
-
-
-
   }
 
   private setPostData(resdata: PostRes[]) {
@@ -142,14 +136,7 @@ export class LocationPostComponent implements OnInit {
 
         }
       }
-
-
-
-
     }
-
-
-
   }
 
   goToProfile(id: number) {

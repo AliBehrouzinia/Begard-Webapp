@@ -7,6 +7,7 @@ import { MyLocationService } from '../my-location.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -16,8 +17,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./post-location.component.css']
 })
 export class PostLocationComponent implements OnInit {
-  SERVER_URL = 'http://127.0.0.1:8000';
-
   images = []
   imageStrings: Image[] = []
   imagePath;
@@ -56,7 +55,7 @@ export class PostLocationComponent implements OnInit {
     this.userService.getUserId().subscribe(user => {
       this.profileService.getHeaderData(user.pk).subscribe(profile => {
         this.username = profile.username
-        this.profileImage += this.SERVER_URL + profile.profile_image;
+        this.profileImage += environment.baseUrl + profile.profile_image;
       })
     })
   }

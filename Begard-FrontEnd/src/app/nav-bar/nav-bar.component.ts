@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take, exhaustMap } from 'rxjs/operators';
 import { ReqUser, NotifService } from './notificaton.service';
+import { environment } from '../../environments/environment';
 
 export interface DialogData {
   animal: string;
@@ -44,6 +45,7 @@ export class NavBarComponent implements OnInit {
     });
   }
   public notfiNums;
+  public url ;
 
   ngOnInit(): void {
     this.notifService.getFollowRequests().subscribe(res => {
@@ -51,6 +53,7 @@ export class NavBarComponent implements OnInit {
     });
     this.loginStatus$ = this.authService.isLogedIn;
     this.userEmail$ = this.authService.userEmail;
+    this.url = environment.baseUrl;
   }
 
   logout() {
@@ -106,7 +109,7 @@ export class NotifComponent implements OnInit {
 
   setItems(res : ReqUser[]){
     for (let i = 0; i < res.length; i++) {
-      this.items.push(new FollowReq(res[i].username, "http://127.0.0.1:8000" + res[i].profile_img, res[i].date, res[i].id));
+      this.items.push(new FollowReq(res[i].username, environment.baseUrl + res[i].profile_img, res[i].date, res[i].id));
     }
   }
 
