@@ -2,6 +2,8 @@ import datetime
 import enum
 from itertools import chain
 
+from django.views.generic import TemplateView
+from django.shortcuts import render
 from django.db.models import Q
 from django.http import JsonResponse
 from django.http.response import HttpResponseBadRequest
@@ -28,6 +30,11 @@ class FollowingState(enum.Enum):
     Following = 2,
     Requested = 3,
     Own = 4
+
+
+class HomePageView(TemplateView):
+    def get(self, request, **kwargs):
+        return render(request, 'index.html', context=None)
 
 
 class CitiesListView(generics.ListAPIView):

@@ -4,6 +4,7 @@ import { ThemePalette } from '@angular/material/core';
 import { CommentComponent, Comment } from './comment/comment.component';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FollowService } from '../follow.service';
 
 class Post {
   constructor(
@@ -52,7 +53,17 @@ export class LocationPostComponent implements OnInit {
   color: ThemePalette = "primary";
 
   constructor(private postservice: LocationPostService,
-    private router: Router) {
+    private router: Router,
+    private followService : FollowService) {
+
+      this.followService.updateFollow.subscribe(res => {
+        for(var i=0;i<this.posts.length;i++){
+          if(this.posts[i].usrId == res[0]){
+            this.posts[i].followingState = res[1];
+          }
+        }
+      })
+    
 
 
   }
@@ -149,7 +160,9 @@ export class LocationPostComponent implements OnInit {
     if(post.followingState=="Follow")
     {
       this.postservice.onFollow(post.usrId).subscribe(res=>{
+        this.followService.updateFollow.emit([post.usrId,"Following"]);
         if(res.status == "Followed"){
+          this.followService.updateFollow.emit([post.usrId,"Following"]);
           for(var i=0;i<this.posts.length;i++){
             if(this.posts[i].usrId == post.usrId){
               this.posts[i].followingState = "Following";

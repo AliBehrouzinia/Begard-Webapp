@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { closest } from '@syncfusion/ej2-base';
 import { EventSettingsModel, View, DayService, WeekService, DragAndDropService, ResizeService, ScheduleComponent, CellClickEventArgs, DragEventArgs, ResizeEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { waitingList } from './data';
+
 import { L10n } from '@syncfusion/ej2-base';
 import { DataStorageService, PlanItem, Plan } from '../data-storage.service';
 import { ActivatedRoute } from '@angular/router';
@@ -60,12 +60,14 @@ export class CalenderComponent implements OnInit {
           , new Date(plan.plan.plan_items[i].finish_date).toISOString()
           , plan.plan.plan_items[i].place_name
           , plan.plan.plan_items[i].place_info.id
+          , plan.plan.plan_items[i].place_info.id + i         
         ));
         this.gridItems.push(new PlanningItem(
           new Date(plan.plan.plan_items[i].start_date).toISOString()
           , new Date(plan.plan.plan_items[i].finish_date).toISOString()
           , plan.plan.plan_items[i].place_name
           , plan.plan.plan_items[i].place_info.id
+          , plan.plan.plan_items[i].place_info.id + i
         ));
 
       }
@@ -97,7 +99,7 @@ export class CalenderComponent implements OnInit {
   public eventSettings: EventSettingsModel = {
     dataSource: this.planItems,
     fields: {
-      id: 'placeId',
+      id: 'id',
       subject: { name: 'placeName' },
       startTime: { name: 'startDate' },
       endTime: { name: 'finishDate' },
@@ -105,7 +107,6 @@ export class CalenderComponent implements OnInit {
   };
 
   // Grid data
-  public gridDS: Object = waitingList;
   public allowDragAndDrop: boolean = true;
   public srcDropOptions: RowDropSettingsModel = { targetID: 'Schedule' };
   public primaryKeyVal: boolean = true;
@@ -130,10 +131,16 @@ export class CalenderComponent implements OnInit {
           cellData.startTime.toISOString()
           , cellData.endTime.toISOString()
           , filteredData[0].placeName
-          , filteredData[0].placeId + 'a'
+          , filteredData[0].placeId
+          ,filteredData[0].placeId + 'a' 
         );
         this.scheduleObj.addEvent(newPlan)
-        this.gridObj.deleteRecord(event.data[0]);
+        for (var i = 0; i < this.gridItems.length; i++) {
+          if (this.gridItems[i].placeName == newPlan.placeName) {
+            this.gridItems.splice(i, 1);
+          }
+        }
+        this.gridObj.refresh();
       }
     }
   }
@@ -158,7 +165,9 @@ export class CalenderComponent implements OnInit {
       , this.gridItems[0].finishDate
       , location.name
       , location.place_id
+      , location.place_id
     ));
+    console.log(this.gridObj.dataSource);
   }
 
   openDialog(): void {

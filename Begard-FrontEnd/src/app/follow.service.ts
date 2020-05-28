@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
@@ -22,6 +22,8 @@ export interface ResFollowReq{
 })
 export class FollowService {
 
+
+  updateFollow = new EventEmitter<any[]>();
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
   sendFollowRequest(followRequest): Observable<FollowResult> {
