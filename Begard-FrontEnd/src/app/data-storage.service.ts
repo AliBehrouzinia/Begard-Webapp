@@ -10,9 +10,7 @@ export interface PlanItem {
     finish_date: string,
     place_name: string,
     place_info: { id: string, lat: string, lng: string }
-
 }
-
 
 export interface Plan {
     plan: {
@@ -20,8 +18,6 @@ export interface Plan {
         finish_date: string,
         plan_items: PlanItem[]
     }
-
-
 }
 
 @Injectable()
@@ -38,7 +34,7 @@ export class DataStorageService {
     ) { }
 
 
-    getplan(): Observable<Plan> {
+    getSuggestedPlan(): Observable<Plan> {
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
             return this.http.get<Plan>(this.planUrl,
@@ -47,7 +43,18 @@ export class DataStorageService {
                 }
             );
         }));
+    }
 
+    getPlan(planId): Observable<Plan> {
+        let url = 'http://127.0.0.1:8000/plans/' + planId + "/"
+        return this.authservice.user.pipe(take(1), exhaustMap(user => {
+            var token = 'token ' + user.token;
+            return this.http.get<Plan>(this.planUrl,
+                {
+                    headers: new HttpHeaders({ 'Authorization': token })
+                }
+            );
+        }));
     }
 
     getCities() {
@@ -64,32 +71,32 @@ export class DataStorageService {
 
     }
 
-    getPlanUrl(){
+    getPlanUrl() {
         return this.planUrl;
     }
 
-    setStartDate(sd){
-        this.start_date = sd; 
+    setStartDate(sd) {
+        this.start_date = sd;
     }
 
-    setEndDate(ed){
-        this.finish_date = ed; 
+    setEndDate(ed) {
+        this.finish_date = ed;
     }
 
-    setCity(c){
-        this.city = c; 
+    setCity(c) {
+        this.city = c;
     }
 
-    getStartDate(){
-        return this.start_date; 
+    getStartDate() {
+        return this.start_date;
     }
 
-    getEndDate(){
-        return this.finish_date; 
+    getEndDate() {
+        return this.finish_date;
     }
 
-    getCity(){
-        return this.city; 
+    getCity() {
+        return this.city;
     }
 
 }

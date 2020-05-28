@@ -45,7 +45,6 @@ export class DynamicSearchComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.cityId = +params.get('city');
-      console.log("city id :" + this.cityId);
     });
 
     this.locationsAutoComplete$ = this.autoCompleteControl.valueChanges.pipe(

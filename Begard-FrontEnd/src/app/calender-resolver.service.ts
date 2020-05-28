@@ -8,9 +8,10 @@ import { Injectable } from '@angular/core';
 export class CalenderResolver implements Resolve<Plan>{
 
     constructor(private dataStorage: DataStorageService) { }
+    
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Plan> |
         Promise<Plan> |
         Plan {
-            return this.dataStorage.getplan();
+        return this.dataStorage.getSuggestedPlan();
     }
 }

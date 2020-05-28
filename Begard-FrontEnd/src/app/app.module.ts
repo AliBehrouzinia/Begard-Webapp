@@ -123,7 +123,7 @@ import { PlanComponent } from './plan/plan.component';
 
    ],
 
-   providers: [DataStorageService, MyPlanService, MyLocationService,ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
+   providers: [ DataStorageService, MyPlanService, MyLocationService, ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],

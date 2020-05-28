@@ -90,7 +90,7 @@ export class MyPlanComponent implements OnInit {
   }
 
   goToPlan(id){
-    this.router.navigate(['/calender', id]);
+    this.router.navigate(['/myplan' , id]);
   }
 
   setProUrl(id) {

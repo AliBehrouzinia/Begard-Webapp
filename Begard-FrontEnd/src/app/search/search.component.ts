@@ -118,8 +118,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSearch() {
     if (!this.startDateControl.valid || !this.endDateControl.valid || !this.isDestinationValid()) {
-      console.log("zart");
-      console.log(this.startDateControl.valid + "  " + this.endDateControl.valid + "  " + this.isDestinationValid())
       return;
     }
     var startdate = new Date(this.startDateControl.value);

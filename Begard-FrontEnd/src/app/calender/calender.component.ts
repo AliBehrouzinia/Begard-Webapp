@@ -60,7 +60,7 @@ export class CalenderComponent implements OnInit {
           , new Date(plan.plan.plan_items[i].finish_date).toISOString()
           , plan.plan.plan_items[i].place_name
           , plan.plan.plan_items[i].place_info.id
-          , plan.plan.plan_items[i].place_info.id + i         
+          , plan.plan.plan_items[i].place_info.id + i
         ));
         this.gridItems.push(new PlanningItem(
           new Date(plan.plan.plan_items[i].start_date).toISOString()
@@ -132,7 +132,7 @@ export class CalenderComponent implements OnInit {
           , cellData.endTime.toISOString()
           , filteredData[0].placeName
           , filteredData[0].placeId
-          ,filteredData[0].placeId + 'a' 
+          , filteredData[0].placeId + 'a'
         );
         this.scheduleObj.addEvent(newPlan)
         for (var i = 0; i < this.gridItems.length; i++) {

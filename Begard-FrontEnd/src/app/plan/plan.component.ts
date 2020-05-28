@@ -33,7 +33,7 @@ L10n.load({
   providers: [DayService, WeekService, DragAndDropService, ResizeService, RowDDService, EditService]
 })
 export class PlanComponent implements OnInit {
-
+  planId
   postPlan: PostPlan;
   pi: PI[];
 
@@ -48,28 +48,34 @@ export class PlanComponent implements OnInit {
     private location: MapLocationService
   ) { }
 
+
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      var plan: Plan = data['plan'];
-      this.location.setLocation(plan.plan.plan_items);
-      for (var i = 0; i < plan.plan.plan_items.length; i++) {
-        this.planItems.push(new PlanningItem(
-          new Date(plan.plan.plan_items[i].start_date).toISOString()
-          , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-          , plan.plan.plan_items[i].place_name
-          , plan.plan.plan_items[i].place_info.id
-        ));
-        this.gridItems.push(new PlanningItem(
-          new Date(plan.plan.plan_items[i].start_date).toISOString()
-          , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-          , plan.plan.plan_items[i].place_name
-          , plan.plan.plan_items[i].place_info.id
-        ));
-
-      }
-      this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
+    alert("yes")
+    this.route.paramMap.subscribe(params => {
+      alert(params.get('planId'))
+      this.dataService.getPlan(params.get('planId')).subscribe(data => {
+        alert(JSON.stringify(data['plan']))
+        let plan: any = data['plan'];
+        this.location.setLocation(plan.plan.plan_items);
+        for (var i = 0; i < plan.plan.plan_items.length; i++) {
+          this.planItems.push(new PlanningItem(
+            new Date(plan.plan.plan_items[i].start_date).toISOString()
+            , new Date(plan.plan.plan_items[i].finish_date).toISOString()
+            , plan.plan.plan_items[i].place_name
+            , plan.plan.plan_items[i].place_info.id
+            , plan.plan.plan_items[i].place_info.id + i
+          ));
+          this.gridItems.push(new PlanningItem(
+            new Date(plan.plan.plan_items[i].start_date).toISOString()
+            , new Date(plan.plan.plan_items[i].finish_date).toISOString()
+            , plan.plan.plan_items[i].place_name
+            , plan.plan.plan_items[i].place_info.id
+            , plan.plan.plan_items[i].place_info.id + i
+          ));
+        }
+        this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
+      });
     });
-
   }
 
   public isSelected: boolean = true;
@@ -103,7 +109,7 @@ export class PlanComponent implements OnInit {
   };
 
   // Grid data
-  public gridDS: Object ;
+  public gridDS: Object;
   public allowDragAndDrop: boolean = true;
   public srcDropOptions: RowDropSettingsModel = { targetID: 'Schedule' };
   public primaryKeyVal: boolean = true;
@@ -128,6 +134,7 @@ export class PlanComponent implements OnInit {
           cellData.startTime.toISOString()
           , cellData.endTime.toISOString()
           , filteredData[0].placeName
+          , filteredData[0].placeId
           , filteredData[0].placeId + 'a'
         );
         this.scheduleObj.addEvent(newPlan)
@@ -154,6 +161,7 @@ export class PlanComponent implements OnInit {
       this.gridItems[0].startDate
       , this.gridItems[0].finishDate
       , location.name
+      , location.place_id
       , location.place_id
     ));
   }
@@ -183,12 +191,10 @@ export class PlanComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('result : ' + result);
     });
   }
 
   addPlanDetails(postDetil) {
-    console.log(" post details : " + postDetil.description)
   }
 
 }
