@@ -10,6 +10,7 @@ import { TopPlannersService } from '../top-planners.service';
 import { TopPlanner } from '../top-planner';
 import { UserService } from '../user.service';
 import { FollowService } from '../follow.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 export interface DialogData {
@@ -77,6 +78,11 @@ export class ProfileComponent implements OnInit {
   ) {
     this.followSerivce.updateFollow.subscribe(res => {
       this.followingState = res[1];
+      if (this.followingState == "Follow") {
+        this.allowFollowRequest = true;
+      } else {
+        this.allowFollowRequest = false;
+      }
     })
   }
 
@@ -149,7 +155,9 @@ export class UnfollowDialog {
   constructor(
     public dialogRef: MatDialogRef<UnfollowDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private followServce: FollowService) {
+    private followServce: FollowService,
+    private snackBar: MatSnackBar
+  ) {
     this.username += data.username;
     this.userId = data.userId;
     if (data.unfollow) {
@@ -164,10 +172,35 @@ export class UnfollowDialog {
   }
 
   onUnfollow() {
-    if (this.data.unfollow)
+    if (this.data.unfollow) {
       alert("unfollow")
-    else
+      this.followServce.unfollow(this.userId).subscribe(
+        status => { this.handleUnfollowResponse(status, "unfollowed") }
+      )
+    }
+    else {
       alert("unrequest")
+      this.followServce.removeRequest(this.userId).subscribe(
+        status => { this.handleUnfollowResponse(status, "request removed") }
+      )
+    }
     this.dialogRef.close();
+  }
+
+  handleUnfollowResponse(status, mes) {
+    if (status == "200") {
+      this.openSnackBar(mes + " successfuly")
+      this.followServce.updateFollow.next([this.userId, "Follow"])
+    } else {
+      this.openSnackBar("something went wrong!")
+    }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
   }
 }
