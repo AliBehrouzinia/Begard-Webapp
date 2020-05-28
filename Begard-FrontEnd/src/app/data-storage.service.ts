@@ -20,6 +20,23 @@ export interface Plan {
     }
 }
 
+export interface PI {
+    id;
+    place_id;
+    finish_date;
+    start_date;
+}
+
+export interface MyPlan {
+    id;
+    destination_city;
+    description;
+    creation_date;
+    start_date;
+    finish_date;
+    plan_items: PI[];
+}
+
 @Injectable()
 
 export class DataStorageService {
@@ -45,11 +62,11 @@ export class DataStorageService {
         }));
     }
 
-    getPlan(planId): Observable<Plan> {
+    getPlan(planId): Observable<MyPlan> {
         let url = 'http://127.0.0.1:8000/plans/' + planId + "/"
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
-            return this.http.get<Plan>(this.planUrl,
+            return this.http.get<MyPlan>(this.planUrl,
                 {
                     headers: new HttpHeaders({ 'Authorization': token })
                 }
@@ -58,17 +75,7 @@ export class DataStorageService {
     }
 
     getCities() {
-
-        // return this.authservice.user.pipe(take(1), exhaustMap(user => {
-        //     var token = 'token ' + user.token;
-        //     return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
-        //         {
-        //             headers: new HttpHeaders({ 'Authorization': token })
-        //         }
-        //     );
-        // }));
         return this.http.get<City[]>('http://127.0.0.1:8000/cities/');
-
     }
 
     getPlanUrl() {

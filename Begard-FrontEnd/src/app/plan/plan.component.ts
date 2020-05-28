@@ -3,7 +3,7 @@ import { closest } from '@syncfusion/ej2-base';
 import { EventSettingsModel, View, DayService, WeekService, DragAndDropService, ResizeService, ScheduleComponent, CellClickEventArgs, DragEventArgs, ResizeEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { L10n } from '@syncfusion/ej2-base';
-import { DataStorageService, PlanItem, Plan } from '../data-storage.service';
+import { DataStorageService, PlanItem, MyPlan } from '../data-storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { PlanningItem } from '../plan-item.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +24,6 @@ L10n.load({
     }
   }
 });
-
 
 @Component({
   selector: 'app-plan',
@@ -50,32 +49,30 @@ export class PlanComponent implements OnInit {
 
 
   ngOnInit() {
-    alert("yes")
-    this.route.paramMap.subscribe(params => {
-      alert(params.get('planId'))
-      this.dataService.getPlan(params.get('planId')).subscribe(data => {
-        alert(JSON.stringify(data['plan']))
-        let plan: any = data['plan'];
-        this.location.setLocation(plan.plan.plan_items);
-        for (var i = 0; i < plan.plan.plan_items.length; i++) {
-          this.planItems.push(new PlanningItem(
-            new Date(plan.plan.plan_items[i].start_date).toISOString()
-            , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-            , plan.plan.plan_items[i].place_name
-            , plan.plan.plan_items[i].place_info.id
-            , plan.plan.plan_items[i].place_info.id + i
-          ));
-          this.gridItems.push(new PlanningItem(
-            new Date(plan.plan.plan_items[i].start_date).toISOString()
-            , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-            , plan.plan.plan_items[i].place_name
-            , plan.plan.plan_items[i].place_info.id
-            , plan.plan.plan_items[i].place_info.id + i
-          ));
-        }
-        this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
-      });
-    });
+    // this.route.paramMap.subscribe(params => {
+    //   this.dataService.getPlan(params.get('planId')).subscribe(data => {
+    //     alert(JSON.stringify(data['plan']))
+    //     let plan: MyPlan = data['plan'];
+    //     this.location.setLocation(plan.plan_items);
+    //     for (var i = 0; i < plan.plan.plan_items.length; i++) {
+    //       this.planItems.push(new PlanningItem(
+    //         new Date(plan.plan.plan_items[i].start_date).toISOString()
+    //         , new Date(plan.plan.plan_items[i].finish_date).toISOString()
+    //         , plan.plan.plan_items[i].place_name
+    //         , plan.plan.plan_items[i].place_info.id
+    //         , plan.plan.plan_items[i].place_info.id + i
+    //       ));
+    //       this.gridItems.push(new PlanningItem(
+    //         new Date(plan.plan.plan_items[i].start_date).toISOString()
+    //         , new Date(plan.plan.plan_items[i].finish_date).toISOString()
+    //         , plan.plan.plan_items[i].place_name
+    //         , plan.plan.plan_items[i].place_info.id
+    //         , plan.plan.plan_items[i].place_info.id + i
+    //       ));
+    //     }
+    //     this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
+    //   });
+    // });
   }
 
   public isSelected: boolean = true;
@@ -188,6 +185,7 @@ export class PlanComponent implements OnInit {
       minWidth: '550px',
       height: 'auto',
       width: 'auto',
+      data: { description: "", photo: "" }
     });
 
     dialogRef.afterClosed().subscribe(result => {

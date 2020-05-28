@@ -1,5 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Output, Inject, EventEmitter } from '@angular/core';
+import { MatDialogRef , MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { PostPlanService } from '../post-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -27,8 +27,16 @@ export class PostDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
     public postPlanService: PostPlanService,
-    private snackBar: MatSnackBar
-  ) { }
+    private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) private data: PlanDetail
+  ) {
+    if (data.description != null) {
+      this.description = data.description;
+    }
+    if (data.photo != null) {
+      this.imgURL = data.photo;
+    }
+  }
 
 
   ngOnInit(): void {
