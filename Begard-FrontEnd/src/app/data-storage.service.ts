@@ -4,6 +4,7 @@ import { City } from './city.model';
 import { first, tap, take, exhaustMap } from 'rxjs/operators'
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface PlanItem {
     start_date: string,
@@ -60,36 +61,37 @@ export class DataStorageService {
         //         }
         //     );
         // }));
-        return this.http.get<City[]>('http://127.0.0.1:8000/cities/');
+        var url = environment.baseUrl + '/cities/';
+        return this.http.get<City[]>(url);
 
     }
 
-    getPlanUrl(){
+    getPlanUrl() {
         return this.planUrl;
     }
 
-    setStartDate(sd){
-        this.start_date = sd; 
+    setStartDate(sd) {
+        this.start_date = sd;
     }
 
-    setEndDate(ed){
-        this.finish_date = ed; 
+    setEndDate(ed) {
+        this.finish_date = ed;
     }
 
-    setCity(c){
-        this.city = c; 
+    setCity(c) {
+        this.city = c;
     }
 
-    getStartDate(){
-        return this.start_date; 
+    getStartDate() {
+        return this.start_date;
     }
 
-    getEndDate(){
-        return this.finish_date; 
+    getEndDate() {
+        return this.finish_date;
     }
 
-    getCity(){
-        return this.city; 
+    getCity() {
+        return this.city;
     }
 
 }

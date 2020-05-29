@@ -6,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { TopPlannersService } from '../top-planners.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogOverviewExampleDialog } from './../profile/profile.component'
+import { DialogOverviewExampleDialog } from './../profile/profile.component';
+import { environment } from '../../environments/environment';
 
 
 @Component({
@@ -16,7 +17,6 @@ import { DialogOverviewExampleDialog } from './../profile/profile.component'
 })
 export class MyPlanComponent implements OnInit {
   myPlans = [];
-  SERVER_URL = 'http://127.0.0.1:8000';
   username
   profileImage;
   plansCount = 0;
@@ -57,7 +57,7 @@ export class MyPlanComponent implements OnInit {
       this.setProUrl(user.pk);
       this.profileService.getProfile(user.pk).subscribe(profile => {
         this.username = profile.username;
-        this.profileImage = this.SERVER_URL + profile.profile_image;
+        this.profileImage = environment.baseUrl + profile.profile_image;
         this.followersCount = profile.followers_count;
         this.followingCount = profile.followings_count;
       })
@@ -80,7 +80,7 @@ export class MyPlanComponent implements OnInit {
   }
 
   setCoverUrl(url) {
-    return this.SERVER_URL + url;
+    return environment.baseUrl + url;
   }
   goToHome() {
     this.router.navigate(['/homepage']);

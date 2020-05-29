@@ -10,6 +10,7 @@ import { TopPlanner } from '../top-planner';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../user.service';
 import { element } from 'protractor';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home-page',
@@ -22,6 +23,7 @@ export class HomePageComponent implements OnInit {
   currentUrl: any;
   userPro: string;
   loginStatus$: Observable<boolean>;
+  public baseurl;
 
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
     private router: ActivatedRoute,
@@ -30,6 +32,7 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.baseurl = environment.baseUrl;
     this.user.getUserId().subscribe(res => {
       this.userPro = '/profile/' + res.pk;
     });

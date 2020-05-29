@@ -1,7 +1,7 @@
 <div (click)="onAllPage()">
     <mat-toolbar color="primary" class="nav-bar">
         <span routerLink="homepage" routerLinkActive="active">
-            <img class="logo" src="../../assets/begrd_icon.svg"> <span class="name">Begard</span>
+            <img class="logo" src="{{url+'/media/images/begrd_icon.svg'}}"> <span class="name">Begard</span>
         </span>
         <button class="searchinput">
             <mat-icon style="color: black; font-size: 30px;">search</mat-icon>
@@ -23,11 +23,11 @@
                 <mat-icon style="font-size: 20px;" *ngIf="notfiNums===0" class="notif" (click)=" openDialog($event)">
                     notifications</mat-icon>
                 <div (click)="onNotif()" *ngIf="!notifDisable" style="margin-top: 30px;
-            width: 400px;
-            transform: translateX(-191px);
-            position: absolute;
-            display: flex;
-            justify-content: flex-end;">
+                    width: 400px;
+                    transform: translateX(-191px);
+                    position: absolute;
+                    display: flex;
+                    justify-content: flex-end;">
                     <mat-card class="scrollbar-ripe-malinka" style="width: 100%;max-height: 400px;overflow-y: auto;">
                         <h1 style="display: flex;justify-content: center;">Notifications</h1>
                         <hr>
@@ -42,9 +42,9 @@
                                     <mat-grid-tile routerLink="{{'/profile/'+item.userId}}" class="username"
                                         [colspan]="5" [rowspan]="2">
                                         <div matTooltip="{{item.userName}}" [matTooltipPosition]="'above'" style=" white-space: nowrap;  
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    cursor: pointer; ">
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;
+                                            cursor: pointer; ">
                                             {{item.userName}}
                                         </div>
                                     </mat-grid-tile>

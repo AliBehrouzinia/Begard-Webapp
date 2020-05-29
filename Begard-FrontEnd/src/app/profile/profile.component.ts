@@ -10,6 +10,7 @@ import { TopPlannersService } from '../top-planners.service';
 import { TopPlanner } from '../top-planner';
 import { UserService } from '../user.service';
 import { FollowService } from '../follow.service';
+import { environment } from 'src/environments/environment';
 
 
 export interface DialogData {
@@ -42,7 +43,7 @@ export class ProfileComponent implements OnInit {
       this.follwersNum = res.followers_count;
       this.follwingsNum = res.followings_count;
       this.postNum = res.posts_count;
-      this.imgUrl = 'http://127.0.0.1:8000' + res.profile_image;
+      this.imgUrl = environment.baseUrl + res.profile_image;
       this.followingState = res.following_state;
     });
 
@@ -68,14 +69,19 @@ export class ProfileComponent implements OnInit {
     private profileService: ProfileService,
     private topPlaners : TopPlannersService,
     private user : UserService,
-  ) { }
+    private followSerivce : FollowService
+  ) {
+    this.followSerivce.updateFollow.subscribe(res=> {
+      this.followingState = res[1];
+    })
+   }
 
 
   onFollow() {
     this.profileService.onFollow(this.id).subscribe(res =>{
       if(res.status == 'Followed'){
         this.followingState = "Following";
-        
+        this.followSerivce.updateFollow.emit([this.id,"Following"]);
       }
       else if( res.status== 'Requested'){
         this.followingState = "Reuested";
