@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostPlanService } from '../post-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdatePlanService } from '../update-plan.service';
+import { MyPlan } from './../data-storage.service'
 
 export interface PlanDetail {
   description: string;
@@ -24,25 +25,28 @@ export class PostDialogComponent implements OnInit {
   public message: string;
   saveDisabled = true;
   isUpdate = false
+  plan
+  BASE_URL = "http://127.0.0.1:8000"
+
 
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
     public postPlanService: PostPlanService,
     public updatePlanService: UpdatePlanService,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) private data: PlanDetail
+    @Inject(MAT_DIALOG_DATA) private data: MyPlan
   ) {
-    if (data.description != null) {
+    if (data != null) {
+      this.plan = data
       this.description = data.description;
       this.isUpdate = true;
-    }
-    if (data.photo != null) {
-      this.imgURL = data.photo;
+      this.imgURL = this.BASE_URL + data.cover;
     }
   }
 
 
   ngOnInit(): void {
+    this.updateSaveButtonDisabled()
   }
 
   onCancel() {
@@ -50,11 +54,13 @@ export class PostDialogComponent implements OnInit {
   }
 
   onPost() {
-    if (this.isUpdate) {
+    if (!this.isUpdate) {
       this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
         .subscribe(status => this.handleRequestResponse(status))
     } else {
-      this.updatePlanService.updatePlan(null, null)
+      this.plan.description = this.description;
+      this.plan.cover = this.coverBinaryString;
+      this.updatePlanService.updatePlan(this.plan.id, this.plan)
         .subscribe(status => this.handleRequestResponse(status))
     }
     this.dialogRef.close();
@@ -100,9 +106,10 @@ export class PostDialogComponent implements OnInit {
         this.saveDisabled = true;
       }
     }
-    else {
+    else if (this.description != undefined && this.isUpdate && this.description.length > 0) {
+      this.saveDisabled = false;
+    } else
       this.saveDisabled = true;
-    }
   }
 
   onChange(e) {

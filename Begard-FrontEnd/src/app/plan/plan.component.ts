@@ -33,6 +33,9 @@ L10n.load({
 })
 export class PlanComponent implements OnInit {
   planId
+  description
+  cover
+  plan: MyPlan
   postPlan: PostPlan;
   pi: PI[];
 
@@ -49,30 +52,31 @@ export class PlanComponent implements OnInit {
 
 
   ngOnInit() {
-    // this.route.paramMap.subscribe(params => {
-    //   this.dataService.getPlan(params.get('planId')).subscribe(data => {
-    //     alert(JSON.stringify(data['plan']))
-    //     let plan: MyPlan = data['plan'];
-    //     this.location.setLocation(plan.plan_items);
-    //     for (var i = 0; i < plan.plan.plan_items.length; i++) {
-    //       this.planItems.push(new PlanningItem(
-    //         new Date(plan.plan.plan_items[i].start_date).toISOString()
-    //         , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-    //         , plan.plan.plan_items[i].place_name
-    //         , plan.plan.plan_items[i].place_info.id
-    //         , plan.plan.plan_items[i].place_info.id + i
-    //       ));
-    //       this.gridItems.push(new PlanningItem(
-    //         new Date(plan.plan.plan_items[i].start_date).toISOString()
-    //         , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-    //         , plan.plan.plan_items[i].place_name
-    //         , plan.plan.plan_items[i].place_info.id
-    //         , plan.plan.plan_items[i].place_info.id + i
-    //       ));
-    //     }
-    //     this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
-    //   });
-    // });
+    this.route.paramMap.subscribe(params => {
+      this.dataService.getPlan(params.get('planId')).subscribe(data => {
+        this.plan = data['plan'];
+        this.description = this.plan.description;
+        this.cover = this.plan.cover;
+        this.location.setLocation(this.plan.plan_items);
+        for (var i = 0; i < this.plan.plan_items.length; i++) {
+          this.planItems.push(new PlanningItem(
+            new Date(this.plan.plan_items[i].start_date).toISOString()
+            , new Date(this.plan.plan_items[i].finish_date).toISOString()
+            , this.plan.plan_items[i].place_name
+            , this.plan.plan_items[i].place_info.id
+            , this.plan.plan_items[i].place_info.id + i
+          ));
+          this.gridItems.push(new PlanningItem(
+            new Date(this.plan.plan_items[i].start_date).toISOString()
+            , new Date(this.plan.plan_items[i].finish_date).toISOString()
+            , this.plan.plan_items[i].place_name
+            , this.plan.plan_items[i].place_info.id
+            , this.plan.plan_items[i].place_info.id + i
+          ));
+        }
+        this.selectedDate = new Date(this.plan.plan_items[0].start_date);
+      });
+    });
   }
 
   public isSelected: boolean = true;
@@ -169,23 +173,17 @@ export class PlanComponent implements OnInit {
       this.pi.push({ start_date: pi.startDate, finish_date: pi.finishDate, place_id: pi.placeId })
     });
 
-    this.postPlanService.setPostPlan(
-      new PostPlan(
-        this.dataService.getCity() + ""
-        , ""
-        , this.dataService.getStartDate()
-        , this.dataService.getEndDate()
-        , this.pi
-        , ""
-      ))
-
     const dialogRef = this.dialog.open(PostDialogComponent, {
       maxWidth: '1200px',
       maxHeight: '800px',
       minWidth: '550px',
       height: 'auto',
       width: 'auto',
-      data: { description: "", photo: "" }
+      data: {
+        id: this.plan.id, description: this.plan.description, cover: this.plan.cover
+        , plan_items: this.pi, creation_date: this.plan.creation_date
+        , start_date: this.plan.start_date, finish_date: this.plan.finish_date
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {

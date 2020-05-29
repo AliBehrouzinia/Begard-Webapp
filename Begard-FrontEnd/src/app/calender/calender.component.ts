@@ -192,7 +192,7 @@ export class CalenderComponent implements OnInit {
       minWidth: '550px',
       height: 'auto',
       width: 'auto',
-      data: { desc: null, cover: null }
+      data: { }
     });
 
     dialogRef.afterClosed().subscribe(result => {

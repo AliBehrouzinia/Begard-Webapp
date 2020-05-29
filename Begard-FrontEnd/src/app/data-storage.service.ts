@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { City } from './city.model';
-import { first, tap, take, exhaustMap } from 'rxjs/operators'
+import { first, map, take, exhaustMap } from 'rxjs/operators'
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -66,16 +66,21 @@ export class DataStorageService {
         }));
     }
 
-    getPlan(planId): Observable<MyPlan> {
+    getPlan(planId): Observable<MyPlan> {        
         let url = 'http://127.0.0.1:8000/plans/' + planId + "/"
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
-            return this.http.get<MyPlan>(this.planUrl,
-                {
-                    headers: new HttpHeaders({ 'Authorization': token })
-                }
-            );
-        }));
+            return this.http
+              .get<MyPlan>(url, {
+                observe: 'response',
+                headers: new HttpHeaders({ 'Authorization': token })
+              })
+              .pipe(
+                map(res => {
+                  return res.body;
+                })
+              );
+          }));
     }
 
     getCities() {

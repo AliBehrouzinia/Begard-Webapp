@@ -18,7 +18,7 @@ export class UpdatePlanService {
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
       return this.http
-        .post<string>(url, JSON.stringify(plan), {
+        .patch<string>(url, JSON.stringify(plan), {
           observe: 'response',
           headers: new HttpHeaders({
             'Authorization': token,
