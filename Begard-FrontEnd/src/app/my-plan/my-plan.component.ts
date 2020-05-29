@@ -93,13 +93,6 @@ export class MyPlanComponent implements OnInit {
   }
 
   openDialog(): void {
-  //   const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-  //     height: '400px',
-  //     width: '600px',
-  //     data: { name: "", animal: "" }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe();
   }
 }
 
