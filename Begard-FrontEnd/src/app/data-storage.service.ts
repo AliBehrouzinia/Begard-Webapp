@@ -26,6 +26,8 @@ export interface PI {
     place_id;
     finish_date;
     start_date;
+    place_info: { id: string, lat: string, lng: string };
+    place_name;
 }
 
 export interface MyPlan {
@@ -35,6 +37,7 @@ export interface MyPlan {
     creation_date;
     start_date;
     finish_date;
+    cover;
     plan_items: PI[];
 }
 
