@@ -53,7 +53,7 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
-import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile.component';
+import { ProfileComponent, UnfollowDialog } from './profile/profile.component';
 import { TopPlannersComponent } from './top-planners/top-planners.component';
 import { MyPlanComponent } from './my-plan/my-plan.component';
 
@@ -91,7 +91,7 @@ import { MyLocationService } from './my-location.service';
       TopPlannersComponent,
       MyPlanComponent,
       ProfileComponent,
-      DialogOverviewExampleDialog,
+      UnfollowDialog,
       PostLocationComponent,
       
    ],
