@@ -123,7 +123,9 @@ class PlanItemSerializer(serializers.ModelSerializer):
 class PlanSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         result = super(PlanSerializer, self).to_representation(instance)
-        result['destination_city'] = instance.destination_city.name
+        result.pop('destination_city')
+        result['destination_city_id'] = instance.destination_city
+        result['destination_city_name'] = instance.destination_city.name
         post = get_object_or_404(Post, plan_id=instance.id, type='plan_post')
         result['cover'] = get_object_or_404(Image, post=post.id).image.url
 
