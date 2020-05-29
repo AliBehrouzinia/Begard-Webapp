@@ -1,7 +1,8 @@
 import { Component, OnInit, Output, Inject, EventEmitter } from '@angular/core';
-import { MatDialogRef , MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostPlanService } from '../post-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UpdatePlanService } from '../update-plan.service';
 
 export interface PlanDetail {
   description: string;
@@ -22,16 +23,18 @@ export class PostDialogComponent implements OnInit {
   imgURL: any;
   public message: string;
   saveDisabled = true;
-
+  isUpdate = false
 
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
     public postPlanService: PostPlanService,
+    public updatePlanService: UpdatePlanService,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) private data: PlanDetail
   ) {
     if (data.description != null) {
       this.description = data.description;
+      this.isUpdate = true;
     }
     if (data.photo != null) {
       this.imgURL = data.photo;
@@ -47,8 +50,13 @@ export class PostDialogComponent implements OnInit {
   }
 
   onPost() {
-    this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
-      .subscribe(status => this.handleRequestResponse(status))
+    if (this.isUpdate) {
+      this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
+        .subscribe(status => this.handleRequestResponse(status))
+    } else {
+      this.updatePlanService.updatePlan(null, null)
+        .subscribe(status => this.handleRequestResponse(status))
+    }
     this.dialogRef.close();
   }
 
@@ -111,7 +119,10 @@ export class PostDialogComponent implements OnInit {
 
   handleRequestResponse(status) {
     if (status == "200") {
-      this.openSnackBar("plan saved successfully!")
+      if (this.isUpdate)
+        this.openSnackBar("plan updated successfully!")
+      else
+        this.openSnackBar("plan saved successfully!")
     }
     else {
       this.openSnackBar("somethins went wrong!")
