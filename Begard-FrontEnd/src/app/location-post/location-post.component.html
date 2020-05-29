@@ -4,7 +4,7 @@
         style="background: #3f51b5;border-top-left-radius: 10px;border-top-right-radius: 10px;">
         <mat-grid-tile [colspan]=2 [rowspan]=2 style="border-top-left-radius: 10px;">
             <img (click)="goToProfile(post.usrId)" matRipple routerLink="post." mat-card-avatar
-                src="{{'http://127.0.0.1:8000'+post.userProImgSrc}}" class="example-header-image">
+                src="{{post.userProImgSrc}}" class="example-header-image">
         </mat-grid-tile>
         <mat-grid-tile class="post-username" [colspan]=6 style="color: white;font-size: 20px;">
             <div (click)="goToProfile(post.usrId)" class="usernamelink"><span class="post-username">{{post.userName}}</span></div>

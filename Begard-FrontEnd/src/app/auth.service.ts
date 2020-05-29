@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { catchError, tap } from "rxjs/operators";
 import { throwError, Subject, BehaviorSubject } from "rxjs";
 import { User } from "./user.model";
+import { environment } from 'src/environments/environment';
 
 
 export interface AuthResponseData {
@@ -20,7 +21,8 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   signup(userData: { email: string, password1: string, password2: string }) {
-    return this.http.post<AuthResponseData>('http://127.0.0.1:8000/rest-auth/registration/',
+    var url = environment.baseUrl + '/rest-auth/registration/';
+    return this.http.post<AuthResponseData>(url,
       userData)
       .pipe(catchError(this.handleError), tap(resData => {
         this.handleAuthentication(userData.email, resData.key);
@@ -29,7 +31,8 @@ export class AuthService {
   }
 
   login(userData: { email: string, password: string }) {
-    return this.http.post<AuthResponseData>('http://127.0.0.1:8000/rest-auth/login/',
+    var url = environment.baseUrl + '/rest-auth/login/';
+    return this.http.post<AuthResponseData>(url,
       userData).
       pipe(catchError(this.handleError), tap(resData => {
         this.handleAuthentication(userData.email, resData.key);
@@ -77,7 +80,7 @@ export class AuthService {
     return throwError(errorMessage);
   }
 
-  logout(){
+  logout() {
     localStorage.removeItem('userData');
     this.loginStatus.next(false);
     this.user.next(null);

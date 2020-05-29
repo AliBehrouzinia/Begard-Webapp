@@ -3,6 +3,7 @@ import { take, exhaustMap, map } from 'rxjs/operators'
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MyLocation } from './my-location'
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -13,7 +14,7 @@ export class MyLocationService {
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
   getMyLocations(planId) {
-    const url = 'http://127.0.0.1:8000/plans/' + planId + '/locations/';
+    const url = environment.baseUrl + '/plans/' + planId + '/locations/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;

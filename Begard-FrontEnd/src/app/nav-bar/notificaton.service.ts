@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { exhaustMap, take } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 export interface ReqUser {
     id: number,
@@ -23,7 +24,7 @@ export class NotifService {
     getFollowRequests() {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
-            var url = 'http://127.0.0.1:8000/followers/requests/';
+            var url = environment.baseUrl+'/followers/requests/';
             return this.http.get<ReqUser[]>(url,
                 {
                     headers: new HttpHeaders({ 'Authorization': token })
@@ -36,7 +37,7 @@ export class NotifService {
     onAction(action: string, id: number) {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
-            var url = 'http://127.0.0.1:8000/followers/requests/' + id + '/?action=' + action;
+            var url = environment.baseUrl +'/followers/requests/' + id + '/?action=' + action;
             return this.http.patch(url, {},
                 {
                     headers: new HttpHeaders({ 'Authorization': token })

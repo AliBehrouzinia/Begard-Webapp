@@ -5,7 +5,6 @@
 
 .tile {
     position: relative;
-    background-image: url('../../assets/back.jpg');
     background-size: cover;
 }
 
