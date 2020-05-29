@@ -5,6 +5,7 @@ import { CommentComponent, Comment } from './comment/comment.component';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FollowService } from '../follow.service';
+import { environment } from '../../environments/environment';
 
 class Post {
   constructor(
@@ -93,7 +94,7 @@ export class LocationPostComponent implements OnInit {
         resdata[i].place_name,
         resdata[i].destination_city,
         resdata[i].user_name,
-        resdata[i].user_profile_image,
+        environment.baseUrl+resdata[i].user_profile_image,
         resdata[i].following_state,
         resdata[i].number_of_likes,
         resdata[i].is_liked,
