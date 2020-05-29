@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { PlanDetail } from './post-dialog/post-dialog.component'
 import { Observable } from 'rxjs';
 import { map, take, exhaustMap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -26,7 +27,7 @@ export class PostPlanService {
   }
 
   sendPostPlan(): Observable<string> {
-    const url = 'http://127.0.0.1:8000/plans/';
+    const url = environment.baseUrl+'/plans/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
