@@ -1,5 +1,6 @@
 import datetime
 import enum
+import os
 from itertools import chain
 
 from django.views.generic import TemplateView
@@ -163,6 +164,17 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         plan_items = self.request.data['plan_items']
         plan_id = self.kwargs.get('id')
         plan = get_object_or_404(models.Plan, id=plan_id)
+
+        if self.request.data.get('cover'):
+            post = get_object_or_404(models.Post, type='plan_post', plan_id=plan_id)
+            image = get_object_or_404(models.Image, post=post.id)
+            os.remove(image.image.path)
+            image.delete()
+
+            data = {'image': self.request.data.get('cover'), 'post': post.id}
+            serializer = ImageSerializer(data=data)
+            if serializer.is_valid(True):
+                serializer.save()
 
         plan_detail = self.request.data
         plan_detail['id'] = plan_id
