@@ -46,7 +46,6 @@ export class ProfileComponent implements OnInit {
       this.postNum = res.posts_count;
       this.imgUrl = environment.baseUrl + res.profile_image;
       this.followingState = res.following_state;
-      alert(this.followingState)
       if (this.followingState == "Follow") {
         this.allowFollowRequest = true;
       }
@@ -103,7 +102,6 @@ export class ProfileComponent implements OnInit {
 
   openDialog(): void {
     let dialogRef;
-    alert(this.followingState == 'Requested')
     if (this.followingState == 'Requested') {
       dialogRef = this.dialog.open(UnfollowDialog, {
         height: 'auto',
@@ -173,13 +171,11 @@ export class UnfollowDialog {
 
   onUnfollow() {
     if (this.data.unfollow) {
-      alert("unfollow")
       this.followServce.unfollow(this.userId).subscribe(
         status => { this.handleUnfollowResponse(status, "unfollowed") }
       )
     }
     else {
-      alert("unrequest")
       this.followServce.removeRequest(this.userId).subscribe(
         status => { this.handleUnfollowResponse(status, "request removed") }
       )
