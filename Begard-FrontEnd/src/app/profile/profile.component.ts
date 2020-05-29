@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject , HostListener} from '@angular/core';
+import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -10,11 +10,13 @@ import { TopPlannersService } from '../top-planners.service';
 import { TopPlanner } from '../top-planner';
 import { UserService } from '../user.service';
 import { FollowService } from '../follow.service';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from 'src/environments/environment';
 
 export interface DialogData {
-  animal: string;
-  name: string;
+  userId: string;
+  username: string;
+  unfollow: boolean;
 }
 
 @Component({
@@ -24,15 +26,15 @@ export interface DialogData {
 })
 export class ProfileComponent implements OnInit {
 
-
+  allowFollowRequest = false;
   topPlanners: TopPlanner[];
-  proUrl : string;
+  proUrl: string;
 
   ngOnInit(): void {
     this.user.getUserId().subscribe(res => {
-        this.proUrl = '/profile/'+ res.pk;
+      this.proUrl = '/profile/' + res.pk;
     })
-    this.topPlaners.getTopPlanners().subscribe(tp=>{this.topPlanners =tp;});
+    this.topPlaners.getTopPlanners().subscribe(tp => { this.topPlanners = tp; });
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
@@ -42,8 +44,12 @@ export class ProfileComponent implements OnInit {
       this.follwersNum = res.followers_count;
       this.follwingsNum = res.followings_count;
       this.postNum = res.posts_count;
-      this.imgUrl = 'http://127.0.0.1:8000' + res.profile_image;
+      this.imgUrl = environment.baseUrl + res.profile_image;
       this.followingState = res.following_state;
+      alert(this.followingState)
+      if (this.followingState == "Follow") {
+        this.allowFollowRequest = true;
+      }
     });
 
   }
@@ -66,41 +72,51 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private profileService: ProfileService,
-    private topPlaners : TopPlannersService,
-    private user : UserService,
-    private followSerivce : FollowService
+    private topPlaners: TopPlannersService,
+    private user: UserService,
+    private followSerivce: FollowService
   ) {
-    this.followSerivce.updateFollow.subscribe(res=> {
+    this.followSerivce.updateFollow.subscribe(res => {
       this.followingState = res[1];
+      if (this.followingState == "Follow") {
+        this.allowFollowRequest = true;
+      } else {
+        this.allowFollowRequest = false;
+      }
     })
-   }
+  }
 
 
   onFollow() {
-    this.profileService.onFollow(this.id).subscribe(res =>{
-      if(res.status == 'Followed'){
-        this.followingState = "Following";
-        this.followSerivce.updateFollow.emit([this.id,"Following"]);
+    this.profileService.onFollow(this.id).subscribe(res => {
+      if (res.status == 'Followed') {
+        this.followingState = "Unfollow";
+        this.allowFollowRequest = false;
+        this.followSerivce.updateFollow.emit([this.id, "Unfollow"]);
       }
-      else if( res.status== 'Requested'){
-        this.followingState = "Reuested";
+      else if (res.status == 'Requested') {
+        this.followingState = "Requested";
+        this.allowFollowRequest = false;
       }
-
     });
-
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      height: '400px',
-      width: '600px',
-      data: { name: this.name, animal: this.animal }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
-    });
+    let dialogRef;
+    alert(this.followingState == 'Requested')
+    if (this.followingState == 'Requested') {
+      dialogRef = this.dialog.open(UnfollowDialog, {
+        height: 'auto',
+        minWidth: '600px',
+        data: { username: this.userName, userId: this.id, unfollow: false }
+      });
+    } else {
+      dialogRef = this.dialog.open(UnfollowDialog, {
+        height: 'auto',
+        minWidth: '600px',
+        data: { username: this.userName, userId: this.id, unfollow: true }
+      });
+    }
   }
 
   goToHome() {
@@ -109,44 +125,82 @@ export class ProfileComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
-     if (window.pageYOffset >= 490) {
-       let element1 = document.getElementById('leftbar');
-       element1.classList.add('sticky');
-       let element2 = document.getElementById('rightbar');
-       element2.classList.add('sticky');
-       let element3 = document.getElementById('content');
-       element3.classList.add('sticky');
-     } else {
+    if (window.pageYOffset >= 490) {
+      let element1 = document.getElementById('leftbar');
+      element1.classList.add('sticky');
+      let element2 = document.getElementById('rightbar');
+      element2.classList.add('sticky');
+      let element3 = document.getElementById('content');
+      element3.classList.add('sticky');
+    } else {
       let element = document.getElementById('leftbar');
-        element.classList.remove('sticky'); 
-        
-        let element2 = document.getElementById('rightbar');
-        element2.classList.remove('sticky');
-
-        let element3 = document.getElementById('content');
-        element3.classList.remove('sticky');
-     }
+      element.classList.remove('sticky');
+      let element2 = document.getElementById('rightbar');
+      element2.classList.remove('sticky');
+      let element3 = document.getElementById('content');
+      element3.classList.remove('sticky');
+    }
   }
-
-
-
-
 }
 
 
 @Component({
-  selector: 'dialog-overview-example-dialog',
-  templateUrl: './dialog-overview-example-dialog.html',
+  selector: 'unfollow-dialog',
+  templateUrl: './unfollow-dialog.html',
 })
-export class DialogOverviewExampleDialog {
-
+export class UnfollowDialog {
+  username = "";
+  userId;
+  message;
   constructor(
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+    public dialogRef: MatDialogRef<UnfollowDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private followServce: FollowService,
+    private snackBar: MatSnackBar
+  ) {
+    this.username += data.username;
+    this.userId = data.userId;
+    if (data.unfollow) {
+      this.message = "Do you want to unfollow " + this.username + " ?"
+    } else {
+      this.message = "Do you want to remove request for " + this.username + " ?"
+    }
+  }
 
-  onNoClick(): void {
+  onCancel(): void {
     this.dialogRef.close();
   }
 
+  onUnfollow() {
+    if (this.data.unfollow) {
+      alert("unfollow")
+      this.followServce.unfollow(this.userId).subscribe(
+        status => { this.handleUnfollowResponse(status, "unfollowed") }
+      )
+    }
+    else {
+      alert("unrequest")
+      this.followServce.removeRequest(this.userId).subscribe(
+        status => { this.handleUnfollowResponse(status, "request removed") }
+      )
+    }
+    this.dialogRef.close();
+  }
 
+  handleUnfollowResponse(status, mes) {
+    if (status == "200") {
+      this.openSnackBar(mes + " successfuly")
+      this.followServce.updateFollow.next([this.userId, "Follow"])
+    } else {
+      this.openSnackBar("something went wrong!")
+    }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+  }
 }

@@ -4,6 +4,7 @@ import { City } from './city.model';
 import { first, tap, take, exhaustMap } from 'rxjs/operators'
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface PlanItem {
     start_date: string,

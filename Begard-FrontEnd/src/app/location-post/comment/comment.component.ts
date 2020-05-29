@@ -11,6 +11,7 @@ export interface Comment {
   user_name: string,
   user_profile_img: string
 }
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -24,9 +25,9 @@ export class CommentComponent implements OnInit {
 
   @Input() postId: number;
 
-  updateComment(comment : Comment) {
+  updateComment(comment: Comment) {
     this.comments.push(comment);
-    
+
   }
 
   public comments: Comment[] = [];
@@ -38,11 +39,11 @@ export class CommentComponent implements OnInit {
       }
     });
   }
-  
+
   private getComments(postId: number) {
     return this.authService.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
-      var url = "http://127.0.0.1:8000/posts/" + postId + "/comments/";
+      var url = environment.baseUrl +"/posts/" + postId + "/comments/";
       return this.http.get<Comment[]>(url,
         {
           headers: new HttpHeaders({ 'Authorization': token })

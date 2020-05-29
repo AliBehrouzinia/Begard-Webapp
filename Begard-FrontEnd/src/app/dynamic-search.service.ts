@@ -4,6 +4,7 @@ import { map, tap, take, exhaustMap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location } from './location';
 import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class DynamicSearchService {
   ) { }
 
   search(query: string, cityId: number): Observable<Location> {
-    const url = 'http://127.0.0.1:8000/cities/' + cityId + '/search/simple/';
+    const url =  environment.baseUrl +'/cities/' + cityId + '/search/simple/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;

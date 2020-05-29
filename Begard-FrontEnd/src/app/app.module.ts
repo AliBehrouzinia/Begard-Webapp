@@ -39,7 +39,7 @@ import { DynamicSearchComponent } from './dynamic-search/dynamic-search.componen
 import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
-import { NavBarComponent, NotifComponent } from './nav-bar/nav-bar.component';
+import { NavBarComponent} from './nav-bar/nav-bar.component';
 import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
@@ -53,7 +53,7 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
-import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile.component';
+import { ProfileComponent, UnfollowDialog } from './profile/profile.component';
 import { TopPlannersComponent } from './top-planners/top-planners.component';
 import { MyPlanComponent } from './my-plan/my-plan.component';
 
@@ -92,9 +92,8 @@ import { PlanComponent } from './plan/plan.component';
       TopPlannersComponent,
       MyPlanComponent,
       ProfileComponent,
-      DialogOverviewExampleDialog,
+      UnfollowDialog,
       PostLocationComponent,
-      NotifComponent,
       PlanComponent
    ],
    imports: [

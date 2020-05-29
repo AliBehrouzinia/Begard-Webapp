@@ -148,7 +148,6 @@ body {
 
 .username.mat-grid-tile .mat-figure{
   justify-content: flex-start !important;
-  margin-left: 10px;
   font-size: 30;
 }
 
@@ -176,17 +175,3 @@ body {
   padding-right: 15px !important;
 }
 
-.req-icons.mat-grid-tile .mat-figure{
-  justify-content: flex-end !important;
-  
-}
-
-.check:hover{
-  cursor: pointer;
-}
-.block:hover{
-  cursor: pointer;
-}
-.clear:hover{
-  cursor: pointer;
-}
