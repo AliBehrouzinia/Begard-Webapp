@@ -32,7 +32,8 @@ export interface PI {
 
 export interface MyPlan {
     id;
-    destination_city;
+    destination_city_id;
+    destination_city_name;
     description;
     creation_date;
     start_date;

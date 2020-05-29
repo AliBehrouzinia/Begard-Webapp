@@ -38,6 +38,7 @@ export class CalenderComponent implements OnInit {
 
   postPlan: PostPlan;
   pi: PI[];
+  cityId;
 
   planItems: PlanningItem[] = [];
   gridItems: PlanningItem[] = [];
@@ -51,6 +52,10 @@ export class CalenderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.cityId = +params.get('city');
+    });
+
     this.route.data.subscribe(data => {
       var plan: Plan = data['plan'];
       this.location.setLocation(plan.plan.plan_items);
@@ -69,7 +74,6 @@ export class CalenderComponent implements OnInit {
           , plan.plan.plan_items[i].place_info.id
           , plan.plan.plan_items[i].place_info.id + i
         ));
-
       }
       this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
     });

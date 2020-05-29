@@ -33,11 +33,10 @@ L10n.load({
 })
 export class PlanComponent implements OnInit {
   planId
-  description
-  cover
   plan: MyPlan
   postPlan: PostPlan;
   pi: PI[];
+  cityId
 
   planItems: PlanningItem[] = [];
   gridItems: PlanningItem[] = [];
@@ -55,8 +54,7 @@ export class PlanComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.dataService.getPlan(params.get('planId')).subscribe(data => {
         this.plan = data['plan'];
-        this.description = this.plan.description;
-        this.cover = this.plan.cover;
+        this.cityId = this.plan.destination_city_id
         this.location.setLocation(this.plan.plan_items);
         for (var i = 0; i < this.plan.plan_items.length; i++) {
           this.planItems.push(new PlanningItem(
@@ -182,6 +180,7 @@ export class PlanComponent implements OnInit {
       data: {
         id: this.plan.id, description: this.plan.description, cover: this.plan.cover
         , plan_items: this.pi, creation_date: this.plan.creation_date
+        , destination_city_id: this.plan.destination_city_id, destination_city_name: this.plan.destination_city_name
         , start_date: this.plan.start_date, finish_date: this.plan.finish_date
       }
     });

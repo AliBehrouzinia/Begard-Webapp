@@ -1,4 +1,4 @@
-import { Component, OnInit ,Output ,EventEmitter } from '@angular/core';
+import { Component, OnInit ,Output ,EventEmitter , Input} from '@angular/core';
 import { DynamicSearchService } from '../dynamic-search.service';
 import { Observable, observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
@@ -23,7 +23,7 @@ import {
 export class DynamicSearchComponent implements OnInit {
   public locationsAutoComplete$: Observable<Location> = null;
   public autoCompleteControl = new FormControl();
-  public cityId: number;
+  @Input() cityId: number;
   @Output() locationEventEmmiter: EventEmitter<Location> = new EventEmitter<Location>();
 
   constructor(
@@ -43,10 +43,6 @@ export class DynamicSearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      this.cityId = +params.get('city');
-    });
-
     this.locationsAutoComplete$ = this.autoCompleteControl.valueChanges.pipe(
       startWith(''),
       // delay emits
