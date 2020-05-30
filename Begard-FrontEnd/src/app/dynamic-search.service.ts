@@ -4,7 +4,7 @@ import { map, tap, take, exhaustMap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location } from './location';
 import { AuthService } from './auth.service';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
