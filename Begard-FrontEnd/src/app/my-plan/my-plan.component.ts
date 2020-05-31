@@ -6,9 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { TopPlannersService } from '../top-planners.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogOverviewExampleDialog } from './../profile/profile.component';
 import { environment } from '../../environments/environment';
-
 
 @Component({
   selector: 'app-my-plan',
@@ -89,18 +87,15 @@ export class MyPlanComponent implements OnInit {
     this.router.navigate(['/profile', this.userId]);
   }
 
+  goToPlan(id){
+    this.router.navigate(['/myplan' , id]);
+  }
+
   setProUrl(id) {
     this.proUrl = '/profile/' + id;
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-      height: '400px',
-      width: '600px',
-      data: { name: "", animal: "" }
-    });
-
-    dialogRef.afterClosed().subscribe();
   }
 }
 

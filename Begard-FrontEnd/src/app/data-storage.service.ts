@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { City } from './city.model';
-import { first, tap, take, exhaustMap } from 'rxjs/operators'
+import { first, map, take, exhaustMap } from 'rxjs/operators'
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -11,9 +11,7 @@ export interface PlanItem {
     finish_date: string,
     place_name: string,
     place_info: { id: string, lat: string, lng: string }
-
 }
-
 
 export interface Plan {
     plan: {
@@ -21,8 +19,27 @@ export interface Plan {
         finish_date: string,
         plan_items: PlanItem[]
     }
+}
 
+export interface PI {
+    id;
+    place_id;
+    finish_date;
+    start_date;
+    place_info: { id: string, lat: string, lng: string };
+    place_name;
+}
 
+export interface MyPlan {
+    id;
+    destination_city_id;
+    destination_city_name;
+    description;
+    creation_date;
+    start_date;
+    finish_date;
+    cover;
+    plan_items: PI[];
 }
 
 @Injectable()
@@ -39,7 +56,7 @@ export class DataStorageService {
     ) { }
 
 
-    getplan(): Observable<Plan> {
+    getSuggestedPlan(): Observable<Plan> {
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
             return this.http.get<Plan>(this.planUrl,
@@ -48,22 +65,27 @@ export class DataStorageService {
                 }
             );
         }));
+    }
 
+    getPlan(planId): Observable<MyPlan> {
+        let url = environment.baseUrl + "/plans/" + planId + "/"
+        return this.authservice.user.pipe(take(1), exhaustMap(user => {
+            var token = 'token ' + user.token;
+            return this.http
+                .get<MyPlan>(url, {
+                    observe: 'response',
+                    headers: new HttpHeaders({ 'Authorization': token })
+                })
+                .pipe(
+                    map(res => {
+                        return res.body;
+                    })
+                );
+        }));
     }
 
     getCities() {
-
-        // return this.authservice.user.pipe(take(1), exhaustMap(user => {
-        //     var token = 'token ' + user.token;
-        //     return this.http.get<City[]>('http://127.0.0.1:8000/cities/',
-        //         {
-        //             headers: new HttpHeaders({ 'Authorization': token })
-        //         }
-        //     );
-        // }));
-        var url = environment.baseUrl + '/cities/';
-        return this.http.get<City[]>(url);
-
+        return this.http.get<City[]>(environment.baseUrl + '/cities/');
     }
 
     getPlanUrl() {

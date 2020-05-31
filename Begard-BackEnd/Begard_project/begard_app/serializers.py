@@ -90,12 +90,47 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
 
 
 class PlanItemSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        result = super(PlanItemSerializer, self).to_representation(instance)
+        place_id = instance.place_id
+
+        places = list(Restaurant.objects.filter(place_id=place_id))
+        places += list(Hotel.objects.filter(place_id=place_id))
+        places += list(Museum.objects.filter(place_id=place_id))
+        places += list(TouristAttraction.objects.filter(place_id=place_id))
+        places += list(RecreationalPlace.objects.filter(place_id=place_id))
+        places += list(Cafe.objects.filter(place_id=place_id))
+        places += list(ShoppingMall.objects.filter(place_id=place_id))
+
+        if len(places) == 0:
+            raise NotFound("any Location not found.")
+
+        result['place_info'] = {}
+        result['place_info']['id'] = place_id
+        result['place_info']['lat'] = places[0].lat
+        result['place_info']['lng'] = places[0].lng
+        result['place_name'] = places[0].name
+        result.pop('place_id')
+
+        return result
+
     class Meta:
         model = PlanItem
         fields = ['id', 'place_id', 'plan', 'start_date', 'finish_date']
 
 
 class PlanSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(PlanSerializer, self).to_representation(instance)
+        result.pop('destination_city')
+        result['destination_city_id'] = instance.destination_city.id
+        result['destination_city_name'] = instance.destination_city.name
+        post = get_object_or_404(Post, plan_id=instance.id, type='plan_post')
+        result['cover'] = get_object_or_404(Image, post=post.id).image.url
+
+        return result
+
     class Meta:
         model = Plan
         fields = ['id', 'user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']

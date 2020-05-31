@@ -11,15 +11,18 @@
                     {{userName}}
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="2" [rowspan]="1">
-                    <button *ngIf="followingState !='Own'" (click)="onFollow()" style="margin-left: 50%;"
+                    <button *ngIf="followingState !='Own' && allowFollowRequest" (click)="onFollow()" style="margin-left: 50%;"
                         mat-raised-button color="primary">
                         <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
                         <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
                         {{followingState}}
                     </button>
-
-
-
+                    <button *ngIf="followingState !='Own' && !allowFollowRequest" (click)="onFollow()" style="margin-left: 50%;"
+                    mat-raised-button color="basic" (click)="openDialog()">
+                    <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
+                    <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
+                    {{followingState}}
+                </button>
                 </mat-grid-tile>
                 <mat-grid-tile class="username" [colspan]="1" [rowspan]="1">
                     <div style="margin-left: 20%;"> <b>
@@ -29,11 +32,11 @@
                 </mat-grid-tile>
                 <mat-grid-tile class="username" style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>
                         <div style="font-size: 20px;">Followers</div>
-                        <div (click)="openDialog()" class="number">{{follwersNum}}</div>
+                        <div class="number">{{follwersNum}}</div>
                     </b></mat-grid-tile>
                 <mat-grid-tile class="username" style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>
                         <div style="font-size: 20px;">Followings</div>
-                        <div (click)="openDialog()" class="number">{{follwingsNum}}</div>
+                        <div class="number">{{follwingsNum}}</div>
                     </b></mat-grid-tile>
 
 
@@ -57,7 +60,7 @@
                     <p style="margin-left: 10px;margin-top: 10px;">Profile</p>
                 </div>
                 <hr class="hr">
-                <div routerLink="/myPlans" class="underline">
+                <div routerLink="/myplans" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">My plans</p>
                 </div>
@@ -106,3 +109,5 @@
 
 
 </div>
+
+<router-outlet></router-outlet>

@@ -38,7 +38,6 @@ export class AuthService {
         this.handleAuthentication(userData.email, resData.key);
       }
       ));
-
   }
 
   autoLogin() {
