@@ -3,6 +3,7 @@ import { take, exhaustMap, map } from 'rxjs/operators'
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
 export interface PlanItem {
   id;
@@ -18,6 +19,14 @@ export interface Plan {
   start_date;
   finish_date;
   plan_items: PlanItem[];
+}
+
+export interface MyPlan {
+  id;
+  destination_city;
+  creation_date;
+  cover;
+  user;
 }
 
 @Injectable({
@@ -45,4 +54,21 @@ export class PlanService {
     }));
   }
 
+  getplans(userId) : Observable<MyPlan>{
+    const url = environment.baseUrl + '/user/' + userId + "/plans/";
+
+    return this.authservice.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      return this.http
+        .get<MyPlan>(url, {
+          observe: 'response',
+          headers: new HttpHeaders({ 'Authorization': token })
+        })
+        .pipe(
+          map(res => {
+            return res.body;
+          })
+        );
+    }));
+  }
 }
