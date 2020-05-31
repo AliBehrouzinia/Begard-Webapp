@@ -67,25 +67,25 @@ export class DataStorageService {
         }));
     }
 
-    getPlan(planId): Observable<MyPlan> {        
-        let url = 'http://127.0.0.1:8000/plans/' + planId + "/"
+    getPlan(planId): Observable<MyPlan> {
+        let url = environment.baseUrl + "/plans/" + planId + "/"
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
             var token = 'token ' + user.token;
             return this.http
-              .get<MyPlan>(url, {
-                observe: 'response',
-                headers: new HttpHeaders({ 'Authorization': token })
-              })
-              .pipe(
-                map(res => {
-                  return res.body;
+                .get<MyPlan>(url, {
+                    observe: 'response',
+                    headers: new HttpHeaders({ 'Authorization': token })
                 })
-              );
-          }));
+                .pipe(
+                    map(res => {
+                        return res.body;
+                    })
+                );
+        }));
     }
 
     getCities() {
-        return this.http.get<City[]>('http://127.0.0.1:8000/cities/');
+        return this.http.get<City[]>(environment.baseUrl + '/cities/');
     }
 
     getPlanUrl() {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { take, exhaustMap, map } from 'rxjs/operators'
 import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 export interface PlanItem {
   id;
@@ -27,7 +28,7 @@ export class PlanService {
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
   getPlan(planId) {
-    const url = 'http://127.0.0.1:8000/plans/' + planId;
+    const url = environment.baseUrl + '/plans/' + planId;
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;

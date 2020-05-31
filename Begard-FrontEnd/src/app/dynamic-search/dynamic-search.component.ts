@@ -7,10 +7,7 @@ import { Location } from '../location'
 import {
   startWith,
   map,
-  tap,
   debounceTime,
-  mergeMapTo,
-  mergeMap,
   switchMap,
   catchError
 } from 'rxjs/operators';

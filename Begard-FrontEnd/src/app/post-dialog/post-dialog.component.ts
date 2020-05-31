@@ -4,6 +4,7 @@ import { PostPlanService } from '../post-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdatePlanService } from '../update-plan.service';
 import { MyPlan } from './../data-storage.service'
+import { environment } from 'src/environments/environment';
 
 export interface PlanDetail {
   description: string;
@@ -26,8 +27,6 @@ export class PostDialogComponent implements OnInit {
   saveDisabled = true;
   isUpdate = false
   plan
-  BASE_URL = "http://127.0.0.1:8000"
-
 
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
@@ -40,7 +39,7 @@ export class PostDialogComponent implements OnInit {
       this.plan = data
       this.description = data.description;
       this.isUpdate = true;
-      this.imgURL = this.BASE_URL + data.cover;
+      this.imgURL = environment.baseUrl + data.cover;
     }
   }
 
@@ -132,7 +131,7 @@ export class PostDialogComponent implements OnInit {
         this.openSnackBar("plan saved successfully!")
     }
     else {
-      this.openSnackBar("somethins went wrong!")
+      this.openSnackBar("something went wrong!")
     }
   }
 }

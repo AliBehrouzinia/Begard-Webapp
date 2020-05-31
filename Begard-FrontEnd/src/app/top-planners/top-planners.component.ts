@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FollowService } from '../follow.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-top-planners',
   templateUrl: './top-planners.component.html',
@@ -22,11 +21,10 @@ export class TopPlannersComponent implements OnInit {
   constructor(private followService: FollowService,
     private route: ActivatedRoute,
     private router: Router,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.email = this.email.substring(0, this.email.search('@'));
-
   }
 
   onFollow() {
@@ -48,5 +46,4 @@ export class TopPlannersComponent implements OnInit {
       this.allowFollowRequest = false
     }
   }
-
 }
