@@ -54,13 +54,13 @@ export class PlanService {
     }));
   }
 
-  getplans(userId) : Observable<MyPlan>{
+  getUserPlans(userId) : Observable<MyPlan[]>{
     const url = environment.baseUrl + '/user/' + userId + "/plans/";
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
       return this.http
-        .get<MyPlan>(url, {
+        .get<MyPlan[]>(url, {
           observe: 'response',
           headers: new HttpHeaders({ 'Authorization': token })
         })
