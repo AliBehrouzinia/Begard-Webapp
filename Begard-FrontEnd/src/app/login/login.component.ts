@@ -16,8 +16,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private router : Router,private authService: AuthService ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onLogin(loginData: NgForm){
 
@@ -32,9 +31,6 @@ export class LoginComponent implements OnInit {
         this.error=errorMessage;
       }
     );
-
     loginData.reset();
-
   }
-
 }

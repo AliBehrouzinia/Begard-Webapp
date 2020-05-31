@@ -46,7 +46,7 @@ export class FollowService {
   }
 
   removeRequest(userId): Observable<string> {
-    const url = 'http://127.0.0.1:8000/followings/requests/' + userId + "/";
+    const url = environment.baseUrl + '/followings/requests/' + userId + "/";
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
@@ -64,7 +64,7 @@ export class FollowService {
   }
 
   unfollow(userId): Observable<string> {
-    const url = 'http://127.0.0.1:8000/followings/' + userId + "/";
+    const url = environment.baseUrl + '/followings/' + userId + "/";
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;

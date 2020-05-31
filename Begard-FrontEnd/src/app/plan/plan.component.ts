@@ -1,11 +1,9 @@
-
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { closest } from '@syncfusion/ej2-base';
 import { EventSettingsModel, View, DayService, WeekService, DragAndDropService, ResizeService, ScheduleComponent, CellClickEventArgs, DragEventArgs, ResizeEventArgs } from '@syncfusion/ej2-angular-schedule';
 import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSettingsModel } from '@syncfusion/ej2-angular-grids';
-
 import { L10n } from '@syncfusion/ej2-base';
-import { DataStorageService, PlanItem, Plan } from '../data-storage.service';
+import { DataStorageService, PlanItem, MyPlan } from '../data-storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { PlanningItem } from '../plan-item.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,18 +25,18 @@ L10n.load({
   }
 });
 
-
 @Component({
-  selector: 'app-calender',
-  templateUrl: './calender.component.html',
-  styleUrls: ['./calender.component.css'],
+  selector: 'app-plan',
+  templateUrl: './plan.component.html',
+  styleUrls: ['./plan.component.css'],
   providers: [DayService, WeekService, DragAndDropService, ResizeService, RowDDService, EditService]
 })
-export class CalenderComponent implements OnInit {
-
+export class PlanComponent implements OnInit {
+  planId
+  plan: MyPlan
   postPlan: PostPlan;
   pi: PI[];
-  cityId;
+  cityId
 
   planItems: PlanningItem[] = [];
   gridItems: PlanningItem[] = [];
@@ -51,33 +49,32 @@ export class CalenderComponent implements OnInit {
     private location: MapLocationService
   ) { }
 
+
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.cityId = +params.get('city');
+      this.dataService.getPlan(params.get('planId')).subscribe(data => {
+        this.plan = data['plan'];
+        this.cityId = this.plan.destination_city_id
+        this.location.setLocation(this.plan.plan_items);
+        for (var i = 0; i < this.plan.plan_items.length; i++) {
+          this.planItems.push(new PlanningItem(
+            new Date(this.plan.plan_items[i].start_date).toISOString()
+            , new Date(this.plan.plan_items[i].finish_date).toISOString()
+            , this.plan.plan_items[i].place_name
+            , this.plan.plan_items[i].place_info.id
+            , this.plan.plan_items[i].place_info.id + i
+          ));
+          this.gridItems.push(new PlanningItem(
+            new Date(this.plan.plan_items[i].start_date).toISOString()
+            , new Date(this.plan.plan_items[i].finish_date).toISOString()
+            , this.plan.plan_items[i].place_name
+            , this.plan.plan_items[i].place_info.id
+            , this.plan.plan_items[i].place_info.id + i
+          ));
+        }
+        this.selectedDate = new Date(this.plan.plan_items[0].start_date);
+      });
     });
-
-    this.route.data.subscribe(data => {
-      var plan: Plan = data['plan'];
-      this.location.setLocation(plan.plan.plan_items);
-      for (var i = 0; i < plan.plan.plan_items.length; i++) {
-        this.planItems.push(new PlanningItem(
-          new Date(plan.plan.plan_items[i].start_date).toISOString()
-          , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-          , plan.plan.plan_items[i].place_name
-          , plan.plan.plan_items[i].place_info.id
-          , plan.plan.plan_items[i].place_info.id + i
-        ));
-        this.gridItems.push(new PlanningItem(
-          new Date(plan.plan.plan_items[i].start_date).toISOString()
-          , new Date(plan.plan.plan_items[i].finish_date).toISOString()
-          , plan.plan.plan_items[i].place_name
-          , plan.plan.plan_items[i].place_info.id
-          , plan.plan.plan_items[i].place_info.id + i
-        ));
-      }
-      this.selectedDate = new Date(plan.plan.plan_items[0].start_date);
-    });
-
   }
 
   public isSelected: boolean = true;
@@ -103,7 +100,7 @@ export class CalenderComponent implements OnInit {
   public eventSettings: EventSettingsModel = {
     dataSource: this.planItems,
     fields: {
-      id: 'id',
+      id: 'placeId',
       subject: { name: 'placeName' },
       startTime: { name: 'startDate' },
       endTime: { name: 'finishDate' },
@@ -111,6 +108,7 @@ export class CalenderComponent implements OnInit {
   };
 
   // Grid data
+  public gridDS: Object;
   public allowDragAndDrop: boolean = true;
   public srcDropOptions: RowDropSettingsModel = { targetID: 'Schedule' };
   public primaryKeyVal: boolean = true;
@@ -139,19 +137,13 @@ export class CalenderComponent implements OnInit {
           , filteredData[0].placeId + 'a'
         );
         this.scheduleObj.addEvent(newPlan)
-        for (var i = 0; i < this.gridItems.length; i++) {
-          if (this.gridItems[i].placeName == newPlan.placeName) {
-            this.gridItems.splice(i, 1);
-          }
-        }
-        this.gridObj.refresh();
+        this.gridObj.deleteRecord(event.data[0]);
       }
     }
   }
 
   onDragStart(args: DragEventArgs): void {
     args.scroll.enable = true;
-    // args.scroll.scrollBy=500;
     args.interval = 1;
     args.navigation.enable = true;
 
@@ -171,7 +163,6 @@ export class CalenderComponent implements OnInit {
       , location.place_id
       , location.place_id
     ));
-    console.log(this.gridObj.dataSource);
   }
 
   openDialog(): void {
@@ -180,23 +171,18 @@ export class CalenderComponent implements OnInit {
       this.pi.push({ start_date: pi.startDate, finish_date: pi.finishDate, place_id: pi.placeId })
     });
 
-    this.postPlanService.setPostPlan(
-      new PostPlan(
-        this.dataService.getCity() + ""
-        , ""
-        , this.dataService.getStartDate()
-        , this.dataService.getEndDate()
-        , this.pi
-        , ""
-      ))
-
     const dialogRef = this.dialog.open(PostDialogComponent, {
       maxWidth: '1200px',
       maxHeight: '800px',
       minWidth: '550px',
       height: 'auto',
       width: 'auto',
-      data: { }
+      data: {
+        id: this.plan.id, description: this.plan.description, cover: this.plan.cover
+        , plan_items: this.pi, creation_date: this.plan.creation_date
+        , destination_city_id: this.plan.destination_city_id, destination_city_name: this.plan.destination_city_name
+        , start_date: this.plan.start_date, finish_date: this.plan.finish_date
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -204,7 +190,6 @@ export class CalenderComponent implements OnInit {
   }
 
   addPlanDetails(postDetil) {
-    console.log(" post details : " + postDetil.description)
   }
 
 }

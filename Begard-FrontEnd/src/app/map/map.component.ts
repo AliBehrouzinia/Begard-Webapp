@@ -30,16 +30,8 @@ import { Icon } from 'ol/style';
 })
 export class MapComponent implements AfterViewInit {
 
-  constructor(private locationService: MapLocationService) {
-
-  }
-
-
-
+  constructor(private locationService: MapLocationService) { }
   markerLocations: MapMarker[];
-
-
-
 
   ngAfterViewInit() {
 
@@ -66,7 +58,7 @@ export class MapComponent implements AfterViewInit {
     // Add a click handler to hide the popup.
     // Don't follow the href.
     //
-    closer.onclick = function() {
+    closer.onclick = function () {
       overlay.setPosition(undefined);
       closer.blur();
       return false;
@@ -131,14 +123,10 @@ export class MapComponent implements AfterViewInit {
       map.addLayer(layer);
     }
 
-
-
-
-
     //
     // Add a click handler to the map to render the popup.
     //
-    map.on('singleclick', function(evt) {
+    map.on('singleclick', function (evt) {
       if (map.hasFeatureAtPixel(evt.pixel) == true) {
         var coordinate = evt.coordinate;
         var hdms = coordinate;
@@ -147,9 +135,6 @@ export class MapComponent implements AfterViewInit {
         overlay.setPosition(coordinate);
 
       }
-
     });
   }
-
-
 }
