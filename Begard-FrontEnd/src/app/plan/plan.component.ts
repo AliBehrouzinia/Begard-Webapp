@@ -11,6 +11,7 @@ import { PostDialogComponent } from './../post-dialog/post-dialog.component';
 import { PostPlan, PI } from '../post-plan';
 import { PostPlanService } from '../post-plan.service';
 import { MapLocationService } from '../map-locations.service';
+import { BehaviorSubject } from 'rxjs'
 
 
 L10n.load({
@@ -39,7 +40,7 @@ export class PlanComponent implements OnInit {
   cityId
 
   planItems: PlanningItem[] = [];
-  gridItems: PlanningItem[] = [];
+  gridItems$: BehaviorSubject<PlanningItem[]> = new BehaviorSubject<PlanningItem[]>([]) ;
 
   constructor(
     public dataService: DataStorageService,
@@ -51,6 +52,7 @@ export class PlanComponent implements OnInit {
 
 
   ngOnInit() {
+    let gridItems: PlanningItem[] = [];
     this.route.paramMap.subscribe(params => {
       this.dataService.getPlan(params.get('planId')).subscribe(data => {
         this.plan = data['plan'];
@@ -64,7 +66,7 @@ export class PlanComponent implements OnInit {
             , this.plan.plan_items[i].place_info.id
             , this.plan.plan_items[i].place_info.id + i
           ));
-          this.gridItems.push(new PlanningItem(
+          gridItems.push(new PlanningItem(
             new Date(this.plan.plan_items[i].start_date).toISOString()
             , new Date(this.plan.plan_items[i].finish_date).toISOString()
             , this.plan.plan_items[i].place_name
@@ -72,6 +74,7 @@ export class PlanComponent implements OnInit {
             , this.plan.plan_items[i].place_info.id + i
           ));
         }
+        this.gridItems$.next(gridItems);
         this.selectedDate = new Date(this.plan.plan_items[0].start_date);
       });
     });
@@ -157,8 +160,8 @@ export class PlanComponent implements OnInit {
 
   addToLocationList(location) {
     this.gridObj.addRecord(new PlanningItem(
-      this.gridItems[0].startDate
-      , this.gridItems[0].finishDate
+      location.start_date
+      , location.finish_date
       , location.name
       , location.place_id
       , location.place_id
