@@ -1,10 +1,13 @@
 <mat-card class="plan-card">
-    <mat-card-header>
-     <img mat-card-avatar class="profile-image" [src]="plannerProfileCover">
-      <mat-card-title>{{plannerUsername}}</mat-card-title>
-      <mat-card-subtitle><mat-icon class="location-icon">location_on</mat-icon><span #city class="city">{{planCity}}</span><span class="date" >,created {{planDateCreted}}</span></mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content class="im">
+  <mat-card-header>
+    <img mat-card-avatar class="profile-image" [src]="plannerProfileCover">
+    <mat-card-title>{{plannerUsername}}</mat-card-title>
+    <mat-card-subtitle>
+      <mat-icon class="location-icon">location_on</mat-icon><span #city class="city">{{planCity}}</span><span
+        class="date">,created {{planDateCreted}}</span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="im-wrapper">
     <img class="im" mat-card-image [src]="planCover" />
-    </mat-card-content>
-  </mat-card>
+  </mat-card-content>
+</mat-card>

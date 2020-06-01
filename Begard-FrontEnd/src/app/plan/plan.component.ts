@@ -156,7 +156,6 @@ export class PlanComponent implements OnInit {
   onResizeStart(args: ResizeEventArgs): void {
     args.scroll.enable = true;
     args.interval = 1;
-
   }
 
   addToLocationList(location) {
