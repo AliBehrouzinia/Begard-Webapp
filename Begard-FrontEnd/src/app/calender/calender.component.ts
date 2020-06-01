@@ -164,16 +164,26 @@ export class CalenderComponent implements OnInit {
   }
 
   addToLocationList(location) {
-    this.gridObj.addRecord(new PlanningItem(
-      this.gridItems[0].startDate
-      , this.gridItems[0].finishDate
-      , location.name
-      , location.place_id
-      , location.place_id
-    ));
-    console.log(this.gridObj.dataSource);
+    if (!this.isLocationDuplicate(location)) {
+      this.gridObj.addRecord(new PlanningItem(
+        location.start_date
+        , location.finish_date
+        , location.name
+        , location.place_id
+        , location.place_id
+      ));
+    }
   }
 
+  isLocationDuplicate(location) {
+    for (let i = 0; i < this.gridItems.length; i++) {
+      if (this.gridItems[i].placeId == location.place_id) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
   openDialog(): void {
     this.pi = [];
     this.planItems.forEach(pi => {

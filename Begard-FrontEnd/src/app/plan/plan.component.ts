@@ -40,7 +40,8 @@ export class PlanComponent implements OnInit {
   cityId
 
   planItems: PlanningItem[] = [];
-  gridItems$: BehaviorSubject<PlanningItem[]> = new BehaviorSubject<PlanningItem[]>([]) ;
+  gridItems$: BehaviorSubject<PlanningItem[]> = new BehaviorSubject<PlanningItem[]>([]);
+  gridItems
 
   constructor(
     public dataService: DataStorageService,
@@ -52,7 +53,7 @@ export class PlanComponent implements OnInit {
 
 
   ngOnInit() {
-    let gridItems: PlanningItem[] = [];
+    this.gridItems = [];
     this.route.paramMap.subscribe(params => {
       this.dataService.getPlan(params.get('planId')).subscribe(data => {
         this.plan = data['plan'];
@@ -66,7 +67,7 @@ export class PlanComponent implements OnInit {
             , this.plan.plan_items[i].place_info.id
             , this.plan.plan_items[i].place_info.id + i
           ));
-          gridItems.push(new PlanningItem(
+          this.gridItems.push(new PlanningItem(
             new Date(this.plan.plan_items[i].start_date).toISOString()
             , new Date(this.plan.plan_items[i].finish_date).toISOString()
             , this.plan.plan_items[i].place_name
@@ -74,7 +75,7 @@ export class PlanComponent implements OnInit {
             , this.plan.plan_items[i].place_info.id + i
           ));
         }
-        this.gridItems$.next(gridItems);
+        this.gridItems$.next(this.gridItems);
         this.selectedDate = new Date(this.plan.plan_items[0].start_date);
       });
     });
@@ -159,13 +160,24 @@ export class PlanComponent implements OnInit {
   }
 
   addToLocationList(location) {
-    this.gridObj.addRecord(new PlanningItem(
-      location.start_date
-      , location.finish_date
-      , location.name
-      , location.place_id
-      , location.place_id
-    ));
+    if (!this.isLocationDuplicate(location)) {
+      this.gridObj.addRecord(new PlanningItem(
+        location.start_date
+        , location.finish_date
+        , location.name
+        , location.place_id
+        , location.place_id
+      ));
+    }
+  }
+
+  isLocationDuplicate(location) {
+    for (let i = 0; i < this.gridItems.length; i++) {
+      if (this.gridItems[i].placeId == location.place_id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   openDialog(): void {
