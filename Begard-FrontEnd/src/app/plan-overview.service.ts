@@ -15,17 +15,7 @@ export class PlanOverviewService {
   private planOverviews$: BehaviorSubject<PlanOverView[]>;
   private tempData;
 
-  constructor(private http: HttpClient, private authservice: AuthService) { this.injectPlanOverviews(); }
-
-
-
-  private injectPlanOverviews() {
-    // this.tempData = [];
-    // for (let i = 0; i < 20; i++) {
-    //   this.tempData[i] = this.pos[Math.floor(Math.random() * this.pos.length)]
-    // }
-    // this.planOverviews$ = new BehaviorSubject<PlanOverView[]>(this.tempData);
-  }
+  constructor(private http: HttpClient, private authservice: AuthService) {}
 
   getPlanOverviews() {
     const url = environment.baseUrl + '/top-posts/';
