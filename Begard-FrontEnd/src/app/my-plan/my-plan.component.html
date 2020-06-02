@@ -109,9 +109,21 @@
             <mat-grid-tile *ngFor="let plan of myPlans">
                 <mat-card (click)="goToPlan(plan.id)" style="box-shadow: 4px 4px 9px #bdbdbd; width: 90%;height: 85%;" >
                     <div style="display:flex;align-items: center;justify-content: center;">
-                        <mat-icon style="display: flex;justify-content: center;align-items: center;" class="location-icon">location_on</mat-icon>
-                        <span #city class="city"><strong>{{plan.destination_city}}</strong></span>
-                        <span class="date">,created {{plan.creation_date}}</span>
+                        <div style="width: 80%;display:flex;align-items: center;">
+                            <mat-icon style="display: flex;justify-content: center;align-items: center;"
+                                class="location-icon">location_on</mat-icon>
+                            <span #city class="city"><strong>{{plan.destination_city}}</strong></span>
+                            <span class="date">,created {{plan.creation_date}}</span>
+                        </div>
+                        <div
+                            style="width: 20%;align-items: center;justify-content: end;display: flex;cursor: pointer;">
+                            <mat-icon style="font-size: 15px;justify-content: end;align-items: center;display: flex;" [matMenuTriggerFor]="moreOptions">more_vert</mat-icon>
+                        </div>
+                        <mat-menu #moreOptions>
+                            <button (click)="onDelete(plan.id)" style="align-items: center;display: flex;" mat-menu-item>
+                                <mat-icon style="font-size: 20px;">delete</mat-icon>delete
+                            </button>
+                        </mat-menu>
                     </div>
                     <img class="im" mat-card-image [src]="plan.cover" />
                 </mat-card>
