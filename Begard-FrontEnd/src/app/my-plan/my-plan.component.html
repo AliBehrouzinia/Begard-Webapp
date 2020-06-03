@@ -119,9 +119,18 @@
                             matTooltip="{{plan.destination_city}}" matTooltipPosition="above"
                             class="city">{{plan.destination_city}}</span>
                         <span class="date"
-                            style="width: 50%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; text-align: end;align-self: center;"
+                            style="width: 45%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; text-align: end;align-self: center;"
                             matTooltip="{{plan.creation_date}}" matTooltipPosition="above">At
                             {{plan.creation_date}}</span>
+                        <mat-icon
+                            style="width: 5% ;font-size: 120%;justify-content: end;align-items: center;display: flex;"
+                            [matMenuTriggerFor]="moreOptions">more_vert</mat-icon>
+                        <mat-menu #moreOptions>
+                            <button (click)="onDelete(plan.id)" style="align-items: center;display: flex;"
+                                mat-menu-item>
+                                <mat-icon style="font-size: 20px;">delete</mat-icon>delete
+                            </button>
+                        </mat-menu>
                     </div>
                     <div class="im-wrapper">
                         <img class="im" mat-card-image [src]="plan.cover" />
@@ -150,7 +159,8 @@
                 <div *ngFor="let tp of topPlanners;">
                     <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
                         [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"
-                        [userId]="tp.pk"></app-top-planners>
+                        [userId]="tp.pk">
+                    </app-top-planners>
                 </div>
             </mat-card-content>
         </mat-card>

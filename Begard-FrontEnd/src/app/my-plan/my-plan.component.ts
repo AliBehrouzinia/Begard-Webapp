@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { TopPlannersService } from '../top-planners.service';
 import { MatDialog } from '@angular/material/dialog';
+import { DeletePlanService } from '../delete-plan.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../environments/environment';
 import { FollowService } from '../follow.service';
 
@@ -29,7 +31,12 @@ export class MyPlanComponent implements OnInit {
   constructor(public dialog: MatDialog, private myPlanService: MyPlanService, private profileService: ProfileService
     , private router: Router, private route: ActivatedRoute, private user: UserService
     , private topPlannerService: TopPlannersService
+<<<<<<< HEAD
     , private followService: FollowService
+=======
+    , private deletePlanService: DeletePlanService
+    , private snackBar: MatSnackBar
+>>>>>>> 26d28c63cc35a3cdee783f0534732b40dfc208a7
   ) { }
 
   @HostListener('window:scroll', ['$event'])
@@ -64,7 +71,11 @@ export class MyPlanComponent implements OnInit {
     })
 
     this.topPlannerService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
+    this.updateMyPlans();
+  }
 
+  updateMyPlans() {
+    this.myPlans = [];
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
       for (let i = 0; i < myPlans.length; i++) {
@@ -110,8 +121,31 @@ export class MyPlanComponent implements OnInit {
   openDialog(): void {
   }
 
+<<<<<<< HEAD
   refresh() {
     location.reload()
+=======
+  onDelete(planId) {
+    this.deletePlanService.delete(planId).subscribe(status => {
+      this.handleDeleteResponse(status);
+    })
+  }
+  handleDeleteResponse(status) {
+    if (status == "200") {
+      this.updateMyPlans()
+      this.openSnackBar("deleted successfuly")
+    } else {
+      this.openSnackBar("something went wrong!")
+    }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+>>>>>>> 26d28c63cc35a3cdee783f0534732b40dfc208a7
   }
 }
 
