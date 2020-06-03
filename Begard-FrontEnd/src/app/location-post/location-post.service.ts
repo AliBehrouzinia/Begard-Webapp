@@ -5,6 +5,8 @@ import { take, exhaustMap } from 'rxjs/operators';
 import { Comment } from './comment/comment.component';
 import { FollowService } from '../follow.service';
 import { environment } from '../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { Post } from './location-post.component'
 
 export interface PostRes {
     "id": number,
@@ -28,6 +30,8 @@ export interface PostRes {
 
 @Injectable()
 export class LocationPostService {
+    public newPost$: BehaviorSubject<Post> = new BehaviorSubject<Post>(null);
+
     constructor(private http: HttpClient,
         private authService: AuthService,
         private followServie: FollowService) { }
@@ -100,9 +104,10 @@ export class LocationPostService {
     }
 
     onFollow(id: number) {
-
         return this.followServie.sendFollowRequest({ request_to: id });
+    }
 
-
+    addPost(post: Post) {
+        this.newPost$.next(post);
     }
 }

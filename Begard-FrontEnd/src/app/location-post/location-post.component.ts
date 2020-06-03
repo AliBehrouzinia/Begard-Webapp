@@ -7,11 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FollowService } from '../follow.service';
 import { environment } from '../../environments/environment';
 
-class Post {
+export class Post {
   constructor(
     public type: string,
     public description: string,
-    public imgSrc:string[],
+    public imgSrc: string[],
     public placeName: string,
     public city: string,
     public userName: string,
@@ -55,46 +55,45 @@ export class LocationPostComponent implements OnInit {
 
   constructor(private postservice: LocationPostService,
     private router: Router,
-    private followService : FollowService) {
+    private followService: FollowService) {
 
-      this.followService.updateFollow.subscribe(res => {
-        for(var i=0;i<this.posts.length;i++){
-          if(this.posts[i].usrId == res[0]){
-            this.posts[i].followingState = res[1];
-          }
+    this.followService.updateFollow.subscribe(res => {
+      for (var i = 0; i < this.posts.length; i++) {
+        if (this.posts[i].usrId == res[0]) {
+          this.posts[i].followingState = res[1];
         }
-      })
-    
-
-
+      }
+    })
   }
 
   ngOnInit(): void {
     if (this.router.url === '/homepage') {
       this.postservice.getPostData().subscribe(resdata => {
-        
         this.setPostData(resdata);
       });
-      console.log(this.posts);
-      
     }
     else {
       this.postservice.getProfilePostData(this.currentUrl).subscribe(resdata => {
         this.setPostData(resdata);
       })
     }
+
+    this.postservice.newPost$.subscribe(np => {
+      if (np != null) {
+        this.posts.splice(0, 0, np)
+      }
+    })
   }
 
   private setPostData(resdata: PostRes[]) {
     for (var i = 0; i < resdata.length; i++) {
-
       this.posts.push(new Post(resdata[i].type,
         resdata[i].content,
         resdata[i].images,
         resdata[i].place_name,
         resdata[i].destination_city,
         resdata[i].user_name,
-        environment.baseUrl+resdata[i].user_profile_image,
+        environment.baseUrl + resdata[i].user_profile_image,
         resdata[i].following_state,
         resdata[i].number_of_likes,
         resdata[i].is_liked,
@@ -102,21 +101,17 @@ export class LocationPostComponent implements OnInit {
         resdata[i].user,
         true,
         resdata[i].number_of_comments));
-
     }
-
   }
-  onLike(post: Post) {
 
+  onLike(post: Post) {
     this.postservice.onLike(post.id).subscribe(resdata => {
       post.isLiked = true;
       post.likeNums++;
     });
-
-
   }
-  onDislike(post: Post) {
 
+  onDislike(post: Post) {
     this.postservice.disLike(post.id).subscribe(resdata => {
       post.isLiked = false;
       post.likeNums--;
@@ -132,9 +127,7 @@ export class LocationPostComponent implements OnInit {
             commentChild.updateComment(resdata);
             post.commentNums++;
             this.commentFc.reset();
-
           });
-
         }
       }
     }
@@ -144,15 +137,14 @@ export class LocationPostComponent implements OnInit {
     this.router.navigate(['/profile/' + id])
   }
 
-  onFollow(post : Post) {
-    if(post.followingState=="Follow")
-    {
-      this.postservice.onFollow(post.usrId).subscribe(res=>{
-        this.followService.updateFollow.emit([post.usrId,"Following"]);
-        if(res.status == "Followed"){
-          this.followService.updateFollow.emit([post.usrId,"Following"]);
-          for(var i=0;i<this.posts.length;i++){
-            if(this.posts[i].usrId == post.usrId){
+  onFollow(post: Post) {
+    if (post.followingState == "Follow") {
+      this.postservice.onFollow(post.usrId).subscribe(res => {
+        this.followService.updateFollow.emit([post.usrId, "Following"]);
+        if (res.status == "Followed") {
+          this.followService.updateFollow.emit([post.usrId, "Following"]);
+          for (var i = 0; i < this.posts.length; i++) {
+            if (this.posts[i].usrId == post.usrId) {
               this.posts[i].followingState = "Following";
             }
           }
