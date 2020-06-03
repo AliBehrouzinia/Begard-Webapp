@@ -28,7 +28,7 @@ export class HomePageComponent implements OnInit {
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
     private router: ActivatedRoute,
     private user: UserService,
-    private authService : AuthService) {
+    private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -38,7 +38,7 @@ export class HomePageComponent implements OnInit {
     });
     this.planOverviews = this.planOverviewService.getPlanOverviews()
     this.TopPlannersService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
-    this.currentUrl=this.router.url;
+    this.currentUrl = this.router.url;
     this.loginStatus$ = this.authService.isLogedIn;
   }
 
@@ -55,7 +55,7 @@ export class HomePageComponent implements OnInit {
       element2.classList.add('sticky');
       let element3 = document.getElementById('content');
       element3.classList.add('sticky');
-     
+
     } else {
       let element1 = document.getElementById('leftbar');
       element1.classList.remove('sticky');
@@ -68,6 +68,7 @@ export class HomePageComponent implements OnInit {
     }
   }
 
-
-
+  refresh() {
+    location.reload()
+  }
 }

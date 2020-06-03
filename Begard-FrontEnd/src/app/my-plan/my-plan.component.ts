@@ -97,5 +97,9 @@ export class MyPlanComponent implements OnInit {
 
   openDialog(): void {
   }
+
+  refresh() {
+    location.reload()
+  }
 }
 

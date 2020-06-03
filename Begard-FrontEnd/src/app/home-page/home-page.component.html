@@ -1,8 +1,8 @@
 <div (scroll)="onWindowScroll($event)" style="background-color: #f7f8fd;">
     <mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
 
-        <mat-grid-tile class="tile" [ngStyle]="{'background-image': 'url(' + baseurl +'/media/images/back.jpg' +')'}" rowspan=2
-            colspan=5>
+        <mat-grid-tile class="tile" [ngStyle]="{'background-image': 'url(' + baseurl +'/media/images/back.jpg' +')'}"
+            rowspan=2 colspan=5>
             <app-search class="search"></app-search>
         </mat-grid-tile>
 
@@ -16,7 +16,7 @@
 
             <mat-card class="shadow-lg " style="height: auto;margin: 20px;;border-radius: 10px">
 
-                <div class="underline">
+                <div (click)="refresh()" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">Home</p>
                 </div>

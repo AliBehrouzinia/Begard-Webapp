@@ -117,6 +117,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  refresh() {
+    location.reload()
+  }
+
   goToHome() {
     this.router.navigate(['/homepage']);
   }
