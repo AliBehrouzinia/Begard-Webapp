@@ -682,7 +682,7 @@ class TopPlannerView(generics.ListAPIView):
                 person.average_rate = sum_of_rates / len(posts)
             else:
                 person.average_rate = 0
-        sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:5]
+        sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:20]
         sorted_list.reverse()
         return sorted_list
 
