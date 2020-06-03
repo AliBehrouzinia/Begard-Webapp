@@ -39,7 +39,6 @@ export class ProfileComponent implements OnInit {
       this.id = params['id'];
     });
     this.profileService.getHeaderData(this.id).subscribe(res => {
-      console.log(res);
       this.userName = res.username;
       this.follwersNum = res.followers_count;
       this.follwingsNum = res.followings_count;
@@ -50,7 +49,6 @@ export class ProfileComponent implements OnInit {
         this.allowFollowRequest = true;
       }
     });
-
   }
 
   userName: string;
@@ -59,7 +57,6 @@ export class ProfileComponent implements OnInit {
   follwingsNum: number;
   imgUrl: string;
   followingState: string;
-
   animal: string;
   name: string;
   id: number;
@@ -67,8 +64,6 @@ export class ProfileComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private authService: AuthService,
     private router: Router,
     private profileService: ProfileService,
     private topPlaners: TopPlannersService,
@@ -79,23 +74,24 @@ export class ProfileComponent implements OnInit {
       this.followingState = res[1];
       if (this.followingState == "Follow") {
         this.allowFollowRequest = true;
+        this.follwersNum -= 1;
+        this.followSerivce.addFollowing()
+      } else if (this.followingState == "Requested") {
+        this.allowFollowRequest = false;
       } else {
         this.allowFollowRequest = false;
+        this.follwersNum += 1;
       }
     })
   }
 
-
   onFollow() {
     this.profileService.onFollow(this.id).subscribe(res => {
       if (res.status == 'Followed') {
-        this.followingState = "Unfollow";
-        this.allowFollowRequest = false;
-        this.followSerivce.updateFollow.emit([this.id, "Unfollow"]);
+        this.followSerivce.updateFollow.emit([this.id, "Following"]);
       }
       else if (res.status == 'Requested') {
-        this.followingState = "Requested";
-        this.allowFollowRequest = false;
+        this.followSerivce.updateFollow.emit([this.id, "Requested"]);
       }
     });
   }
@@ -191,6 +187,7 @@ export class UnfollowDialog {
     if (status == "200") {
       this.openSnackBar(mes + " successfuly")
       this.followServce.updateFollow.next([this.userId, "Follow"])
+      this.followServce.removeFollowing()
     } else {
       this.openSnackBar("something went wrong!")
     }

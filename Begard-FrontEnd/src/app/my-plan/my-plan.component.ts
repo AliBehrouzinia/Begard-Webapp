@@ -7,6 +7,7 @@ import { UserService } from '../user.service';
 import { TopPlannersService } from '../top-planners.service';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../environments/environment';
+import { FollowService } from '../follow.service';
 
 @Component({
   selector: 'app-my-plan',
@@ -28,6 +29,7 @@ export class MyPlanComponent implements OnInit {
   constructor(public dialog: MatDialog, private myPlanService: MyPlanService, private profileService: ProfileService
     , private router: Router, private route: ActivatedRoute, private user: UserService
     , private topPlannerService: TopPlannersService
+    , private followService: FollowService
   ) { }
 
   @HostListener('window:scroll', ['$event'])
@@ -70,6 +72,16 @@ export class MyPlanComponent implements OnInit {
       };
     })
 
+    this.followService.userFollowing$.subscribe(addFlag => {
+      if (addFlag != null) {
+        if (addFlag) {
+          this.followingCount += 1;
+        } else {
+          this.followingCount -= 1;
+        }
+      }
+    })
+
   }
 
   setDate(date) {
@@ -87,8 +99,8 @@ export class MyPlanComponent implements OnInit {
     this.router.navigate(['/profile', this.userId]);
   }
 
-  goToPlan(id){
-    this.router.navigate(['/myplan' , id]);
+  goToPlan(id) {
+    this.router.navigate(['/myplan', id]);
   }
 
   setProUrl(id) {
