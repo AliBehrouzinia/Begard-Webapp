@@ -4,12 +4,12 @@
       style="cursor: pointer;margin-right: -15px;">
     <div style="display: block;overflow: hidden;width: 100%;">
       <div (click)="goToProfile()"
-        style="cursor: pointer; margin-left: 1.5%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; font-size: 20px; margin-bottom: 2%;;"
+        style="cursor: pointer; margin-left: 1.5%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; font-size: 125%; margin-bottom: 2%;;"
         matTooltip="{{plannerUsername}}" matTooltipPosition="before">
         {{plannerUsername}}
       </div>
       <div style="display: flex;overflow: hidden;width: 100%;margin-bottom: 10px;">
-        <mat-icon style="width: 10px;margin-top: 1.1%;" class="location-icon">location_on</mat-icon>
+        <mat-icon style="min-width: 10px;" class="location-icon">location_on</mat-icon>
         <span #city style=" align-self: center;width: 28%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"
           matTooltip="{{planCity}}" matTooltipPosition="before" class="city">{{planCity}}</span>
         <span class="date"

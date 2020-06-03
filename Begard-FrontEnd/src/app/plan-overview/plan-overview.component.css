@@ -24,13 +24,17 @@
 }
 
 .location-icon {
-  font-size: 20px;
+  font-size: 120%;
+  align-items: center;
+  align-content: center;
+  display: flex;
+  justify-content: center;
   color: rgb(14, 212, 219);
 }
 
 .city {
   margin-top: 2px;
-  font-size: 15px;
+  font-size: 90%;
 }
 
 mat-card-subtitle {
@@ -50,5 +54,5 @@ mat-card-subtitle {
 .date {
   margin-top: 2px;
   margin-left: 10px;
-  font-size: 15px;
+  font-size: 90%;
 }

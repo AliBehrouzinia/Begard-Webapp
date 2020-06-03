@@ -105,14 +105,20 @@
     </div> -->
 
     <div id="content" style="width: 55%; margin-left: 2%;margin-right: 2%;margin-top: -0.6%;">
-        <mat-grid-list cols="3" rowHeight="200px">
+        <mat-grid-list cols="3" rowHeight="16:12">
             <mat-grid-tile *ngFor="let plan of myPlans">
-                <mat-card (click)="goToPlan(plan.id)" style="box-shadow: 4px 4px 9px #bdbdbd; width: 90%;height: 85%;padding: 4%;">
-                    <div style="display:flex;align-items: center;justify-content: center;">
-                        <mat-icon style="display: flex;justify-content: center;align-items: center;"
-                            class="location-icon">location_on</mat-icon>
-                        <span #city class="city"><strong>{{plan.destination_city}}</strong></span>
-                        <span class="date">,created {{plan.creation_date}}</span>
+                <mat-card (click)="goToPlan(plan.id)"
+                    style="box-shadow: 4px 4px 9px #bdbdbd; width: 90%;height: 85%;padding: 4%; cursor: pointer;">
+                    <div style="display: flex;overflow: hidden;width: 96%;margin-bottom: 3%;">
+                        <mat-icon style="min-width: 10px;padding: 2px;margin: auto;font-size: 20px;" class="location-icon">location_on</mat-icon>
+                        <span #city
+                            style=" align-self: center;width: 38%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; font-size: 16px;"
+                            matTooltip="{{plan.destination_city}}" matTooltipPosition="above"
+                            class="city">{{plan.destination_city}}</span>
+                        <span class="date"
+                            style="width: 50%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; text-align: end;align-self: center;font-size: 16px;"
+                            matTooltip="{{plan.creation_date}}" matTooltipPosition="above">At
+                            {{plan.creation_date}}</span>
                     </div>
                     <div class="im-wrapper">
                         <img class="im" mat-card-image [src]="plan.cover" />
