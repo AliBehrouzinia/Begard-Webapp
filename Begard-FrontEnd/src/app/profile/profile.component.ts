@@ -27,14 +27,16 @@ export interface DialogData {
 export class ProfileComponent implements OnInit {
 
   allowFollowRequest = false;
-  topPlanners: TopPlanner[];
+  topPlanners = [];
+  allTopPlanners = [];
   proUrl: string;
+  userId
 
   ngOnInit(): void {
     this.user.getUserId().subscribe(res => {
       this.proUrl = '/profile/' + res.pk;
     })
-    this.topPlaners.getTopPlanners().subscribe(tp => { this.topPlanners = tp; });
+    this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
@@ -49,6 +51,17 @@ export class ProfileComponent implements OnInit {
         this.allowFollowRequest = true;
       }
     });
+
+    this.followSerivce.updateFollow.subscribe(res => {
+      if (res[1] == "Following" || res[1] == "Requested") {
+        this.replaceTopPlanner(res[0]);
+        if (res[1] == "Following")
+          this.openSnackBar("followed successfully")
+        else {
+          this.openSnackBar("requested successfully")
+        }
+      }
+    })
   }
 
   userName: string;
@@ -68,20 +81,27 @@ export class ProfileComponent implements OnInit {
     private profileService: ProfileService,
     private topPlaners: TopPlannersService,
     private user: UserService,
-    private followSerivce: FollowService
+    private followSerivce: FollowService,
+    private snackBar: MatSnackBar
   ) {
     this.followSerivce.updateFollow.subscribe(res => {
-      this.followingState = res[1];
-      if (this.followingState == "Follow") {
-        this.allowFollowRequest = true;
-        this.follwersNum -= 1;
-        this.followSerivce.addFollowing()
-      } else if (this.followingState == "Requested") {
-        this.allowFollowRequest = false;
-      } else {
-        this.allowFollowRequest = false;
-        this.follwersNum += 1;
+      if (res[0] == this.id) {
+        this.followingState = res[1];
+        if (this.followingState == "Requested") {
+          this.allowFollowRequest = false;
+        } else if (this.followingState == "Following") {
+          this.allowFollowRequest = false;
+          this.follwersNum += 1;
+        } else {
+          this.allowFollowRequest = true;
+          this.follwersNum -= 1;
+        }
+      } else if (this.followingState == "Own") {
+        if (res[0] == "Following") {
+          this.followSerivce.addFollowing()
+        }
       }
+
     })
   }
 
@@ -139,6 +159,33 @@ export class ProfileComponent implements OnInit {
       element3.classList.remove('sticky');
     }
   }
+  initTopPlanners(tp) {
+    for (let i = 0; i < Math.min(tp.length, 6); i++) {
+      this.topPlanners.push(this.allTopPlanners[0])
+      this.allTopPlanners.splice(0, 1);
+    }
+  }
+
+  replaceTopPlanner(id) {
+    for (let i = 0; i < this.topPlanners.length; i++) {
+      if (id == this.topPlanners[i].pk) {
+        if (this.allTopPlanners.length > 0) {
+          this.topPlanners.splice(i, 1, this.allTopPlanners[0])
+          this.allTopPlanners.splice(0, 1)
+        }
+        else
+          this.topPlanners.splice(i, 1)
+      }
+    }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+  }
 }
 
 
@@ -185,9 +232,8 @@ export class UnfollowDialog {
 
   handleUnfollowResponse(status, mes) {
     if (status == "200") {
-      this.openSnackBar(mes + " successfuly")
+      this.openSnackBar(mes + " successfully")
       this.followServce.updateFollow.next([this.userId, "Follow"])
-      this.followServce.removeFollowing()
     } else {
       this.openSnackBar("something went wrong!")
     }

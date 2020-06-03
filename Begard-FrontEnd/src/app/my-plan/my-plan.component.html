@@ -157,7 +157,7 @@
                 Top Planners
             </mat-card-title>
             <mat-card-content style="margin-top: 40px;">
-                <div *ngFor="let tp of topPlanners;">
+                <div class="tp" *ngFor="let tp of topPlanners;">
                     <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
                         [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"
                         [userId]="tp.pk">

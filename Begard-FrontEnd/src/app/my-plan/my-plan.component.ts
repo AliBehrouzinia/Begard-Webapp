@@ -23,7 +23,8 @@ export class MyPlanComponent implements OnInit {
   plansCount = 0;
   followersCount = 0;
   followingCount = 0;
-  topPlanners
+  topPlanners = [];
+  allTopPlanners = [];
   userId
   proUrl
 
@@ -67,7 +68,7 @@ export class MyPlanComponent implements OnInit {
       })
     })
 
-    this.topPlannerService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
+    this.topPlannerService.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) })
     this.updateMyPlans();
   }
 
@@ -90,6 +91,17 @@ export class MyPlanComponent implements OnInit {
       }
     })
 
+    this.followService.updateFollow.subscribe(res => {
+      if (res[1] == "Following" || res[1] == "Requested") {
+        this.replaceTopPlanner(res[0]);
+        if (res[1] == "Following")
+          this.openSnackBar("followed successfully")
+        else {
+          this.openSnackBar("requested successfully")
+        }
+      }
+    })
+
   }
 
   setDate(date) {
@@ -100,9 +112,11 @@ export class MyPlanComponent implements OnInit {
   setCoverUrl(url) {
     return environment.baseUrl + url;
   }
+
   goToHome() {
     this.router.navigate(['/homepage']);
   }
+
   goToProfile() {
     this.router.navigate(['/profile', this.userId]);
   }
@@ -132,6 +146,26 @@ export class MyPlanComponent implements OnInit {
       this.openSnackBar("deleted successfuly")
     } else {
       this.openSnackBar("something went wrong!")
+    }
+  }
+
+  initTopPlanners(tp) {
+    for (let i = 0; i < Math.min(tp.length, 6); i++) {
+      this.topPlanners.push(this.allTopPlanners[0])
+      this.allTopPlanners.splice(0, 1);
+    }
+  }
+
+  replaceTopPlanner(id) {
+    for (let i = 0; i < this.topPlanners.length; i++) {
+      if (id == this.topPlanners[i].pk) {
+        if (this.allTopPlanners.length > 0) {
+          this.topPlanners.splice(i, 1, this.allTopPlanners[0])
+          this.allTopPlanners.splice(0, 1)
+        }
+        else
+          this.topPlanners.splice(i, 1)
+      }
     }
   }
 
