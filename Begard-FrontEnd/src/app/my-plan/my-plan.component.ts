@@ -31,12 +31,9 @@ export class MyPlanComponent implements OnInit {
   constructor(public dialog: MatDialog, private myPlanService: MyPlanService, private profileService: ProfileService
     , private router: Router, private route: ActivatedRoute, private user: UserService
     , private topPlannerService: TopPlannersService
-<<<<<<< HEAD
     , private followService: FollowService
-=======
     , private deletePlanService: DeletePlanService
     , private snackBar: MatSnackBar
->>>>>>> 26d28c63cc35a3cdee783f0534732b40dfc208a7
   ) { }
 
   @HostListener('window:scroll', ['$event'])
@@ -121,10 +118,9 @@ export class MyPlanComponent implements OnInit {
   openDialog(): void {
   }
 
-<<<<<<< HEAD
   refresh() {
     location.reload()
-=======
+  }
   onDelete(planId) {
     this.deletePlanService.delete(planId).subscribe(status => {
       this.handleDeleteResponse(status);
@@ -145,7 +141,6 @@ export class MyPlanComponent implements OnInit {
       duration: 3 * 1000
     }
     );
->>>>>>> 26d28c63cc35a3cdee783f0534732b40dfc208a7
   }
 }
 
