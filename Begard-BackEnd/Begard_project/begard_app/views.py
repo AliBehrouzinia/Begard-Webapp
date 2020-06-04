@@ -678,13 +678,6 @@ class TopPlannerView(generics.ListAPIView):
             number_of_likes = 0
             for item in posts:
                 number_of_likes += models.Like.objects.filter(post_id=item.id).count()
-        #     if len(posts) != 0:
-        #         person.average_rate = number_of_likes / len(posts)
-        #     else:
-        #         person.average_rate = 0
-        # sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:20]
-        # sorted_list.reverse()
-        # return sorted_list
             person.average_rate = number_of_likes
         sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:20]
         sorted_list.reverse()
