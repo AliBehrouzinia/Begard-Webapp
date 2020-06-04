@@ -9,6 +9,7 @@ import { FollowService } from '../follow.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { PlanService, MyPlan } from '../plan.service';
+import { AuthService } from '../auth.service';
 
 export interface DialogData {
   userId: string;
@@ -24,8 +25,65 @@ export interface DialogData {
 export class ProfileComponent implements OnInit {
 
   allowFollowRequest = false;
-  topPlanners: TopPlanner[];
+  topPlanners = [];
+  allTopPlanners = [];
   proUrl: string;
+  userId
+
+  ngOnInit(): void {
+
+    this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+    });
+
+    this.profileService.getHeaderData(this.id).subscribe(res => {
+      this.userName = res.username;
+      this.follwersNum = res.followers_count;
+      this.follwingsNum = res.followings_count;
+      this.postNum = res.posts_count;
+      this.imgUrl = environment.baseUrl + res.profile_image;
+      this.followingState = res.following_state;
+      if (this.followingState == "Follow") {
+        this.allowFollowRequest = true;
+      }
+    });
+
+    this.followSerivce.updateFollow.subscribe(res => {
+      if (res[1] == "Following" || res[1] == "Requested") {
+        this.replaceTopPlanner(res[0]);
+        if (res[1] == "Following")
+          this.openSnackBar("followed successfully")
+        else {
+          this.openSnackBar("requested successfully")
+        }
+      }
+    })
+
+    this.user.getUserId().subscribe(res => {
+      this.proUrl = '/profile/' + res.pk;
+      this.route.params.subscribe(params => {
+        if (res.pk == params['id']) {
+          this.isOwnPro = true;
+        }
+        else {
+          this.isOwnPro = false;
+        }
+      })
+    })
+
+    this.planService.getUserPlans(this.id).subscribe(plans => {
+      for (let i = 0; i < plans.length; i++) {
+        this.plans.push({
+          id: plans[i].id
+          , destination_city: plans[i].destination_city
+          , creation_date: this.setDateCreation(plans[i].creation_date)
+          , cover: this.setCoverUrl(plans[i].cover)
+          , userId: plans[i].user
+        })
+      };
+    })
+  }
   isOwnPro: boolean;
 
   userName: string;
@@ -48,58 +106,46 @@ export class ProfileComponent implements OnInit {
     private profileService: ProfileService,
     private topPlaners: TopPlannersService,
     private user: UserService,
-    private followSerivce: FollowService
+    private followSerivce: FollowService,
+    private snackBar: MatSnackBar,
+    public authService: AuthService
   ) {
     this.followSerivce.updateFollow.subscribe(res => {
-      this.followingState = res[1];
-      if (this.followingState == "Follow") {
-        this.allowFollowRequest = true;
-      } else {
-        this.allowFollowRequest = false;
+      if (res[0] == this.id) {
+        this.followingState = res[1];
+        if (this.followingState == "Requested") {
+          this.allowFollowRequest = false;
+        } else if (this.followingState == "Following") {
+          this.allowFollowRequest = false;
+          this.follwersNum += 1;
+        } else {
+          this.allowFollowRequest = true;
+          this.follwersNum -= 1;
+        }
+      } else if (this.followingState == "Own") {
+        if (res[0] == "Following") {
+          this.followSerivce.addFollowing()
+        }
       }
     })
   }
 
-  ngOnInit(): void {
-    this.user.getUserId().subscribe(res => {
-      this.proUrl = '/profile/' + res.pk;
-      this.route.params.subscribe(params => {
-        if (res.pk == params['id']) {
-          this.isOwnPro = true;
-        }
-        else {
-          this.isOwnPro = false;
-        }
-      })
-    })
-    this.topPlaners.getTopPlanners().subscribe(tp => { this.topPlanners = tp; });
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-    });
-    this.profileService.getHeaderData(this.id).subscribe(res => {
-      console.log(res);
-      this.userName = res.username;
-      this.follwersNum = res.followers_count;
-      this.follwingsNum = res.followings_count;
-      this.postNum = res.posts_count;
-      this.imgUrl = environment.baseUrl + res.profile_image;
-      this.followingState = res.following_state;
-      if (this.followingState == "Follow") {
-        this.allowFollowRequest = true;
-      }
-    });
-
-    this.planService.getUserPlans(this.id).subscribe(plans => {
-      for (let i = 0; i < plans.length; i++) {
-        this.plans.push({
-          id: plans[i].id
-          , destination_city: plans[i].destination_city
-          , creation_date: this.setDate(plans[i].creation_date)
-          , cover: this.setCoverUrl(plans[i].cover)
-          , userId: plans[i].user
-        })
-      };
-    })
+  setDateCreation(d) {
+    let date = new Date(d);
+    let day = date.getUTCDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let currentDate = new Date();
+    let dayDiff = ((currentDate.getFullYear() - year) * 365 + (currentDate.getMonth() - month) * 30 + (currentDate.getUTCDate() - day))
+    if (dayDiff >= 2 && dayDiff < 7) {
+      return "last week";
+    } else if (dayDiff == 1) {
+      return "Yesterday";
+    } else if (dayDiff == 0) {
+      return "Today";
+    } else {
+      return day + "/" + month + "/" + year;
+    }
   }
 
   setDate(date) {
@@ -111,20 +157,17 @@ export class ProfileComponent implements OnInit {
     return environment.baseUrl + url;
   }
 
-  goToPlan(id){
-    this.router.navigate(['/myplan' , id]);
+  goToPlan(id) {
+    this.router.navigate(['/myplan', id]);
   }
 
   onFollow() {
     this.profileService.onFollow(this.id).subscribe(res => {
       if (res.status == 'Followed') {
-        this.followingState = "Unfollow";
-        this.allowFollowRequest = false;
-        this.followSerivce.updateFollow.emit([this.id, "Unfollow"]);
+        this.followSerivce.updateFollow.emit([this.id, "Following"]);
       }
       else if (res.status == 'Requested') {
-        this.followingState = "Requested";
-        this.allowFollowRequest = false;
+        this.followSerivce.updateFollow.emit([this.id, "Requested"]);
       }
     });
   }
@@ -144,6 +187,10 @@ export class ProfileComponent implements OnInit {
         data: { username: this.userName, userId: this.id, unfollow: true }
       });
     }
+  }
+
+  refresh() {
+    location.reload()
   }
 
   goToHome() {
@@ -167,6 +214,33 @@ export class ProfileComponent implements OnInit {
       let element3 = document.getElementById('content');
       element3.classList.remove('sticky');
     }
+  }
+  initTopPlanners(tp) {
+    for (let i = 0; i < Math.min(tp.length, 6); i++) {
+      this.topPlanners.push(this.allTopPlanners[0])
+      this.allTopPlanners.splice(0, 1);
+    }
+  }
+
+  replaceTopPlanner(id) {
+    for (let i = 0; i < this.topPlanners.length; i++) {
+      if (id == this.topPlanners[i].pk) {
+        if (this.allTopPlanners.length > 0) {
+          this.topPlanners.splice(i, 1, this.allTopPlanners[0])
+          this.allTopPlanners.splice(0, 1)
+        }
+        else
+          this.topPlanners.splice(i, 1)
+      }
+    }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
   }
 }
 
@@ -214,7 +288,7 @@ export class UnfollowDialog {
 
   handleUnfollowResponse(status, mes) {
     if (status == "200") {
-      this.openSnackBar(mes + " successfuly")
+      this.openSnackBar(mes + " successfully")
       this.followServce.updateFollow.next([this.userId, "Follow"])
     } else {
       this.openSnackBar("something went wrong!")

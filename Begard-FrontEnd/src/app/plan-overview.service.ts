@@ -15,23 +15,12 @@ export class PlanOverviewService {
   private planOverviews$: BehaviorSubject<PlanOverView[]>;
   private tempData;
 
-  constructor(private http: HttpClient, private authservice: AuthService) { this.injectPlanOverviews(); }
-
-
-
-  private injectPlanOverviews() {
-    // this.tempData = [];
-    // for (let i = 0; i < 20; i++) {
-    //   this.tempData[i] = this.pos[Math.floor(Math.random() * this.pos.length)]
-    // }
-    // this.planOverviews$ = new BehaviorSubject<PlanOverView[]>(this.tempData);
-  }
+  constructor(private http: HttpClient, private authservice: AuthService) {}
 
   getPlanOverviews() {
     const url = environment.baseUrl + '/top-posts/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
       return this.http
         .get<PlanOverView[]>(url, {
           observe: 'response',
@@ -41,7 +30,6 @@ export class PlanOverviewService {
         })
         .pipe(
           map(res => {
-            console.log("fuckin : " + res.body)
             return res.body;
           })
         );

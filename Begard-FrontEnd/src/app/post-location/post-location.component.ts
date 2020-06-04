@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { PostLocationService } from '../post-location.service';
+import { PostLocationService, PL } from '../post-location.service';
 import { PostLocation, Image } from './../post-location'
 import { MyPlanService } from '../my-plan.service';
 import { MyLocationService } from '../my-location.service';
@@ -8,7 +8,8 @@ import { ProfileService } from '../profile/profile.service';
 import { UserService } from '../user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
-
+import { LocationPostService } from '../location-post/location-post.service';
+import { Post } from '../location-post/location-post.component';
 
 
 @Component({
@@ -43,6 +44,7 @@ export class PostLocationComponent implements OnInit {
     , private userService: UserService
     , private profileService: ProfileService
     , private snackBar: MatSnackBar
+    , private locationPostService: LocationPostService
   ) { }
 
   ngOnInit(): void {
@@ -106,8 +108,8 @@ export class PostLocationComponent implements OnInit {
       this.locationControl.value.place_id,
       this.locationControl.value.place_name,
       this.imageStrings
-    )).subscribe(status => {
-      this.handleRequest(status);
+    )).subscribe(result => {
+      this.handleRequest(result);
     })
   }
 
@@ -167,10 +169,26 @@ export class PostLocationComponent implements OnInit {
     );
   }
 
-  handleRequest(status) {
-    if (status == "200") {
+  handleRequest(result: PL) {
+    if (result != null) {
       this.clear()
       this.openSnackBar("post saved successfully!")
+      this.locationPostService.addPost(new Post(
+        result.type,
+        result.content,
+        result.images,
+        result.place_name,
+        result.destination_city,
+        result.user_name,
+        result.user_profile_image,
+        result.following_state,
+        result.number_of_likes,
+        result.is_liked,
+        result.id,
+        result.user,
+        true,
+        0
+      ))
     } else {
       this.openSnackBar("something went wrong!")
     }

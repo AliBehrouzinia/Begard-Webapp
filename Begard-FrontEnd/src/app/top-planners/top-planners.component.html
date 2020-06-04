@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div style="display: flex;align-items: center;justify-content: center;width: 30%;">
+    <div *ngIf="(authService.isLogedIn | async)" style="display: flex;align-items: center;justify-content: center;width: 30%;">
       <button *ngIf="allowFollowRequest" mat-raised-button class="follow" color="primary" (click)="onFollow()" style="width: 85%;
       height: 70%;
       justify-content: center;

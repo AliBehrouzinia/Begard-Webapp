@@ -112,28 +112,109 @@
   width: 80%;
 }
 
-.location-icon {
-  font-size: 15px;
-  margin-left: -8px;
-  color: rgb(14, 212, 219);
+.tp {
+  animation: fadein 2s;
+  -moz-animation: fadein 2s;
+  -webkit-animation: fadein 2s;
+  -o-animation: fadein 2s;
 }
 
-.city {
-  margin-top: 1px;
-  font-size: 8px;
-  margin-left: -2px;
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.im {
-  height: 85%;
-  width: 106%;
-  margin-top: 5px;
-  margin-left: -7px;
-  background-size: cover;
+@-moz-keyframes fadein {
+  /* Firefox */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
+
+@-webkit-keyframes fadein {
+  /* Safari and Chrome */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadein {
+  /* Opera */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 
 .date {
   margin-top: 1px;
   margin-left: 3px;
   font-size: 8px;
+}
+
+.item {
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.item:before {
+  content: "";
+  display: block;
+  height: 0;
+  width: 0;
+  padding-bottom: calc(9/16 * 100%);
+}
+
+.location-icon {
+  font-size: 120%;
+  align-items: center;
+  align-content: center;
+  display: flex;
+  justify-content: center;
+  color: rgb(14, 212, 219);
+}
+
+.city {
+  margin-top: 2px;
+  font-size: 90%;
+}
+
+.date {
+  margin-top: 2px;
+  margin-left: 10px;
+  font-size: 90%;
+}
+
+.im {
+  position: absolute;
+  display: block;
+  max-width: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto !important;
+}
+
+.im-wrapper {
+  display: flex;
+  position: relative;
+  padding: 56.25% 0 0 0;
+  overflow: hidden;
+  background: white;
 }

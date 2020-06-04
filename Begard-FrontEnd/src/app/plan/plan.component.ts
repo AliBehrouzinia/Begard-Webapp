@@ -11,6 +11,7 @@ import { PostDialogComponent } from './../post-dialog/post-dialog.component';
 import { PostPlan, PI } from '../post-plan';
 import { PostPlanService } from '../post-plan.service';
 import { MapLocationService } from '../map-locations.service';
+import { BehaviorSubject } from 'rxjs'
 
 
 L10n.load({
@@ -39,7 +40,8 @@ export class PlanComponent implements OnInit {
   cityId
 
   planItems: PlanningItem[] = [];
-  gridItems: PlanningItem[] = [];
+  gridItems$: BehaviorSubject<PlanningItem[]> = new BehaviorSubject<PlanningItem[]>([]);
+  gridItems
 
   constructor(
     public dataService: DataStorageService,
@@ -51,6 +53,7 @@ export class PlanComponent implements OnInit {
 
 
   ngOnInit() {
+    this.gridItems = [];
     this.route.paramMap.subscribe(params => {
       this.dataService.getPlan(params.get('planId')).subscribe(data => {
         this.plan = data['plan'];
@@ -72,6 +75,7 @@ export class PlanComponent implements OnInit {
             , this.plan.plan_items[i].place_info.id + i
           ));
         }
+        this.gridItems$.next(this.gridItems);
         this.selectedDate = new Date(this.plan.plan_items[0].start_date);
       });
     });
@@ -152,17 +156,27 @@ export class PlanComponent implements OnInit {
   onResizeStart(args: ResizeEventArgs): void {
     args.scroll.enable = true;
     args.interval = 1;
-
   }
 
   addToLocationList(location) {
-    this.gridObj.addRecord(new PlanningItem(
-      this.gridItems[0].startDate
-      , this.gridItems[0].finishDate
-      , location.name
-      , location.place_id
-      , location.place_id
-    ));
+    if (!this.isLocationDuplicate(location)) {
+      this.gridObj.addRecord(new PlanningItem(
+        location.start_date
+        , location.finish_date
+        , location.name
+        , location.place_id
+        , location.place_id
+      ));
+    }
+  }
+
+  isLocationDuplicate(location) {
+    for (let i = 0; i < this.gridItems.length; i++) {
+      if (this.gridItems[i].placeId == location.place_id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   openDialog(): void {

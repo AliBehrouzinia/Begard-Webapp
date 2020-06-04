@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { map, take, exhaustMap } from 'rxjs/operators';
 import { type } from 'os';
 import { environment } from 'src/environments/environment';
@@ -22,8 +22,7 @@ export interface ResFollowReq {
   providedIn: 'root'
 })
 export class FollowService {
-
-
+  public userFollowing$ = new BehaviorSubject<boolean>(null);
   updateFollow = new EventEmitter<any[]>();
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
@@ -79,5 +78,13 @@ export class FollowService {
         }).pipe(
           map(res => res.status.toString()))
     }))
+  }
+
+  addFollowing() {
+    this.userFollowing$.next(true)
+  }
+
+  removeFollowing() {
+    this.userFollowing$.next(false)
   }
 }

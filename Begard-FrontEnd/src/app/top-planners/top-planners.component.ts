@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FollowService } from '../follow.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-top-planners',
@@ -21,6 +22,7 @@ export class TopPlannersComponent implements OnInit {
   constructor(private followService: FollowService,
     private route: ActivatedRoute,
     private router: Router,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -30,7 +32,6 @@ export class TopPlannersComponent implements OnInit {
   onFollow() {
     if (this.allowFollowRequest) {
       this.followService.sendFollowRequest({ request_to: this.userId }).subscribe(res => {
-        console.log(JSON.stringify(res))
         this.handleResponse(res.status)
       })
     }
@@ -40,10 +41,13 @@ export class TopPlannersComponent implements OnInit {
     if (status == "Requested") {
       this.followButtonTitle = "Requested"
       this.allowFollowRequest = false
+      this.followService.updateFollow.next([this.userId, "Requested"])
     }
     else if (status == "Followed") {
       this.followButtonTitle = "Following"
       this.allowFollowRequest = false
+      this.followService.updateFollow.next([this.userId, "Following"])
+      this.followService.addFollowing()
     }
   }
 }

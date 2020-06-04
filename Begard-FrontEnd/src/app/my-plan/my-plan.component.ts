@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeletePlanService } from '../delete-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../environments/environment';
+import { FollowService } from '../follow.service';
 
 @Component({
   selector: 'app-my-plan',
@@ -22,7 +23,8 @@ export class MyPlanComponent implements OnInit {
   plansCount = 0;
   followersCount = 0;
   followingCount = 0;
-  topPlanners
+  topPlanners = [];
+  allTopPlanners = [];
   userId
   proUrl
 
@@ -30,6 +32,7 @@ export class MyPlanComponent implements OnInit {
   constructor(public dialog: MatDialog, private myPlanService: MyPlanService, private profileService: ProfileService
     , private router: Router, private route: ActivatedRoute, private user: UserService
     , private topPlannerService: TopPlannersService
+    , private followService: FollowService
     , private deletePlanService: DeletePlanService
     , private snackBar: MatSnackBar
   ) { }
@@ -65,7 +68,7 @@ export class MyPlanComponent implements OnInit {
       })
     })
 
-    this.topPlannerService.getTopPlanners().subscribe(tp => { this.topPlanners = tp; })
+    this.topPlannerService.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) })
     this.updateMyPlans();
   }
 
@@ -74,28 +77,64 @@ export class MyPlanComponent implements OnInit {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
       for (let i = 0; i < myPlans.length; i++) {
-        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city, this.setDate(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
+        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city, this.setDateCreation(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
       };
     })
+
+    this.followService.userFollowing$.subscribe(addFlag => {
+      if (addFlag != null) {
+        if (addFlag) {
+          this.followingCount += 1;
+        } else {
+          this.followingCount -= 1;
+        }
+      }
+    })
+
+    this.followService.updateFollow.subscribe(res => {
+      if (res[1] == "Following" || res[1] == "Requested") {
+        this.replaceTopPlanner(res[0]);
+        if (res[1] == "Following")
+          this.openSnackBar("followed successfully")
+        else {
+          this.openSnackBar("requested successfully")
+        }
+      }
+    })
+
   }
 
-  setDate(date) {
-    let d = new Date(date);
-    return "" + d.getFullYear() + "/" + d.getUTCMonth() + "/" + d.getUTCDate();
+  setDateCreation(d) {
+    let date = new Date(d);
+    let day = date.getUTCDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let currentDate = new Date();
+    let dayDiff = ((currentDate.getFullYear() - year) * 365 + (currentDate.getMonth() - month) * 30 + (currentDate.getUTCDate() - day))
+    if (dayDiff >= 2 && dayDiff < 7) {
+      return "last week";
+    } else if (dayDiff == 1) {
+      return "Yesterday";
+    } else if (dayDiff == 0) {
+      return "Today";
+    } else {
+      return day + "/" + month + "/" + year;
+    }
   }
-
   setCoverUrl(url) {
     return environment.baseUrl + url;
   }
+
   goToHome() {
     this.router.navigate(['/homepage']);
   }
+
   goToProfile() {
     this.router.navigate(['/profile', this.userId]);
   }
 
-  goToPlan(id){
-    this.router.navigate(['/myplan' , id]);
+  goToPlan(id) {
+    this.router.navigate(['/myplan', id]);
   }
 
   setProUrl(id) {
@@ -105,6 +144,9 @@ export class MyPlanComponent implements OnInit {
   openDialog(): void {
   }
 
+  refresh() {
+    location.reload()
+  }
   onDelete(planId) {
     this.deletePlanService.delete(planId).subscribe(status => {
       this.handleDeleteResponse(status);
@@ -116,6 +158,26 @@ export class MyPlanComponent implements OnInit {
       this.openSnackBar("deleted successfuly")
     } else {
       this.openSnackBar("something went wrong!")
+    }
+  }
+
+  initTopPlanners(tp) {
+    for (let i = 0; i < Math.min(tp.length, 6); i++) {
+      this.topPlanners.push(this.allTopPlanners[0])
+      this.allTopPlanners.splice(0, 1);
+    }
+  }
+
+  replaceTopPlanner(id) {
+    for (let i = 0; i < this.topPlanners.length; i++) {
+      if (id == this.topPlanners[i].pk) {
+        if (this.allTopPlanners.length > 0) {
+          this.topPlanners.splice(i, 1, this.allTopPlanners[0])
+          this.allTopPlanners.splice(0, 1)
+        }
+        else
+          this.topPlanners.splice(i, 1)
+      }
     }
   }
 

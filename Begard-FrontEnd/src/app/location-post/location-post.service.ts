@@ -5,6 +5,8 @@ import { take, exhaustMap } from 'rxjs/operators';
 import { Comment } from './comment/comment.component';
 import { FollowService } from '../follow.service';
 import { environment } from '../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { Post } from './location-post.component'
 
 export interface PostRes {
     "id": number,
@@ -28,17 +30,17 @@ export interface PostRes {
 
 @Injectable()
 export class LocationPostService {
+    public newPost$: BehaviorSubject<Post> = new BehaviorSubject<Post>(null);
+
     constructor(private http: HttpClient,
         private authService: AuthService,
         private followServie: FollowService) { }
 
     getProfilePostData(id: string) {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
             var url = environment.baseUrl + "/profile/" + id + "/posts/";
             return this.http.get<PostRes[]>(url,
                 {
-                    headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
         }));
@@ -46,11 +48,9 @@ export class LocationPostService {
 
     getPostData() {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
             var url = environment.baseUrl + "/posts/?page=1";
             return this.http.get<PostRes[]>(url,
                 {
-                    headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
         }));
@@ -100,9 +100,10 @@ export class LocationPostService {
     }
 
     onFollow(id: number) {
-
         return this.followServie.sendFollowRequest({ request_to: id });
+    }
 
-
+    addPost(post: Post) {
+        this.newPost$.next(post);
     }
 }

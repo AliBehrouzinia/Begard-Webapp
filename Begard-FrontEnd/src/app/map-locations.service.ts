@@ -1,5 +1,5 @@
 import { MapMarker } from './map/mapmarker.model';
-import { PlanItem  ,PI} from './data-storage.service';
+import { PlanItem, PI } from './data-storage.service';
 
 
 export class MapLocationService {
@@ -9,12 +9,12 @@ export class MapLocationService {
     setLocation(planitems: PlanItem[] | PI[]) {
         this.locations = [];
         for (var i = 0; i < planitems.length; i++) {
-            this.locations.push(new MapMarker(planitems[i].place_info.lng, planitems[i].place_info.lat));
+            this.locations.push({ lan: planitems[i].place_info.lng, lat: planitems[i].place_info.lat, place_name: planitems[i].place_name });
         }
     }
 
     getLocations() {
         return this.locations.slice();
     }
-    
+
 }

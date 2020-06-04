@@ -11,14 +11,15 @@
                     {{userName}}
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="2" [rowspan]="1">
-                    <button *ngIf="followingState !='Own' && allowFollowRequest" (click)="onFollow()"
-                        style="margin-left: 50%;" mat-raised-button color="primary">
+                    <button *ngIf="followingState !='Own' && allowFollowRequest && (authService.isLogedIn | async)"
+                        (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
                         <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
                         <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
                         {{followingState}}
                     </button>
-                    <button *ngIf="followingState !='Own' && !allowFollowRequest" (click)="onFollow()"
-                        style="margin-left: 50%;" mat-raised-button color="basic" (click)="openDialog()">
+                    <button *ngIf="followingState !='Own' && !allowFollowRequest && (authService.isLogedIn | async)"
+                        (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="basic"
+                        (click)="openDialog()">
                         <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
                         <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
                         {{followingState}}
@@ -48,14 +49,14 @@
     <div style="display:flex">
         <div id="leftbar">
 
-            <mat-card class="shadow-lg " style="height: auto;margin: 20px;;border-radius: 10px">
-
+            <mat-card *ngIf="(authService.isLogedIn   | async)" class="shadow-lg"
+                style="height: auto;margin: 20px;;border-radius: 10px">
                 <div routerLink="/homepage" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">Home</p>
                 </div>
                 <hr class="hr">
-                <div routerLink='{{proUrl}}' class="underline">
+                <div (click)="refresh()" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">person_outline</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">Profile</p>
                 </div>
@@ -64,11 +65,20 @@
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">My plans</p>
                 </div>
-
-
+            </mat-card>
+            <mat-card *ngIf="!(authService.isLogedIn | async)" class="shadow-lg"
+                style="height: auto;margin: 20px;border-radius: 10px">
+                <p style="padding-top: 3%;padding-right: 10%;padding-left: 10%;padding-bottom: 3%;"> you are not a
+                    member
+                    yet? it's not late.</p>
+                <div>
+                    <a mat-raised-button color="basic" routerLink="/login" routerLinkActive="active"
+                        style="width: 90%;margin: 5%;">Login</a>
+                    <a mat-button mat-raised-button color="accent" routerLink="/register" routerLinkActive="active"
+                        style="width: 90%;margin: 5%;">Register</a>
+                </div>
             </mat-card>
         </div>
-
 
         <div id="content">
             <mat-tab-group *ngIf="!isOwnPro" mat-align-tabs="center">
@@ -80,30 +90,36 @@
                     </div>
                 </mat-tab>
                 <mat-tab label="Plans">
-                    <mat-grid-list cols="3" rowHeight="200px">
-                        <mat-grid-tile *ngFor="let plan of plans">
-                            <mat-card (click)="goToPlan(plan.id)"
-                                style="box-shadow: 4px 4px 9px #bdbdbd; width: 90%;height: 85%;">
-                                <div style="display:flex;align-items: center;justify-content: center;">
-                                    <mat-icon style="display: flex;justify-content: center;align-items: center;"
+                    <div style="display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                    grid-template-rows: 1fr;
+                    padding-bottom: 5%;
+                    padding-left: 3%;
+                    padding-right: 3%;
+                    padding-top: 3%;
+                    overflow: hidden;
+                    grid-gap: 5%;">
+                        <div class="item" *ngFor="let plan of plans">
+                            <mat-card
+                                style="box-shadow: 4px 4px 9px #bdbdbd; width: 100%;height: 100%;padding: 4%; cursor: pointer;">
+                                <div style="display: flex;overflow: hidden;width: 96%;margin-bottom: 3%;">
+                                    <mat-icon (click)="goToPlan(plan.id)" style="min-width: 10px;margin: auto;"
                                         class="location-icon">location_on</mat-icon>
-                                    <span #city class="city"><strong>{{plan.destination_city}}</strong></span>
-                                    <span class="date">,created {{plan.creation_date}}</span>
+                                    <span (click)="goToPlan(plan.id)" #city
+                                        style=" align-self: center;width: 38%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"
+                                        matTooltip="{{plan.destination_city}}" matTooltipPosition="above"
+                                        class="city">{{plan.destination_city}}</span>
+                                    <span (click)="goToPlan(plan.id)" class="date"
+                                        style="width: 50%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; text-align: end;align-self: center;"
+                                        matTooltip="{{plan.creation_date}}" matTooltipPosition="above">At
+                                        {{plan.creation_date}}</span>
                                 </div>
-                                <img class="im" mat-card-image [src]="plan.cover" />
+                                <div class="im-wrapper">
+                                    <img class="im" mat-card-image [src]="plan.cover" />
+                                </div>
                             </mat-card>
-                        </mat-grid-tile>
-                        <!-- <mat-grid-tile>
-                            <mat-card class="shadow-lg" style="width: 90%;height: 85%;background-color: #e1e1e1;">
-                                <button mat-icon-button style="width: 100%;height: 100%;">
-                                    <mat-icon style="font-size: 100px;width: auto;height: 
-                                        auto;color: white;">
-                                        add
-                                    </mat-icon>
-                                </button>
-                            </mat-card>
-                        </mat-grid-tile> -->
-                    </mat-grid-list>
+                        </div>
+                    </div>
                 </mat-tab>
 
             </mat-tab-group>
@@ -120,7 +136,7 @@
                     Top Planners
                 </mat-card-title>
                 <mat-card-content style="margin-top: 40px;">
-                    <div *ngFor="let tp of topPlanners;">
+                    <div class="tp" *ngFor="let tp of topPlanners;">
                         <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
                             [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"
                             [userId]="tp.pk"></app-top-planners>
@@ -128,10 +144,7 @@
                 </mat-card-content>
             </mat-card>
         </div>
-
     </div>
-
-
 </div>
 
 <router-outlet></router-outlet>
