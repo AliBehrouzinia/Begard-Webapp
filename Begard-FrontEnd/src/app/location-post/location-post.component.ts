@@ -8,6 +8,7 @@ import { FollowService } from '../follow.service';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from '../user.service';
 
 export class Post {
   constructor(
@@ -45,6 +46,7 @@ export class LocationPostComponent implements OnInit {
   disabled = false;
   unbounded = false;
   isLoggedIn = false
+  userId
   commentFc = new FormControl()
   radius: number;
   color: ThemePalette = "primary";
@@ -53,7 +55,8 @@ export class LocationPostComponent implements OnInit {
     private router: Router,
     public authService: AuthService,
     private followService: FollowService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private user: UserService) {
 
     this.followService.updateFollow.subscribe(res => {
       for (var i = 0; i < this.posts.length; i++) {
@@ -84,6 +87,10 @@ export class LocationPostComponent implements OnInit {
 
     this.authService.isLogedIn.subscribe(isLogged => {
       this.isLoggedIn = isLogged;
+    })
+
+    this.user.getUserId().subscribe(res => {
+      this.userId = parseInt(res.pk);
     })
   }
 

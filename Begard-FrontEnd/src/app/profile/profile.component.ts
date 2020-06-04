@@ -31,7 +31,6 @@ export class ProfileComponent implements OnInit {
   userId
 
   ngOnInit(): void {
-
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
     this.route.params.subscribe(params => {
       this.id = params['id'];

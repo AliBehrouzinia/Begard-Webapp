@@ -11,13 +11,13 @@
                     {{userName}}
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="2" [rowspan]="1">
-                    <button *ngIf="followingState !='Own' && allowFollowRequest && (authService.isLogedIn | async)"
+                    <button *ngIf="!isOwnPro && allowFollowRequest && (authService.isLogedIn | async)"
                         (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
                         <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
                         <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
                         {{followingState}}
                     </button>
-                    <button *ngIf="followingState !='Own' && !allowFollowRequest && (authService.isLogedIn | async)"
+                    <button *ngIf="!isOwnPro && !allowFollowRequest && (authService.isLogedIn | async)"
                         (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="basic"
                         (click)="openDialog()">
                         <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
