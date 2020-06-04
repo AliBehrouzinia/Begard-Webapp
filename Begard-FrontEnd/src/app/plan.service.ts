@@ -53,7 +53,6 @@ export class PlanService {
   }
 
   getUserPlans(userId) : Observable<MyPlan[]>{
-    alert("zartt")
     const url = environment.baseUrl + '/user/' + userId + "/plans/";
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {

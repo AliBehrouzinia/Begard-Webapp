@@ -158,6 +158,7 @@ export class ProfileComponent implements OnInit {
   }
 
   goToPlan(id) {
+    this.router.navigate(['/myplan', id]);
   }
 
   onFollow() {

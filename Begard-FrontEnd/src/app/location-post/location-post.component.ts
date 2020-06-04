@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FollowService } from '../follow.service';
 import { environment } from '../../environments/environment';
+import { AuthService } from '../auth.service';
 
 export class Post {
   constructor(
@@ -55,6 +56,7 @@ export class LocationPostComponent implements OnInit {
 
   constructor(private postservice: LocationPostService,
     private router: Router,
+    public authService: AuthService,
     private followService: FollowService) {
 
     this.followService.updateFollow.subscribe(res => {

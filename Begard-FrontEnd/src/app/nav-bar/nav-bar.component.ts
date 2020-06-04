@@ -69,6 +69,7 @@ export class NavBarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    location.reload()
   }
 
   openDialog(event: Event): void {
