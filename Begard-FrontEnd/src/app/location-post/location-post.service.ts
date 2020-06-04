@@ -38,11 +38,9 @@ export class LocationPostService {
 
     getProfilePostData(id: string) {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
             var url = environment.baseUrl + "/profile/" + id + "/posts/";
             return this.http.get<PostRes[]>(url,
                 {
-                    headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
         }));
@@ -50,11 +48,9 @@ export class LocationPostService {
 
     getPostData() {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
             var url = environment.baseUrl + "/posts/?page=1";
             return this.http.get<PostRes[]>(url,
                 {
-                    headers: new HttpHeaders({ 'Authorization': token })
                 }
             );
         }));

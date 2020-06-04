@@ -27,6 +27,7 @@ export class HomePageComponent implements OnInit {
   userPro: string;
   loginStatus$: Observable<boolean>;
   public baseurl;
+  isLogged
 
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
     private router: ActivatedRoute,
@@ -38,17 +39,23 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentUrl = this.router.url;
+    this.loginStatus$ = this.authService.isLogedIn;
+
+    this.authService.isLogedIn.subscribe(isLogged => {
+      this.isLogged = isLogged;
+    })
+
     this.baseurl = environment.baseUrl;
     this.user.getUserId().subscribe(res => {
       this.userPro = '/profile/' + res.pk;
     });
+
     this.planOverviews = this.planOverviewService.getPlanOverviews()
     this.TopPlannersService.getTopPlanners().subscribe(tp => {
       this.allTopPlanners = tp;
       this.initTopPlanners(tp);
     })
-    this.currentUrl = this.router.url;
-    this.loginStatus$ = this.authService.isLogedIn;
 
     this.followSerivce.updateFollow.subscribe(res => {
       if (res[1] == "Following" || res[1] == "Requested") {

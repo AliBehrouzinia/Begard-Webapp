@@ -40,11 +40,9 @@ export class PlanService {
     const url = environment.baseUrl + '/plans/' + planId;
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
       return this.http
         .get<Plan[]>(url, {
           observe: 'response',
-          headers: new HttpHeaders({ 'Authorization': token })
         })
         .pipe(
           map(res => {
@@ -55,14 +53,13 @@ export class PlanService {
   }
 
   getUserPlans(userId) : Observable<MyPlan[]>{
+    alert("zartt")
     const url = environment.baseUrl + '/user/' + userId + "/plans/";
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
       return this.http
         .get<MyPlan[]>(url, {
           observe: 'response',
-          headers: new HttpHeaders({ 'Authorization': token })
         })
         .pipe(
           map(res => {

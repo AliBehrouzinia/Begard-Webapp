@@ -9,6 +9,7 @@ import { FollowService } from '../follow.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { PlanService, MyPlan } from '../plan.service';
+import { AuthService } from '../auth.service';
 
 export interface DialogData {
   userId: string;
@@ -106,7 +107,8 @@ export class ProfileComponent implements OnInit {
     private topPlaners: TopPlannersService,
     private user: UserService,
     private followSerivce: FollowService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public authService: AuthService
   ) {
     this.followSerivce.updateFollow.subscribe(res => {
       if (res[0] == this.id) {

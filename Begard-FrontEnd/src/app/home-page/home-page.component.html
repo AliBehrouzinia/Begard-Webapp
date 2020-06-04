@@ -1,21 +1,15 @@
 <div (scroll)="onWindowScroll($event)" style="background-color: #f7f8fd;">
     <mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
-
         <mat-grid-tile class="tile" [ngStyle]="{'background-image': 'url(' + baseurl +'/media/images/back.jpg' +')'}"
             rowspan=2 colspan=5>
             <app-search class="search"></app-search>
         </mat-grid-tile>
-
     </mat-grid-list>
-
-
-
 
     <div style="display:flex">
         <div id="leftbar">
-
-            <mat-card class="shadow-lg " style="height: auto;margin: 20px;;border-radius: 10px">
-
+            <mat-card *ngIf="(loginStatus$ | async)" class="shadow-lg"
+                style="height: auto;margin: 20px;border-radius: 10px">
                 <div (click)="refresh()" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">Home</p>
@@ -30,13 +24,19 @@
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">My plans</p>
                 </div>
-
-
             </mat-card>
-
+            <mat-card *ngIf="!(loginStatus$ | async)" class="shadow-lg"
+                style="height: auto;margin: 20px;border-radius: 10px">
+                <p style="padding-top: 3%;padding-right: 10%;padding-left: 10%;padding-bottom: 3%;"> you are not a member
+                    yet? it's not late.</p>
+                <div>
+                    <a mat-raised-button color="basic" routerLink="login" routerLinkActive="active"
+                        style="width: 90%;margin: 5%;">Login</a>
+                    <a mat-button mat-raised-button color="accent" routerLink="register" routerLinkActive="active"
+                        style="width: 90%;margin: 5%;">Register</a>
+                </div>
+            </mat-card>
         </div>
-
-
 
         <div id="content">
             <mat-card *ngIf="(loginStatus$ | async)" class="shadow-lg" style="margin: 20px;border-radius: 10px">
@@ -65,8 +65,6 @@
                 </mat-card-content>
             </mat-card>
         </div>
-
-
 
     </div>
     <router-outlet></router-outlet>

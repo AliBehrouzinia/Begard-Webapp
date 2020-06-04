@@ -23,12 +23,8 @@ export class ProfileService {
   }
   getHeaderData(id: number) {
     return this.authService.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
       var url = environment.baseUrl + '/profile/' + id + '/header/';
-      return this.http.get<ProfileHeader>(url,
-        {
-          headers: new HttpHeaders({ 'Authorization': token })
-        }
+      return this.http.get<ProfileHeader>(url
       );
     }));
   }
@@ -36,8 +32,6 @@ export class ProfileService {
   onFollow(id: number) {
     var userid: number = (Number)(id);
     return this.followService.sendFollowRequest({ request_to: userid });
-
-
   }
 
 }

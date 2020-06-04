@@ -21,7 +21,6 @@ export class PlanOverviewService {
     const url = environment.baseUrl + '/top-posts/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
       return this.http
         .get<PlanOverView[]>(url, {
           observe: 'response',
@@ -31,7 +30,6 @@ export class PlanOverviewService {
         })
         .pipe(
           map(res => {
-            console.log("fuckin : " + res.body)
             return res.body;
           })
         );

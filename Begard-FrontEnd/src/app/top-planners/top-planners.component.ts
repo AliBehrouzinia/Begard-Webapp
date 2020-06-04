@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FollowService } from '../follow.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-top-planners',
@@ -21,6 +22,7 @@ export class TopPlannersComponent implements OnInit {
   constructor(private followService: FollowService,
     private route: ActivatedRoute,
     private router: Router,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
