@@ -77,7 +77,7 @@ export class MyPlanComponent implements OnInit {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
       for (let i = 0; i < myPlans.length; i++) {
-        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city, this.setDate(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
+        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city, this.setDateCreation(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
       };
     })
 
@@ -104,11 +104,23 @@ export class MyPlanComponent implements OnInit {
 
   }
 
-  setDate(date) {
-    let d = new Date(date);
-    return "" + d.getFullYear() + "/" + d.getUTCMonth() + "/" + d.getUTCDate();
+  setDateCreation(d) {
+    let date = new Date(d);
+    let day = date.getUTCDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let currentDate = new Date();
+    let dayDiff = ((currentDate.getFullYear() - year) * 365 + (currentDate.getMonth() - month) * 30 + (currentDate.getUTCDate() - day))
+    if (dayDiff >= 2 && dayDiff < 7) {
+      return "last week";
+    } else if (dayDiff == 1) {
+      return "Yesterday";
+    } else if (dayDiff == 0) {
+      return "Today";
+    } else {
+      return day + "/" + month + "/" + year;
+    }
   }
-
   setCoverUrl(url) {
     return environment.baseUrl + url;
   }

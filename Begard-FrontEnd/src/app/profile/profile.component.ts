@@ -35,7 +35,7 @@ export class ProfileComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
-    
+
     this.profileService.getHeaderData(this.id).subscribe(res => {
       this.userName = res.username;
       this.follwersNum = res.followers_count;
@@ -76,7 +76,7 @@ export class ProfileComponent implements OnInit {
         this.plans.push({
           id: plans[i].id
           , destination_city: plans[i].destination_city
-          , creation_date: this.setDate(plans[i].creation_date)
+          , creation_date: this.setDateCreation(plans[i].creation_date)
           , cover: this.setCoverUrl(plans[i].cover)
           , userId: plans[i].user
         })
@@ -125,8 +125,25 @@ export class ProfileComponent implements OnInit {
           this.followSerivce.addFollowing()
         }
       }
-
     })
+  }
+
+  setDateCreation(d) {
+    let date = new Date(d);
+    let day = date.getUTCDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+    let currentDate = new Date();
+    let dayDiff = ((currentDate.getFullYear() - year) * 365 + (currentDate.getMonth() - month) * 30 + (currentDate.getUTCDate() - day))
+    if (dayDiff >= 2 && dayDiff < 7) {
+      return "last week";
+    } else if (dayDiff == 1) {
+      return "Yesterday";
+    } else if (dayDiff == 0) {
+      return "Today";
+    } else {
+      return day + "/" + month + "/" + year;
+    }
   }
 
   setDate(date) {
@@ -138,8 +155,7 @@ export class ProfileComponent implements OnInit {
     return environment.baseUrl + url;
   }
 
-  goToPlan(id){
-    this.router.navigate(['/myplan' , id]);
+  goToPlan(id) {
   }
 
   onFollow() {
