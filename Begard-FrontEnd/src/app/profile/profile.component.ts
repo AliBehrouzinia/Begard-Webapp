@@ -1,17 +1,14 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../auth.service';
-import { take, exhaustMap } from 'rxjs/operators';
-import { ProfileService, ProfileHeader } from './profile.service';
+import { ProfileService } from './profile.service';
 import { TopPlannersService } from '../top-planners.service';
 import { TopPlanner } from '../top-planner';
 import { UserService } from '../user.service';
 import { FollowService } from '../follow.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
+import { PlanService, MyPlan } from '../plan.service';
 
 export interface DialogData {
   userId: string;
@@ -33,13 +30,12 @@ export class ProfileComponent implements OnInit {
   userId
 
   ngOnInit(): void {
-    this.user.getUserId().subscribe(res => {
-      this.proUrl = '/profile/' + res.pk;
-    })
+
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
+    
     this.profileService.getHeaderData(this.id).subscribe(res => {
       this.userName = res.username;
       this.follwersNum = res.followers_count;
@@ -62,7 +58,32 @@ export class ProfileComponent implements OnInit {
         }
       }
     })
+
+    this.user.getUserId().subscribe(res => {
+      this.proUrl = '/profile/' + res.pk;
+      this.route.params.subscribe(params => {
+        if (res.pk == params['id']) {
+          this.isOwnPro = true;
+        }
+        else {
+          this.isOwnPro = false;
+        }
+      })
+    })
+
+    this.planService.getUserPlans(this.id).subscribe(plans => {
+      for (let i = 0; i < plans.length; i++) {
+        this.plans.push({
+          id: plans[i].id
+          , destination_city: plans[i].destination_city
+          , creation_date: this.setDate(plans[i].creation_date)
+          , cover: this.setCoverUrl(plans[i].cover)
+          , userId: plans[i].user
+        })
+      };
+    })
   }
+  isOwnPro: boolean;
 
   userName: string;
   postNum: number;
@@ -70,6 +91,8 @@ export class ProfileComponent implements OnInit {
   follwingsNum: number;
   imgUrl: string;
   followingState: string;
+  plans = []
+
   animal: string;
   name: string;
   id: number;
@@ -77,6 +100,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private route: ActivatedRoute,
+    private planService: PlanService,
     private router: Router,
     private profileService: ProfileService,
     private topPlaners: TopPlannersService,
@@ -103,6 +127,19 @@ export class ProfileComponent implements OnInit {
       }
 
     })
+  }
+
+  setDate(date) {
+    let d = new Date(date);
+    return "" + d.getFullYear() + "/" + d.getUTCMonth() + "/" + d.getUTCDate();
+  }
+
+  setCoverUrl(url) {
+    return environment.baseUrl + url;
+  }
+
+  goToPlan(id){
+    this.router.navigate(['/myplan' , id]);
   }
 
   onFollow() {
