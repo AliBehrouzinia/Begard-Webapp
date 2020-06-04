@@ -689,7 +689,7 @@ class TopPlannerView(generics.ListAPIView):
 
 class UserPlansView(generics.ListAPIView):
     serializer_class = UserPlansSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         user_pk = self.kwargs.get('id')
