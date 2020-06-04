@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FollowService } from '../follow.service';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export class Post {
   constructor(
@@ -35,29 +36,24 @@ export class Post {
   styleUrls: ['./location-post.component.css']
 })
 export class LocationPostComponent implements OnInit {
-
-  @Input() currentUrl;
-  commentFc = new FormControl()
-
   @ViewChildren(CommentComponent) child: QueryList<CommentComponent>;
-
+  @Input() currentUrl;
   public userName: string;
-
-
   public defaultValue: string = '';
-
   public posts: Post[] = [];
   centered = false;
   disabled = false;
   unbounded = false;
-
+  isLoggedIn = false
+  commentFc = new FormControl()
   radius: number;
   color: ThemePalette = "primary";
 
   constructor(private postservice: LocationPostService,
     private router: Router,
     public authService: AuthService,
-    private followService: FollowService) {
+    private followService: FollowService,
+    private snackBar: MatSnackBar) {
 
     this.followService.updateFollow.subscribe(res => {
       for (var i = 0; i < this.posts.length; i++) {
@@ -85,6 +81,10 @@ export class LocationPostComponent implements OnInit {
         this.posts.splice(0, 0, np)
       }
     })
+
+    this.authService.isLogedIn.subscribe(isLogged => {
+      this.isLoggedIn = isLogged;
+    })
   }
 
   private setPostData(resdata: PostRes[]) {
@@ -107,6 +107,9 @@ export class LocationPostComponent implements OnInit {
   }
 
   onLike(post: Post) {
+    if (!this.isLoggedIn) {
+      this.openSnackBar("login to like this post !")
+    }
     this.postservice.onLike(post.id).subscribe(resdata => {
       post.isLiked = true;
       post.likeNums++;
@@ -157,11 +160,22 @@ export class LocationPostComponent implements OnInit {
 
   onAbleComment(post: Post) {
     if (post.disable == true) {
+      if (!this.isLoggedIn) {
+        this.openSnackBar("login to leave a comment !")
+      }
       post.disable = false;
     }
     else {
       post.disable = true;
     }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
   }
 
 }

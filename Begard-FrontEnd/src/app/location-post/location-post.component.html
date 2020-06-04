@@ -53,9 +53,9 @@
             <b style=" color: #424242;margin-left: -18px;margin-top: 35px;">{{post.likeNums}}</b>
         </form>
 
-        <form *ngIf="!post.disable  && (authService.isLogedIn | async)" class="example-form">
+        <form *ngIf="!post.disable" class="example-form">
 
-            <div style="width: 100%;">
+            <div style="width: 100%;" *ngIf="(authService.isLogedIn | async)" >
                 <mat-form-field class="example-full-width" style="margin-right: 5px;">
                     <mat-label>Leave a comment</mat-label>
                     <textarea [formControl]="commentFc" matInput placeholder="It makes me feel..."></textarea>
