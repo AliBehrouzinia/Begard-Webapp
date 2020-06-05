@@ -18,7 +18,7 @@ from .permissions import *
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
-    UserPlansSerializer, ImageSerializer, TopPlannerSerializer
+    UserPlansSerializer, ImageSerializer, TopPlannerSerializer, CustomUserDetailsSerializer
 
 
 class ActionOnFollowRequestType(enum.Enum):
@@ -713,3 +713,13 @@ class LocationsOfPlanView(generics.ListAPIView):
 
     def get_queryset(self):
         return models.PlanItem.objects.filter(plan=self.kwargs.get('id'))
+
+
+class UserSearchView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = CustomUserDetailsSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('query', None)
+        result = models.BegardUser.objects.filter(email__icontains=query)
+        return result
