@@ -109,7 +109,7 @@
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         grid-template-rows: 1fr;
         grid-gap: 5%;">
-            <div class="item" *ngFor="let plan of myPlans">
+            <div *ngFor="let plan of myPlans">
                 <mat-card
                     style="box-shadow: 4px 4px 9px #bdbdbd; width: 100%;height: 100%;padding: 4%; cursor: pointer;">
                     <div style="display: flex;overflow: hidden;width: 100%;margin-bottom: 3%;">
@@ -117,8 +117,8 @@
                             class="location-icon">location_on</mat-icon>
                         <span (click)="goToPlan(plan.id)" #city
                             style=" align-self: center;width: 38%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"
-                            matTooltip="{{plan.destination_city}}" matTooltipPosition="above"
-                            class="city">{{plan.destination_city}}</span>
+                            matTooltip="{{plan.destination_city_name}}" matTooltipPosition="above"
+                            class="city">{{plan.destination_city_name}}</span>
                         <span (click)="goToPlan(plan.id)" class="date"
                             style="width: 45%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; text-align: end;align-self: center;"
                             matTooltip="{{plan.creation_date}}" matTooltipPosition="above">At

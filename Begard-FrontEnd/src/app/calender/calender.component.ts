@@ -46,6 +46,7 @@ export class CalenderComponent implements OnInit {
   planItems: PlanningItem[] = [];
   gridItems: PlanningItem[] = [];
   loginStatus$: Observable<boolean>;
+  cityName
 
   constructor(
     public dataService: DataStorageService,
@@ -71,6 +72,7 @@ export class CalenderComponent implements OnInit {
 
     this.route.data.subscribe(data => {
       var plan: Plan = data['plan'];
+      this.cityName = this.dataService.getCityName()
       this.location.setLocation(plan.plan.plan_items);
       for (var i = 0; i < plan.plan.plan_items.length; i++) {
         this.planItems.push(new PlanningItem(

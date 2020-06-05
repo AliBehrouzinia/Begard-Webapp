@@ -77,7 +77,7 @@ export class MyPlanComponent implements OnInit {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
       for (let i = 0; i < myPlans.length; i++) {
-        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city, this.setDateCreation(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
+        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city_name , myPlans[i].destination_city_id, this.setDateCreation(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
       };
     })
 

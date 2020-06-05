@@ -3,7 +3,6 @@
     justify-content: center;
     align-items: center;
     float: left;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
     border-radius: 10px;
     padding: 10px;
 }
@@ -11,6 +10,7 @@
 .save-button {
     width: 100%;
     margin-top: 20px;
+    border-radius: 10px;
 }
 
 .grid {

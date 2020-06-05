@@ -32,6 +32,7 @@ export interface PI {
 
 export interface MyPlan {
     id;
+    user;
     destination_city_id;
     destination_city_name;
     description;
@@ -49,6 +50,7 @@ export class DataStorageService {
     start_date;
     finish_date;
     city;
+    cityName;
 
     constructor(
         private http: HttpClient,
@@ -107,6 +109,14 @@ export class DataStorageService {
 
     getCity() {
         return this.city;
+    }
+
+    setCityName(name) {
+        this.cityName = name;
+    }
+
+    getCityName() {
+        return this.cityName;
     }
 
 }

@@ -15,6 +15,7 @@ import { BehaviorSubject, Observable } from 'rxjs'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../auth.service';
 import { Route } from '@angular/compiler/src/core';
+import { UserService } from '../user.service';
 
 
 L10n.load({
@@ -48,7 +49,10 @@ export class PlanComponent implements OnInit {
   isPremium = false;
   loginStatus$: Observable<boolean>;
   isLoggedIn = false
-
+  userId
+  userPlanId
+  cityName
+  
   constructor(
     public dataService: DataStorageService,
     public postPlanService: PostPlanService,
@@ -57,7 +61,8 @@ export class PlanComponent implements OnInit {
     private location: MapLocationService,
     private snackBar: MatSnackBar,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private userServie: UserService
   ) { }
 
   ngOnInit() {
@@ -67,11 +72,20 @@ export class PlanComponent implements OnInit {
       this.isLoggedIn = isLoggedIn
     })
 
+    this.userServie.getUserId().subscribe(res => {
+      this.userId = res.pk;
+      if (this.plan.user != this.userPlanId) {
+        this.isOwn = false;
+      }
+    })
+
     this.gridItems = [];
     this.route.paramMap.subscribe(params => {
       this.dataService.getPlan(params.get('planId')).subscribe(data => {
-        this.plan = data['plan'];
-        if (true) {
+        this.plan = data;
+        this.userPlanId = this.plan.user
+        this.cityName = this.plan.destination_city_name
+        if (this.plan.user != this.userPlanId) {
           this.isOwn = false;
         }
         this.cityId = this.plan.destination_city_id
@@ -197,7 +211,11 @@ export class PlanComponent implements OnInit {
   }
 
   openDialog(): void {
-    if (!this.isPremium) {
+    if (!this.isOwn) {
+      this.openSnackBar("you need to login to edit plan")
+      return
+    }
+    if (!this.isPremium && !this.isOwn) {
       this.openSnackBar("you need premium account to edit others plan!")
       return
     }
@@ -244,7 +262,7 @@ export class PlanComponent implements OnInit {
 
   goToProfile() {
     if (this.isLoggedIn)
-      this.router.navigate(['/profile', 1])
+      this.router.navigate(['/profile', this.userId])
     else
       this.openSnackBar("login to see your profile!")
   }
