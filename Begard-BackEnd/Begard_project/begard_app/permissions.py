@@ -18,19 +18,14 @@ class AnswerFollowRequestPermission(permissions.BasePermission):
 class GetUpdateDeletePlanPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        if request.method == "GET":
-            plan = models.Plan.objects.get(pk=view.kwargs['id'])
-            if not plan.is_public:
-                user = plan.user
-                if request.user == user:
-                    return True
-                return False
-            return True
         plan = models.Plan.objects.get(pk=view.kwargs['id'])
-        user = plan.user
-        if request.user == user:
-            return True
-        return False
+        if request.method == "GET":
+            if plan.user.is_public:
+                return True
+            if models.UserFollowing.objects.filter(user_id=request.user.id, following_user_id=plan.user).exists():
+                return True
+
+        return plan.user == request.user
 
 
 class LikeAndCommentOnPostPermission(permissions.BasePermission):
