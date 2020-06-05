@@ -68,6 +68,8 @@ import { PostLocationService } from './post-location.service';
 
 import { MyLocationService } from './my-location.service';
 import { PlanComponent } from './plan/plan.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+
 
 
 
@@ -94,7 +96,8 @@ import { PlanComponent } from './plan/plan.component';
       ProfileComponent,
       UnfollowDialog,
       PostLocationComponent,
-      PlanComponent
+      PlanComponent,
+      LandingPageComponent
    ],
    imports: [
       BrowserModule,
