@@ -139,7 +139,7 @@ class PlansView(generics.ListCreateAPIView):
 
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, GetUpdateDeletePlanPermission]
+    permission_classes = [AllowAny, GetUpdateDeletePlanPermission]
 
     def get(self, request, *args, **kwargs):
         plan_id = self.kwargs.get('id')

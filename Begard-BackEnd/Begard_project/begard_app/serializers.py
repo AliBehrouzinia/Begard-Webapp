@@ -303,7 +303,9 @@ class MyPlansSerializer(serializers.ModelSerializer):
         post = get_object_or_404(Post, plan_id=ret['id'], type='plan_post')
         image = get_object_or_404(Image, post=post)
         ret['cover'] = image.image.url
-        ret['destination_city'] = instance.destination_city.name
+        ret.pop('destination_city')
+        ret['destination_city_id'] = instance.destination_city.id
+        ret['destination_city_name'] = instance.destination_city.name
 
         return ret
 
@@ -346,6 +348,10 @@ class UserPlansSerializer(serializers.ModelSerializer):
         post = get_object_or_404(Post, plan_id=result['id'], type='plan_post')
         image = get_object_or_404(Image, post=post)
         result['cover'] = image.image.url
+        result.pop('destination_city')
+        result.pop('user')
+        result['destination_city_id'] = instance.destination_city.id
+        result['destination_city_name'] = instance.destination_city.name
         return result
 
     class Meta:
