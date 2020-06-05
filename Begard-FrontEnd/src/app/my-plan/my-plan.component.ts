@@ -27,7 +27,7 @@ export class MyPlanComponent implements OnInit {
   allTopPlanners = [];
   userId
   proUrl
-
+  noPlannerEnable = false
 
   constructor(public dialog: MatDialog, private myPlanService: MyPlanService, private profileService: ProfileService
     , private router: Router, private route: ActivatedRoute, private user: UserService
@@ -147,11 +147,13 @@ export class MyPlanComponent implements OnInit {
   refresh() {
     location.reload()
   }
+  
   onDelete(planId) {
     this.deletePlanService.delete(planId).subscribe(status => {
       this.handleDeleteResponse(status);
     })
   }
+
   handleDeleteResponse(status) {
     if (status == "200") {
       this.updateMyPlans()
@@ -166,6 +168,11 @@ export class MyPlanComponent implements OnInit {
       this.topPlanners.push(this.allTopPlanners[0])
       this.allTopPlanners.splice(0, 1);
     }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
+    }
   }
 
   replaceTopPlanner(id) {
@@ -178,6 +185,11 @@ export class MyPlanComponent implements OnInit {
         else
           this.topPlanners.splice(i, 1)
       }
+    }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
     }
   }
 

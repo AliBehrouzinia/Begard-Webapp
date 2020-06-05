@@ -163,6 +163,9 @@
                         [userId]="tp.pk">
                     </app-top-planners>
                 </div>
+                <div style="text-align: center;" class="tp" *ngIf="noPlannerEnable">
+                    No Planner to Follow
+                </div>
             </mat-card-content>
         </mat-card>
     </div>

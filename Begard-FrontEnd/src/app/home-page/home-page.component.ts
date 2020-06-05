@@ -143,7 +143,7 @@ export class HomePageComponent implements OnInit {
 
   goToProfile() {
     if (this.isLogged)
-      this.router.navigate(['/profile', 1])
+      this.router.navigate([this.userPro])
     else
       this.openSnackBar("login to see your profile!")
   }

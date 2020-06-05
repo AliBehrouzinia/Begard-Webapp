@@ -30,6 +30,7 @@ export class ProfileComponent implements OnInit {
   proUrl: string;
   userId
   isLogged
+  noPlannerEnable = false
 
   ngOnInit(): void {
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
@@ -219,10 +220,16 @@ export class ProfileComponent implements OnInit {
       element3.classList.remove('sticky');
     }
   }
+
   initTopPlanners(tp) {
     for (let i = 0; i < Math.min(tp.length, 6); i++) {
       this.topPlanners.push(this.allTopPlanners[0])
       this.allTopPlanners.splice(0, 1);
+    }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
     }
   }
 
@@ -236,6 +243,11 @@ export class ProfileComponent implements OnInit {
         else
           this.topPlanners.splice(i, 1)
       }
+    }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
     }
   }
 
