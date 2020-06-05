@@ -145,15 +145,14 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         plan_id = self.kwargs.get('id')
         plan = get_object_or_404(models.Plan, pk=plan_id)
 
-        plan_details = {'plan': serializers.PlanSerializer(instance=plan).data}
-        plan_details['plan'].pop('user')
-        plan_details['plan']['plan_items'] = []
+        plan_details = serializers.PlanSerializer(instance=plan).data
+        plan_details['plan_items'] = []
 
         plan_items = models.PlanItem.objects.filter(plan=plan)
         for plan_item in plan_items:
             plan_item_details = serializers.PlanItemSerializer(plan_item).data
             plan_item_details.pop('plan')
-            plan_details['plan']['plan_items'].append(plan_item_details)
+            plan_details['plan_items'].append(plan_item_details)
 
         return Response(data=plan_details)
 
