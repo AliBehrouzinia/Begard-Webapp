@@ -1,16 +1,15 @@
 <div (click)="onAllPage()">
     <mat-toolbar color="primary" class="nav-bar">
-        <span routerLink="homepage" routerLinkActive="active"
-            style="cursor: pointer;align-items: center;display: flex;">
-            <img class="logo" src="{{url+'/media/images/bgrd.jpg'}}"> <span>Begard</span>
+        <span routerLink="/homepage" routerLinkActive="active">
+            <img class="logo" src="{{url+'/media/images/begrd_icon.svg'}}"> <span class="name">Begard</span>
         </span>
         <!-- <button class="searchinput">
             <mat-icon style="color: black; font-size: 30px;">search</mat-icon>
         </button> -->
         <div class="spacer"></div>
-        <div *ngIf="!(loginStatus$ | async)" style="display: flex; width: 16%;">
-            <a style="width: 46%;margin-right: 5%;" mat-raised-button color="basic" routerLink="login" routerLinkActive="active">Login</a>
-            <a style="width: 46%;" mat-button mat-raised-button color="accent" routerLink="register" routerLinkActive="active">Register</a>
+        <div *ngIf="!(loginStatus$ | async)">
+            <a mat-raised-button color="basic" routerLink="/login" routerLinkActive="active">Login</a>
+            <a mat-button mat-raised-button color="accent" routerLink="/register" routerLinkActive="active">Register</a>
         </div>
         <div *ngIf="(loginStatus$ | async)" style="display: flex; align-items: center; width: 16%;">
             <button mat-button color="primary" *ngIf="(userEmail$ | async) as userEmail" class="font"
@@ -71,7 +70,7 @@
                 </div>
             </div>
             <mat-menu #accountOptions>
-                <button mat-menu-item routerLink="homepage" routerLinkActive="active" (click)="logout()"
+                <button mat-menu-item routerLink="/homepage" routerLinkActive="active" (click)="logout()"
                     class="logout">Logout<mat-icon class="logout-icon">exit_to_app</mat-icon></button>
             </mat-menu>
         </div>

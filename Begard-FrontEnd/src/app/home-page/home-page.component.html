@@ -1,4 +1,6 @@
 <div (scroll)="onWindowScroll($event)" style="background-color: #f7f8fd;">
+    <app-nav-bar></app-nav-bar>
+    
     <mat-grid-list cols="5" rowHeight="200px" class="grid-parent">
         <mat-grid-tile class="tile" [ngStyle]="{'background-image': 'url(' + baseurl +'/media/images/back.jpg' +')'}"
             rowspan=2 colspan=5>

@@ -139,21 +139,20 @@ class PlansView(generics.ListCreateAPIView):
 
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, GetUpdateDeletePlanPermission]
+    permission_classes = [AllowAny, GetUpdateDeletePlanPermission]
 
     def get(self, request, *args, **kwargs):
         plan_id = self.kwargs.get('id')
         plan = get_object_or_404(models.Plan, pk=plan_id)
 
-        plan_details = {'plan': serializers.PlanSerializer(instance=plan).data}
-        plan_details['plan'].pop('user')
-        plan_details['plan']['plan_items'] = []
+        plan_details = serializers.PlanSerializer(instance=plan).data
+        plan_details['plan_items'] = []
 
         plan_items = models.PlanItem.objects.filter(plan=plan)
         for plan_item in plan_items:
             plan_item_details = serializers.PlanItemSerializer(plan_item).data
             plan_item_details.pop('plan')
-            plan_details['plan']['plan_items'].append(plan_item_details)
+            plan_details['plan_items'].append(plan_item_details)
 
         return Response(data=plan_details)
 
@@ -675,15 +674,17 @@ class TopPlannerView(generics.ListAPIView):
         users_list = list(users)
         for person in users_list:
             posts = models.Post.objects.filter(Q(user_id__in=users) & Q(user_id=person.id))
-            sum_of_rates = 0
-            for item1 in posts:
-                sum_of_rates += item1.rate
-            if len(posts) != 0:
-                person.average_rate = sum_of_rates / len(posts)
-            else:
-                person.average_rate = 0
+            number_of_likes = 0
+            for item in posts:
+                number_of_likes += models.Like.objects.filter(post_id=item.id).count()
+            person.average_rate = number_of_likes
         sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:20]
         sorted_list.reverse()
+        for person in users_list:
+            if sorted_list[0].average_rate != 0:
+                person.average_rate = (person.average_rate / sorted_list[0].average_rate) * 9.9
+            else:
+                person.average_rate = 0
         return sorted_list
 
 
