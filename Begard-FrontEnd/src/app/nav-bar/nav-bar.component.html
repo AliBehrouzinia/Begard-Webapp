@@ -4,9 +4,9 @@
             style="cursor: pointer;align-items: center;display: flex;">
             <img class="logo" src="{{url+'/media/images/bgrd.jpg'}}"> <span>Begard</span>
         </span>
-        <button class="searchinput">
+        <!-- <button class="searchinput">
             <mat-icon style="color: black; font-size: 30px;">search</mat-icon>
-        </button>
+        </button> -->
         <div class="spacer"></div>
         <div *ngIf="!(loginStatus$ | async)" style="display: flex; width: 16%;">
             <a style="width: 46%;margin-right: 5%;" mat-raised-button color="basic" routerLink="login" routerLinkActive="active">Login</a>

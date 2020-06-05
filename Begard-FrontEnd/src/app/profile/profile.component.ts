@@ -29,12 +29,17 @@ export class ProfileComponent implements OnInit {
   allTopPlanners = [];
   proUrl: string;
   userId
+  isLogged
 
   ngOnInit(): void {
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
+
+    this.authService.isLogedIn.subscribe(isLogged => {
+      this.isLogged = isLogged;
+    })
 
     this.profileService.getHeaderData(this.id).subscribe(res => {
       this.userName = res.username;
@@ -157,7 +162,7 @@ export class ProfileComponent implements OnInit {
   }
 
   goToPlan(id) {
-    this.router.navigate(['/myplan', id]);
+    this.router.navigate(['/plan', id]);
   }
 
   onFollow() {
@@ -240,6 +245,13 @@ export class ProfileComponent implements OnInit {
       duration: 3 * 1000
     }
     );
+  }
+
+  goToMyplan() {
+    if (this.isLogged)
+      this.router.navigate(['/myplans'])
+    else
+      this.openSnackBar("login to see your plans!")
   }
 }
 

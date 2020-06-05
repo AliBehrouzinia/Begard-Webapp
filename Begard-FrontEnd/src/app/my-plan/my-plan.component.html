@@ -133,7 +133,7 @@
                             </button>
                         </mat-menu>
                     </div>
-                    <div class="im-wrapper">
+                    <div class="im-wrapper" (click)="goToPlan(plan.id)">
                         <img class="im" mat-card-image [src]="plan.cover" />
                     </div>
                 </mat-card>
