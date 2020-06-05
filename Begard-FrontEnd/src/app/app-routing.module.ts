@@ -12,10 +12,12 @@ import { LocationPostComponent } from './location-post/location-post.component';
 import { MyPlanComponent } from './my-plan/my-plan.component';
 import { ProfileComponent } from './profile/profile.component';
 import { PlanComponent } from './plan/plan.component'
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+    { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
+    { path: 'landing-page', component: LandingPageComponent},
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'search', component: SearchComponent },
