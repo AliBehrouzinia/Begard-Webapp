@@ -16,8 +16,8 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
-    { path: 'landing-page', component: LandingPageComponent},
+    { path: '', redirectTo: '/landingpage', pathMatch: 'full' },
+    { path: 'landingpage', component: LandingPageComponent},
     { path: 'login', component: LoginComponent },
     { path: 'register', component: LoginComponent },
     { path: 'search', component: SearchComponent },

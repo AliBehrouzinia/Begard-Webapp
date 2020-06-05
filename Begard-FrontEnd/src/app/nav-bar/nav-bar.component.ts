@@ -74,7 +74,7 @@ export class NavBarComponent implements OnInit {
     if (this.router.url.toString().includes('register') || this.router.url.toString().includes('login'))
       location.reload()
     else
-      this.router.navigate(['/homepage'])
+      this.router.navigate(['/landingpage'])
   }
 
   openDialog(event: Event): void {

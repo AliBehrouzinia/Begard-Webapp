@@ -1,12 +1,13 @@
-<div class="login-wrapper" style="padding: 15%;
+<div class="login-wrapper" style="padding: 7%;
 display: flex;
+height: auto;
 background: white !important;
 justify-content: center;">
 
   <mat-card *ngIf="!isRegister" class="fadein" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;border-radius: 10px;top: 0;
   opacity: 1;
   float: left;
-  padding: 60px 50px 40px 50px;
+  padding: 30px 50px 30px 50px;
   width: 100%;
   background: #fff;
   border-radius: 10px;
@@ -16,10 +17,10 @@ justify-content: center;">
   z-index: 5;
   max-width: 330px;">
     <mat-card-header>
-      <mat-card-title>Login</mat-card-title>
+      <mat-card-title style="font-size: 30px;">Login</mat-card-title>
     </mat-card-header>
 
-    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
+    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" style="padding-top: 20px;">
       <mat-card-content>
         <mat-form-field class="example-full-width">
           <input matInput placeholder="Email" type="email" ngModel required email name="email">
@@ -44,7 +45,7 @@ justify-content: center;">
   <mat-card *ngIf="isRegister" class="fadein" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;border-radius: 10px;top: 0;
   opacity: 1;
   float: left;
-  padding: 60px 50px 40px 50px;
+  padding: 30px 50px 30px 50px;
   width: 100%;
   background: #fff;
   border-radius: 10px;
@@ -54,10 +55,10 @@ justify-content: center;">
   z-index: 5;
   max-width: 330px;">
     <mat-card-header>
-      <mat-card-title>Register</mat-card-title>
+      <mat-card-title  style="font-size: 30px;">Register</mat-card-title>
     </mat-card-header>
 
-    <form #registerForm="ngForm" (ngSubmit)="onCreateUser(registerForm)" class="example-form">
+    <form #registerForm="ngForm" (ngSubmit)="onCreateUser(registerForm)" style="padding-top: 20px;">
 
       <mat-card-content>
         <mat-form-field class="example-full-width">
