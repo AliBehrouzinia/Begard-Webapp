@@ -63,10 +63,10 @@ REST_AUTH_SERIALIZERS = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-               'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-            'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 
@@ -76,7 +76,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 USER_MODEL_USERNAME_FIELD = 'email'
-ACCOUNT_USER_MODEL_USERNAME_FIELD=None
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -122,6 +122,9 @@ DATABASES = {
         'PASSWORD': 'Begardpass',
         'HOST': 'localhost',
         'PORT': '',
+        'TEST': {
+            'NAME': 'mytestdatabase',
+        },
     }
 
 }
@@ -145,7 +148,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -158,7 +160,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
