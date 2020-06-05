@@ -28,6 +28,7 @@ export class HomePageComponent implements OnInit {
   loginStatus$: Observable<boolean>;
   public baseurl;
   isLogged
+  noPlannerEnable = false;
 
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
     private router: Router,
@@ -74,6 +75,11 @@ export class HomePageComponent implements OnInit {
       this.topPlanners.push(this.allTopPlanners[0])
       this.allTopPlanners.splice(0, 1);
     }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
+    }
   }
 
   replaceTopPlanner(id) {
@@ -86,6 +92,11 @@ export class HomePageComponent implements OnInit {
         else
           this.topPlanners.splice(i, 1)
       }
+    }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
     }
   }
 
