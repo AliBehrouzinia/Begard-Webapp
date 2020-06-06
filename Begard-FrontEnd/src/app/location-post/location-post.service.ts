@@ -48,11 +48,18 @@ export class LocationPostService {
 
     getPostData() {
         return this.authService.user.pipe(take(1), exhaustMap(user => {
-            var url = environment.baseUrl + "/posts/?page=1";
-            return this.http.get<PostRes[]>(url,
-                {
-                }
-            );
+            if (user == null) {
+                var url = environment.baseUrl + "/posts/?page=1";
+                return this.http.get<PostRes[]>(url);
+            } else {
+                var token = 'token ' + user.token;
+                var url = environment.baseUrl + "/posts/?page=1";
+                return this.http.get<PostRes[]>(url,
+                    {
+                        headers: new HttpHeaders({ 'Authorization': token })
+                    }
+                );
+            }
         }));
     }
 
