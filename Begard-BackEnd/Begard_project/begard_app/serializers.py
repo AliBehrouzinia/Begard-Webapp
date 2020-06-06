@@ -210,9 +210,31 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 
 
 class FollowingsSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(FollowingsSerializer, self).to_representation(instance)
+        user = instance.following_user_id
+        result['id'] = result.pop('following_user_id')
+        result['profile_img'] = user.profile_img.url
+        result['username'] = user.email
+        return result
+
     class Meta:
         model = UserFollowing
-        fields = '__all__'
+        fields = ['following_user_id']
+
+
+class FollowersSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(FollowersSerializer, self).to_representation(instance)
+        user = instance.user_id
+        result['id'] = result.pop('user_id')
+        result['profile_img'] = user.profile_img.url
+        result['username'] = user.email
+        return result
+
+    class Meta:
+        model = UserFollowing
+        fields = ['user_id']
 
 
 class CreateLikeSerializer(serializers.ModelSerializer):

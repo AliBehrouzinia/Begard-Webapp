@@ -723,3 +723,21 @@ class UserSearchView(generics.ListAPIView):
         query = self.request.query_params.get('query', None)
         result = models.BegardUser.objects.filter(email__icontains=query)
         return result
+
+
+class UserFollowingView(generics.ListAPIView):
+    permission_classes = [AllowAny, IsPublicOrFollowing]
+    serializer_class = FollowingsSerializer
+
+    def get_queryset(self):
+        user = self.kwargs.get('id')
+        return models.UserFollowing.objects.filter(Q(user_id=user))
+
+
+class UserFollowerView(generics.ListAPIView):
+    permission_classes = [AllowAny, IsPublicOrFollowing]
+    serializer_class = serializers.FollowersSerializer
+
+    def get_queryset(self):
+        user = self.kwargs.get('id')
+        return models.UserFollowing.objects.filter(Q(following_user_id=user))
