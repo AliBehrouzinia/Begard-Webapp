@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 })
 export class FollowerDialogComponent implements OnInit {
   users = []
+  type
+  noFollower = false
   env = environment.baseUrl
   constructor(public dialogRef: MatDialogRef<FollowerDialogComponent>,
     private router: Router,
@@ -18,6 +20,10 @@ export class FollowerDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.users = this.data['followers'];
+    this.type = this.data['type'];
+    if (this.users.length == 0){
+      this.noFollower = true;
+    }
   }
 
   goToProfile(id) {

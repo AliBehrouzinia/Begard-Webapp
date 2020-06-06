@@ -46,14 +46,6 @@ export class ProfileComponent implements OnInit {
       this.isLogged = isLogged;
     })
 
-    this.followSerivce.getFollowers(this.id).subscribe(followers => {
-      this.followers = followers;
-    })
-
-    this.followSerivce.getFollowings(this.id).subscribe(followings => {
-      this.followings = followings;
-    })
-
     this.profileService.getHeaderData(this.id).subscribe(res => {
       this.userName = res.username;
       this.follwersNum = res.followers_count;
@@ -212,23 +204,29 @@ export class ProfileComponent implements OnInit {
   }
 
   showFollowers() {
-    let dialogRef;
-    dialogRef = this.dialog.open(FollowerDialogComponent, {
-      height: 'auto',
-      minWidth: '300px',
-      maxHeight: '400px',
-      data: { followers: this.followers }
-    });
+    this.followSerivce.getFollowers(this.id).subscribe(followers => {
+      this.followers = followers;
+      let dialogRef;
+      dialogRef = this.dialog.open(FollowerDialogComponent, {
+        height: 'auto',
+        minWidth: '300px',
+        maxHeight: '400px',
+        data: { followers: this.followers , type : "followers"}
+      });
+    })
   }
 
   showFollowings() {
-    let dialogRef;
-    dialogRef = this.dialog.open(FollowerDialogComponent, {
-      height: 'auto',
-      minWidth: '300px',
-      maxHeight: '400px',
-      data: { followers: this.followings }
-    });
+    this.followSerivce.getFollowings(this.id).subscribe(followings => {
+      this.followings = followings;
+      let dialogRef;
+      dialogRef = this.dialog.open(FollowerDialogComponent, {
+        height: 'auto',
+        minWidth: '300px',
+        maxHeight: '400px',
+        data: { followers: this.followings , type : "followings"}
+      });
+    })
   }
 
   goToHome() {
