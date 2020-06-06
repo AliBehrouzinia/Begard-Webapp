@@ -30,4 +30,7 @@ urlpatterns = [
     path('user/<int:id>/plans/', views.UserPlansView.as_view()),
     path('top-planners/', views.TopPlannerView.as_view()),
     path('plans/<int:id>/locations/', views.LocationsOfPlanView.as_view()),
+    path('user/search/', views.UserSearchView.as_view()),
+    path('user/<int:id>/followings/', views.UserFollowingView.as_view()),
+    path('user/<int:id>/followers/', views.UserFollowerView.as_view()),
 ]
