@@ -1,6 +1,7 @@
+<app-nav-bar></app-nav-bar>
 <mat-card class="cover"></mat-card>
 
-<div style="display: flex; justify-content: center">
+<div style="display: flex; justify-content: center" (scroll)="onWindowScroll($event)">
     <mat-card class="pro-info shadow-lg">
         <mat-grid-list class="gird-list" cols="6" rowHeight="50%">
             <mat-grid-tile [colspan]="1" [rowspan]="2">
@@ -19,11 +20,11 @@
             </mat-grid-tile>
             <mat-grid-tile class="username" style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>
                     <div style="font-size: 20px;">Followers</div>
-                    <div (click)="openDialog()" class="number">{{followersCount}}</div>
+                    <div (click)="showFollowers()" class="number">{{followersCount}}</div>
                 </b></mat-grid-tile>
             <mat-grid-tile class="username" style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>
                     <div style="font-size: 20px;">Followings</div>
-                    <div (click)="openDialog()" class="number">{{followingCount}}</div>
+                    <div (click)="showFollowings()" class="number">{{followingCount}}</div>
                 </b></mat-grid-tile>
         </mat-grid-list>
     </mat-card>
@@ -106,7 +107,7 @@
 
     <div id="content" style="width: 55%; margin-left: 2%;margin-right: 2%">
         <div style="display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
         grid-gap: 5%;">
             <div *ngFor="let plan of myPlans">
@@ -129,7 +130,10 @@
                         <mat-menu #moreOptions>
                             <button (click)="onDelete(plan.id)" style="align-items: center;display: flex;"
                                 mat-menu-item>
-                                <mat-icon style="font-size: 105%;">delete</mat-icon>delete
+                                <mat-icon style="font-size: 120%;
+                                align-content: center;
+                                display: flex;
+                                align-items: center;">delete</mat-icon>delete
                             </button>
                         </mat-menu>
                     </div>

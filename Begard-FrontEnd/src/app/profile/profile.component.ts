@@ -35,7 +35,6 @@ export class ProfileComponent implements OnInit {
   followers: Follower[]
   followings: Follower[]
 
-
   ngOnInit(): void {
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
     this.route.params.subscribe(params => {
@@ -235,7 +234,7 @@ export class ProfileComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
-    if (window.pageYOffset >= 490) {
+    if (window.pageYOffset >= 480) {
       let element1 = document.getElementById('leftbar');
       element1.classList.add('sticky');
       let element2 = document.getElementById('rightbar');

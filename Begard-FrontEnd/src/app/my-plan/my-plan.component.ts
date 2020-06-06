@@ -10,6 +10,7 @@ import { DeletePlanService } from '../delete-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../environments/environment';
 import { FollowService } from '../follow.service';
+import { FollowerDialogComponent } from '../follower-dialog/follower-dialog.component';
 
 @Component({
   selector: 'app-my-plan',
@@ -21,6 +22,8 @@ export class MyPlanComponent implements OnInit {
   username
   profileImage;
   plansCount = 0;
+  followers = []
+  followings = []
   followersCount = 0;
   followingCount = 0;
   topPlanners = [];
@@ -39,7 +42,7 @@ export class MyPlanComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll(e) {
-    if (window.pageYOffset >= 490) {
+    if (window.pageYOffset >= 480) {
       let element1 = document.getElementById('leftbar');
       element1.classList.add('sticky');
       let element2 = document.getElementById('rightbar');
@@ -77,7 +80,7 @@ export class MyPlanComponent implements OnInit {
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
       for (let i = 0; i < myPlans.length; i++) {
-        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city_name , myPlans[i].destination_city_id, this.setDateCreation(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
+        this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city_name, myPlans[i].destination_city_id, this.setDateCreation(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
       };
     })
 
@@ -147,7 +150,7 @@ export class MyPlanComponent implements OnInit {
   refresh() {
     location.reload()
   }
-  
+
   onDelete(planId) {
     this.deletePlanService.delete(planId).subscribe(status => {
       this.handleDeleteResponse(status);
@@ -199,6 +202,32 @@ export class MyPlanComponent implements OnInit {
       duration: 3 * 1000
     }
     );
+  }
+
+  showFollowers() {
+    this.followService.getFollowers(this.userId).subscribe(followers => {
+      this.followers = followers;
+      let dialogRef;
+      dialogRef = this.dialog.open(FollowerDialogComponent, {
+        height: 'auto',
+        minWidth: '300px',
+        maxHeight: '400px',
+        data: { followers: this.followers, type: "followers" }
+      });
+    })
+  }
+
+  showFollowings() {
+    this.followService.getFollowings(this.userId).subscribe(followings => {
+      this.followings = followings;
+      let dialogRef;
+      dialogRef = this.dialog.open(FollowerDialogComponent, {
+        height: 'auto',
+        minWidth: '300px',
+        maxHeight: '400px',
+        data: { followers: this.followings, type: "followings" }
+      });
+    })
   }
 }
 

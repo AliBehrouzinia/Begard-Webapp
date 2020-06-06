@@ -1,4 +1,4 @@
-<div style="background-color: #f7f8fd;">
+<div style="background-color: #f7f8fd;" (scroll)="onWindowScroll($event)">
     <app-nav-bar></app-nav-bar>
     <mat-card class="cover"></mat-card>
 
@@ -92,7 +92,7 @@
                 </mat-tab>
                 <mat-tab label="Plans">
                     <div style="display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                    grid-template-columns: 1fr 1fr;
                     grid-template-rows: 1fr;
                     padding-bottom: 5%;
                     padding-left: 3%;

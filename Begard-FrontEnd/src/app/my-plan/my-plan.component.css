@@ -219,3 +219,33 @@ mat-card-subtitle {
         opacity: 1;
     }
 }
+
+#leftbar {
+    width: 20%;
+}
+
+#content {
+    width: 50%;
+}
+
+#content.sticky {
+    width: 50.3% !important;
+    margin-left: 20.3% !important;
+}
+
+#leftbar.sticky {
+    position: fixed;
+    width: 17.75% !important;
+    top: 80px;
+}
+
+#rightbar {
+    width: 30%;
+}
+
+#rightbar.sticky {
+    position: fixed;
+    margin-left: 70.4%;
+    width: 26.5% !important;
+    top: 80px;
+}
