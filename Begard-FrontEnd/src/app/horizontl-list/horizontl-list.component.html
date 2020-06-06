@@ -1,5 +1,5 @@
 <ngu-carousel #myCarousel [inputs]="carouselTileConfig" [dataSource]="carouselTileItems">
-  <ngu-tile *nguCarouselDef="let item; let i = index; let ani = animate">
+  <ngu-tile style="border-radius: 10px;" *nguCarouselDef="let item; let i = index; let ani = animate">
     <app-plan-overview class="tile" [plannerProfileCover]="item.profile_image" [planCity]="item.city"
       [planCover]="item.cover" [plannerUsername]="item.user_name" [planDateCreted]="item.creation_date"
       [userId]="item.user" [planId]="item.plan_id"></app-plan-overview>

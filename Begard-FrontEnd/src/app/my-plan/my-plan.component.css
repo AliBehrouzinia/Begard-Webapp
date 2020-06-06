@@ -45,11 +45,6 @@ mat-card-subtitle {
     display: flex;
 }
 
-.hr {
-    background-color: #d2cece;
-    width: 80%;
-}
-
 .cover {
     height: 400px;
     background-image: url('../../assets/back.jpg');
@@ -108,14 +103,22 @@ mat-card-subtitle {
     width: 100%;
     display: flex;
     justify-content: flex-start;
-    font-size: 20px;
-    margin-top: 10px;
+    font-size: 125%;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .underline:hover {
     border-radius: 10px;
-    background-color: #d6d8e2;
+    background-color: #f0f0f0;
     cursor: pointer;
+}
+
+.hr {
+    background-color: #d2cece;
+    width: 80%;
+    margin-top: 3%;
+    margin-bottom: 3%;
 }
 
 .grid-container>div {

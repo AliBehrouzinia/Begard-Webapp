@@ -17,6 +17,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .tile {
   min-height: 200px;
   background-color: #ccc;
@@ -164,4 +165,8 @@ nav h1 {
 .myBannerPoint li.active {
   transform: translateY(-10px);
   transition: 0.3s ease all;
+}
+
+.tile[_ngcontent-pwn-c359]{
+  border-radius: 10px;
 }
