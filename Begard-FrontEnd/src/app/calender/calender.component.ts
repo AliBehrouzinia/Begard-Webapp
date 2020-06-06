@@ -280,8 +280,4 @@ export class CalenderComponent implements OnInit {
     }
     return pi;
   }
-
-  handleSelectEvent(){
-    alert("fuck")
-  }
 }
