@@ -21,7 +21,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   startDateControl: FormControl = new FormControl('', [Validators.required]);
   endDateControl: FormControl = new FormControl('', [Validators.required]);
-
   endDateDisable = true;
   endDateMin: Date;
   startDateMin: Date;
@@ -131,6 +130,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       startday + '&finish_date=' + endday;
     this.dataStorageService.setStartDate(startday);
     this.dataStorageService.setEndDate(endday);
+    this.dataStorageService.setCityName(this.cityCtrl.value?.name)
     this.dataStorageService.setCity(this.cityCtrl.value?.id);
   }
 

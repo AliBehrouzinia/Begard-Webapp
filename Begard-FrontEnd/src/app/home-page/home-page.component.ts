@@ -7,7 +7,7 @@ import { PlanOverviewService } from '../plan-overview.service';
 import { TopPlannersService } from '../top-planners.service';
 import { PlanOverView } from '../plan-overview';
 import { TopPlanner } from '../top-planner';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { element, promise } from 'protractor';
 import { environment } from '../../environments/environment';
@@ -28,9 +28,10 @@ export class HomePageComponent implements OnInit {
   loginStatus$: Observable<boolean>;
   public baseurl;
   isLogged
+  noPlannerEnable = false;
 
   constructor(public planOverviewService: PlanOverviewService, public TopPlannersService: TopPlannersService,
-    private router: ActivatedRoute,
+    private router: Router,
     private user: UserService,
     private authService: AuthService,
     private followSerivce: FollowService,
@@ -74,6 +75,11 @@ export class HomePageComponent implements OnInit {
       this.topPlanners.push(this.allTopPlanners[0])
       this.allTopPlanners.splice(0, 1);
     }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
+    }
   }
 
   replaceTopPlanner(id) {
@@ -86,6 +92,11 @@ export class HomePageComponent implements OnInit {
         else
           this.topPlanners.splice(i, 1)
       }
+    }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
     }
   }
 
@@ -121,5 +132,19 @@ export class HomePageComponent implements OnInit {
 
   refresh() {
     location.reload()
+  }
+
+  goToMyplan() {
+    if (this.isLogged)
+      this.router.navigate(['/myplans'])
+    else
+      this.openSnackBar("login to see your plans!")
+  }
+
+  goToProfile() {
+    if (this.isLogged)
+      this.router.navigate([this.userPro])
+    else
+      this.openSnackBar("login to see your profile!")
   }
 }

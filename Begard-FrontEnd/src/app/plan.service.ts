@@ -23,7 +23,8 @@ export interface Plan {
 
 export interface MyPlan {
   id;
-  destination_city;
+  destination_city_name;
+  destination_city_id;
   creation_date;
   cover;
   user;

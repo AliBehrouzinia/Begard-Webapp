@@ -24,7 +24,5 @@ export class LandingPageComponent implements OnInit {
       left: 0,
       behavior: 'smooth'
     });
-
-
   }
 }

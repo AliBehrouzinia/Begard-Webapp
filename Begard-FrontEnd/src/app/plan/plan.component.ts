@@ -4,14 +4,18 @@ import { EventSettingsModel, View, DayService, WeekService, DragAndDropService, 
 import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { L10n } from '@syncfusion/ej2-base';
 import { DataStorageService, PlanItem, MyPlan } from '../data-storage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningItem } from '../plan-item.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PostDialogComponent } from './../post-dialog/post-dialog.component';
 import { PostPlan, PI } from '../post-plan';
 import { PostPlanService } from '../post-plan.service';
 import { MapLocationService } from '../map-locations.service';
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../auth.service';
+import { Route } from '@angular/compiler/src/core';
+import { UserService } from '../user.service';
 
 
 L10n.load({
@@ -38,25 +42,52 @@ export class PlanComponent implements OnInit {
   postPlan: PostPlan;
   pi: PI[];
   cityId
-
+  isOwn = true
   planItems: PlanningItem[] = [];
   gridItems$: BehaviorSubject<PlanningItem[]> = new BehaviorSubject<PlanningItem[]>([]);
   gridItems
+  isPremium = false;
+  loginStatus$: Observable<boolean>;
+  isLoggedIn = false
+  userId
+  userPlanId
+  cityName
 
   constructor(
     public dataService: DataStorageService,
     public postPlanService: PostPlanService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    private location: MapLocationService
+    private location: MapLocationService,
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router,
+    private userServie: UserService
   ) { }
 
-
   ngOnInit() {
+    this.loginStatus$ = this.authService.isLogedIn;
+
+    this.loginStatus$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn
+    })
+
+    this.userServie.getUserId().subscribe(res => {
+      this.userId = res.pk;
+      if (this.userPlanId != this.userId) {
+        this.isOwn = false;
+      }
+    })
+
     this.gridItems = [];
     this.route.paramMap.subscribe(params => {
       this.dataService.getPlan(params.get('planId')).subscribe(data => {
-        this.plan = data['plan'];
+        this.plan = data;
+        this.userPlanId = this.plan.user
+        this.cityName = this.plan.destination_city_name
+        if (this.plan.user != this.userId) {
+          this.isOwn = false;
+        }
         this.cityId = this.plan.destination_city_id
         this.location.setLocation(this.plan.plan_items);
         for (var i = 0; i < this.plan.plan_items.length; i++) {
@@ -180,6 +211,14 @@ export class PlanComponent implements OnInit {
   }
 
   openDialog(): void {
+    if (!this.isOwn) {
+      this.openSnackBar("you need to login to edit plan")
+      return
+    }
+    if (!this.isPremium && !this.isOwn) {
+      this.openSnackBar("you need premium account to edit others plan!")
+      return
+    }
     this.pi = [];
     this.planItems.forEach(pi => {
       this.pi.push({ start_date: pi.startDate, finish_date: pi.finishDate, place_id: pi.placeId })
@@ -206,4 +245,25 @@ export class PlanComponent implements OnInit {
   addPlanDetails(postDetil) {
   }
 
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+  }
+
+  goToMyplan() {
+    if (this.isLoggedIn)
+      this.router.navigate(['/myplans'])
+    else
+      this.openSnackBar("login to see your plans!")
+  }
+
+  goToProfile() {
+    if (this.isLoggedIn)
+      this.router.navigate(['/profile', this.userId])
+    else
+      this.openSnackBar("login to see your profile!")
+  }
 }

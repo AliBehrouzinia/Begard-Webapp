@@ -16,15 +16,16 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: '/landing-page', pathMatch: 'full' },
-    { path: 'landing-page', component: LandingPageComponent},
+    { path: '', redirectTo: '/landingpage', pathMatch: 'full' },
+    { path: 'landingpage', component: LandingPageComponent},
     { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
+    { path: 'register', component: LoginComponent },
     { path: 'search', component: SearchComponent },
     { path: 'myplans', component: MyPlanComponent },
     { path: 'homepage', component: HomePageComponent },
     { path: 'calender/:city', component: CalenderComponent, resolve: { plan: CalenderResolver } },
     { path: 'myplan/:planId', component: PlanComponent },
+    { path: 'plan/:planId', component: PlanComponent },
     { path: 'postlocatio', component: LocationPostComponent },
     { path: 'profile/:id', component: ProfileComponent }
 

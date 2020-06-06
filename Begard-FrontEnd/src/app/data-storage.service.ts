@@ -32,6 +32,7 @@ export interface PI {
 
 export interface MyPlan {
     id;
+    user;
     destination_city_id;
     destination_city_name;
     description;
@@ -49,6 +50,7 @@ export class DataStorageService {
     start_date;
     finish_date;
     city;
+    cityName;
 
     constructor(
         private http: HttpClient,
@@ -58,23 +60,16 @@ export class DataStorageService {
 
     getSuggestedPlan(): Observable<Plan> {
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
-            return this.http.get<Plan>(this.planUrl,
-                {
-                    headers: new HttpHeaders({ 'Authorization': token })
-                }
-            );
+            return this.http.get<Plan>(this.planUrl);
         }));
     }
 
     getPlan(planId): Observable<MyPlan> {
         let url = environment.baseUrl + "/plans/" + planId + "/"
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
-            var token = 'token ' + user.token;
             return this.http
                 .get<MyPlan>(url, {
                     observe: 'response',
-                    headers: new HttpHeaders({ 'Authorization': token })
                 })
                 .pipe(
                     map(res => {
@@ -114,6 +109,14 @@ export class DataStorageService {
 
     getCity() {
         return this.city;
+    }
+
+    setCityName(name) {
+        this.cityName = name;
+    }
+
+    getCityName() {
+        return this.cityName;
     }
 
 }

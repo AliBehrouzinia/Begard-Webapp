@@ -12,13 +12,13 @@
                     {{userName}}
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="2" [rowspan]="1">
-                    <button *ngIf="followingState !='Own' && allowFollowRequest && (authService.isLogedIn | async)"
+                    <button *ngIf="!isOwnPro && allowFollowRequest && (authService.isLogedIn | async)"
                         (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="primary">
                         <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
                         <mat-icon *ngIf="followingState!='Follow'">person</mat-icon>
                         {{followingState}}
                     </button>
-                    <button *ngIf="followingState !='Own' && !allowFollowRequest && (authService.isLogedIn | async)"
+                    <button *ngIf="!isOwnPro && !allowFollowRequest && (authService.isLogedIn | async)"
                         (click)="onFollow()" style="margin-left: 50%;" mat-raised-button color="basic"
                         (click)="openDialog()">
                         <mat-icon *ngIf="followingState=='Follow'">person_add</mat-icon>
@@ -34,11 +34,11 @@
                 </mat-grid-tile>
                 <mat-grid-tile class="username" style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>
                         <div style="font-size: 20px;">Followers</div>
-                        <div class="number">{{follwersNum}}</div>
+                        <div (click)="showFollowers()" class="number">{{follwersNum}}</div>
                     </b></mat-grid-tile>
                 <mat-grid-tile class="username" style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>
                         <div style="font-size: 20px;">Followings</div>
-                        <div class="number">{{follwingsNum}}</div>
+                        <div (click)="showFollowings()" class="number">{{follwingsNum}}</div>
                     </b></mat-grid-tile>
 
 
@@ -50,7 +50,7 @@
     <div style="display:flex">
         <div id="leftbar">
 
-            <mat-card *ngIf="(authService.isLogedIn   | async)" class="shadow-lg"
+            <mat-card *ngIf="(authService.isLogedIn | async)" class="shadow-lg"
                 style="height: auto;margin: 20px;;border-radius: 10px">
                 <div routerLink="/homepage" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>
@@ -62,7 +62,7 @@
                     <p style="margin-left: 10px;margin-top: 10px;">Profile</p>
                 </div>
                 <hr class="hr">
-                <div routerLink="/myplans" class="underline">
+                <div (click)="goToMyplan()" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">My plans</p>
                 </div>
@@ -109,7 +109,7 @@
                                     <span (click)="goToPlan(plan.id)" #city
                                         style=" align-self: center;width: 38%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"
                                         matTooltip="{{plan.destination_city}}" matTooltipPosition="above"
-                                        class="city">{{plan.destination_city}}</span>
+                                        class="city">{{plan.destination_city_name}}</span>
                                     <span (click)="goToPlan(plan.id)" class="date"
                                         style="width: 50%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; text-align: end;align-self: center;"
                                         matTooltip="{{plan.creation_date}}" matTooltipPosition="above">At
@@ -141,6 +141,9 @@
                         <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
                             [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"
                             [userId]="tp.pk"></app-top-planners>
+                    </div>
+                    <div style="text-align: center;" class="tp" *ngIf="noPlannerEnable">
+                        No Planner to Follow
                     </div>
                 </mat-card-content>
             </mat-card>

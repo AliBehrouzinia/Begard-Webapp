@@ -37,6 +37,10 @@ export class TopPlannersComponent implements OnInit {
     }
   }
 
+  goToProfile(id) {
+    location.assign('/profile/' + id)
+  }
+
   handleResponse(status) {
     if (status == "Requested") {
       this.followButtonTitle = "Requested"

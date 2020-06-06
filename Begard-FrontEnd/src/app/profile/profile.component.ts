@@ -5,11 +5,12 @@ import { ProfileService } from './profile.service';
 import { TopPlannersService } from '../top-planners.service';
 import { TopPlanner } from '../top-planner';
 import { UserService } from '../user.service';
-import { FollowService } from '../follow.service';
+import { FollowService, Follower } from '../follow.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { PlanService, MyPlan } from '../plan.service';
 import { AuthService } from '../auth.service';
+import { FollowerDialogComponent } from '../follower-dialog/follower-dialog.component';
 
 export interface DialogData {
   userId: string;
@@ -29,13 +30,21 @@ export class ProfileComponent implements OnInit {
   allTopPlanners = [];
   proUrl: string;
   userId
+  isLogged
+  noPlannerEnable = false
+  followers: Follower[]
+  followings: Follower[]
+
 
   ngOnInit(): void {
-
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
+
+    this.authService.isLogedIn.subscribe(isLogged => {
+      this.isLogged = isLogged;
+    })
 
     this.profileService.getHeaderData(this.id).subscribe(res => {
       this.userName = res.username;
@@ -76,7 +85,8 @@ export class ProfileComponent implements OnInit {
       for (let i = 0; i < plans.length; i++) {
         this.plans.push({
           id: plans[i].id
-          , destination_city: plans[i].destination_city
+          , destination_city_name: plans[i].destination_city_name
+          , destination_city_id: plans[i].destination_city_id
           , creation_date: this.setDateCreation(plans[i].creation_date)
           , cover: this.setCoverUrl(plans[i].cover)
           , userId: plans[i].user
@@ -158,7 +168,7 @@ export class ProfileComponent implements OnInit {
   }
 
   goToPlan(id) {
-    this.router.navigate(['/myplan', id]);
+    this.router.navigate(['/plan', id]);
   }
 
   onFollow() {
@@ -193,6 +203,32 @@ export class ProfileComponent implements OnInit {
     location.reload()
   }
 
+  showFollowers() {
+    this.followSerivce.getFollowers(this.id).subscribe(followers => {
+      this.followers = followers;
+      let dialogRef;
+      dialogRef = this.dialog.open(FollowerDialogComponent, {
+        height: 'auto',
+        minWidth: '300px',
+        maxHeight: '400px',
+        data: { followers: this.followers , type : "followers"}
+      });
+    })
+  }
+
+  showFollowings() {
+    this.followSerivce.getFollowings(this.id).subscribe(followings => {
+      this.followings = followings;
+      let dialogRef;
+      dialogRef = this.dialog.open(FollowerDialogComponent, {
+        height: 'auto',
+        minWidth: '300px',
+        maxHeight: '400px',
+        data: { followers: this.followings , type : "followings"}
+      });
+    })
+  }
+
   goToHome() {
     this.router.navigate(['/homepage']);
   }
@@ -215,10 +251,16 @@ export class ProfileComponent implements OnInit {
       element3.classList.remove('sticky');
     }
   }
+
   initTopPlanners(tp) {
     for (let i = 0; i < Math.min(tp.length, 6); i++) {
       this.topPlanners.push(this.allTopPlanners[0])
       this.allTopPlanners.splice(0, 1);
+    }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
     }
   }
 
@@ -233,6 +275,11 @@ export class ProfileComponent implements OnInit {
           this.topPlanners.splice(i, 1)
       }
     }
+    if (this.topPlanners.length == 0) {
+      this.noPlannerEnable = true
+    } else {
+      this.noPlannerEnable = false
+    }
   }
 
   openSnackBar(message) {
@@ -241,6 +288,13 @@ export class ProfileComponent implements OnInit {
       duration: 3 * 1000
     }
     );
+  }
+
+  goToMyplan() {
+    if (this.isLogged)
+      this.router.navigate(['/myplans'])
+    else
+      this.openSnackBar("login to see your plans!")
   }
 }
 
