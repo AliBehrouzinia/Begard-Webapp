@@ -66,3 +66,17 @@ class IsPlanOwner(permissions.BasePermission):
     def has_permission(self, request, view):
         plan = get_object_or_404(models.Plan, id=view.kwargs.get('id'))
         return request.user == plan.user
+
+
+class IsPublicOrFollowing(permissions.BasePermission):
+    """Check that target user is public or one of followings of user that requested"""
+
+    def has_permission(self, request, view):
+        target_user = get_object_or_404(models.BegardUser, id=view.kwargs.get('id'))
+        source_user = request.user
+        if target_user.is_public:
+            return True
+        if source_user == target_user:
+            return True
+
+        return models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user.id).exists()
