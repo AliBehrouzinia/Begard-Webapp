@@ -211,7 +211,7 @@ export class ProfileComponent implements OnInit {
         height: 'auto',
         minWidth: '300px',
         maxHeight: '400px',
-        data: { followers: this.followers , type : "followers"}
+        data: { followers: this.followers, type: "followers" }
       });
     })
   }
@@ -224,7 +224,7 @@ export class ProfileComponent implements OnInit {
         height: 'auto',
         minWidth: '300px',
         maxHeight: '400px',
-        data: { followers: this.followings , type : "followings"}
+        data: { followers: this.followings, type: "followings" }
       });
     })
   }

@@ -24,8 +24,20 @@ export class ProfileService {
   getHeaderData(id: number) {
     return this.authService.user.pipe(take(1), exhaustMap(user => {
       var url = environment.baseUrl + '/profile/' + id + '/header/';
-      return this.http.get<ProfileHeader>(url
-      );
+
+      if (user == null) {
+        return this.http.get<ProfileHeader>(url);
+      } else {
+        var token = 'token ' + user.token;
+        return this.http.get<ProfileHeader>(url, {
+          headers: new HttpHeaders({
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          })
+        }
+        );
+      }
     }));
   }
 

@@ -41,6 +41,7 @@ export class CalenderComponent implements OnInit {
 
   postPlan: PostPlan;
   pi: PI[];
+  allLocations: PlanItem[]
   cityId;
   isLoggedIn = false;
   planItems: PlanningItem[] = [];
@@ -74,6 +75,7 @@ export class CalenderComponent implements OnInit {
       var plan: Plan = data['plan'];
       this.cityName = this.dataService.getCityName()
       this.location.setLocation(plan.plan.plan_items);
+      this.allLocations = plan.plan.plan_items
       for (var i = 0; i < plan.plan.plan_items.length; i++) {
         this.planItems.push(new PlanningItem(
           new Date(plan.plan.plan_items[i].start_date).toISOString()
@@ -154,6 +156,7 @@ export class CalenderComponent implements OnInit {
           , filteredData[0].placeId + 'a'
         );
         this.scheduleObj.addEvent(newPlan)
+        this.location.addLocation({ lan: filteredData[0].place_info.lng, lat: filteredData[0].place_info.lat, place_name: filteredData[0].place_name })
         for (var i = 0; i < this.gridItems.length; i++) {
           if (this.gridItems[i].placeName == newPlan.placeName) {
             this.gridItems.splice(i, 1);
@@ -175,10 +178,17 @@ export class CalenderComponent implements OnInit {
   onResizeStart(args: ResizeEventArgs): void {
     args.scroll.enable = true;
     args.interval = 1;
-
   }
 
   addToLocationList(location) {
+    let a: PlanItem
+    this.allLocations.push(
+      {
+        start_date: location.start_date
+        , finish_date: location.finish_date
+        , place_name: location.name
+        , place_info: { lng: location.lan, lat: location.lat, id: location.place_id }
+      })
     if (!this.isLocationDuplicate(location)) {
       this.gridObj.addRecord(new PlanningItem(
         location.start_date
@@ -187,6 +197,8 @@ export class CalenderComponent implements OnInit {
         , location.place_id
         , location.place_id
       ));
+    } else {
+      this.openSnackBar("item exists!")
     }
   }
 
@@ -233,7 +245,6 @@ export class CalenderComponent implements OnInit {
   }
 
   addPlanDetails(postDetil) {
-    console.log(" post details : " + postDetil.description)
   }
 
   openSnackBar(message) {
@@ -258,4 +269,15 @@ export class CalenderComponent implements OnInit {
       this.openSnackBar("login to see your profile!")
   }
 
+  getLocations() {
+    let pi: PlanItem[] = []
+    for (let i = 0; i < this.planItems.length; i++) {
+      for (let j = 0; j < this.allLocations.length; j++) {
+        if (this.planItems[i].placeId == this.allLocations[j].place_info['id']){
+          pi.push(this.allLocations[j])
+        }
+      }
+    }
+    return pi;
+  }
 }

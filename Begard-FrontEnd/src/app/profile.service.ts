@@ -19,15 +19,21 @@ export class ProfileService {
     var url = environment.baseUrl + '/profile/' + id + '/header/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      return this.http
-        .get<Profile>(url, {
-          observe: 'response',
-        })
-        .pipe(
-          map(res => {
-            return res.body;
+      var url = environment.baseUrl + '/profile/' + id + '/header/';
+
+      if (user == null) {
+        return this.http.get<Profile>(url);
+      } else {
+        var token = 'token ' + user.token;
+        return this.http.get<Profile>(url, {
+          headers: new HttpHeaders({
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           })
+        }
         );
+      }
     }));
   }
 }
