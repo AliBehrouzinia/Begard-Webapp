@@ -39,21 +39,45 @@
 
         <app-location-carousel [imgSrc]="post.imgSrc"></app-location-carousel>
 
-        <form class="example-form">
-            <div style=" margin-left: 45%; margin-top: 11px;width: 7%;"> <a (click)="onAbleComment(post)"
-                    class="comment far fa-comment" style="color: #616161;transform: scale(2);"></a>
-                <div style="margin-top: 4px;color: #424242;"><b>{{post.commentNums}}</b></div>
+        <div>
+            <div style="margin-top: 5%;
+            justify-content: center;
+            display: flex;">
+                <div style="display: block;">
+                    <a (click)="onAbleComment(post)" class="comment far fa-comment"
+                        style="color: #616161;color: #616161;
+                        height: 40px;
+                        width: 40px;
+                        justify-content: center;
+                        display: flex;
+                        align-items: center;
+                        font-size: 180%;;">
+                    </a>
+                    <div style="margin-top: 10%;
+                    justify-content: center;
+                    display: flex;
+                    font-size: 130%;">
+                        <div>{{post.commentNums}}</div>
+                    </div>
+                </div>
+                <div style="display: block;">
+                    <a (click)='onLike(post)' mat-icon-button *ngIf="!post.isLiked">
+                        <mdb-icon far icon="heart" style="color: #616161;font-size: 180%;"></mdb-icon>
+                    </a>
+                    <a (click)='onDislike(post)' mat-icon-button color="warn"  *ngIf="post.isLiked">
+                        <mdb-icon fas icon="heart" color="red" style="font-size: 180%;"></mdb-icon>
+                    </a>
+                    <div style="margin-top: 10%;
+                    justify-content: center;
+                    display: flex;
+                    font-size: 130%;">
+                        <div>{{post.likeNums}}</div>
+                    </div>
+                </div>
             </div>
-            <a (click)='onLike(post)' mat-icon-button style="width: 5%;" *ngIf="!post.isLiked">
-                <mdb-icon far icon="heart" style="color: #616161;" size="2x"></mdb-icon>
-            </a>
-            <a (click)='onDislike(post)' mat-icon-button color="warn" style="width: 5%;" *ngIf="post.isLiked">
-                <mdb-icon fas icon="heart" color="red" size="2x"></mdb-icon>
-            </a>
-            <b style=" color: #424242;margin-left: -18px;margin-top: 35px;">{{post.likeNums}}</b>
-        </form>
+        </div>
 
-        <form *ngIf="!post.disable" class="example-form">
+        <div *ngIf="!post.disable">
 
             <div style="width: 100%;display: flex;" *ngIf="(authService.isLogedIn | async)">
                 <mat-form-field class="example-full-width" style="width: 100%;">
@@ -65,10 +89,12 @@
                 width: 10%;
                 align-items: end;
                 padding-bottom: 2%;width: 10%;">
-                    <button (click)="onComment(post)" mat-icon-button ><mat-icon>send</mat-icon></button>
+                    <button (click)="onComment(post)" mat-icon-button>
+                        <mat-icon>send</mat-icon>
+                    </button>
                 </div>
             </div>
-        </form>
+        </div>
         <app-comment *ngIf="!post.disable" [postId]="post.id"></app-comment>
     </div>
 </mat-card>
