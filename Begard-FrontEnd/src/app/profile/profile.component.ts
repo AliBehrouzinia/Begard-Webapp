@@ -46,11 +46,11 @@ export class ProfileComponent implements OnInit {
       this.isLogged = isLogged;
     })
 
-    this.followSerivce.getFollowers().subscribe(followers => {
+    this.followSerivce.getFollowers(this.id).subscribe(followers => {
       this.followers = followers;
     })
 
-    this.followSerivce.getFollowings().subscribe(followings => {
+    this.followSerivce.getFollowings(this.id).subscribe(followings => {
       this.followings = followings;
     })
 
@@ -93,7 +93,8 @@ export class ProfileComponent implements OnInit {
       for (let i = 0; i < plans.length; i++) {
         this.plans.push({
           id: plans[i].id
-          , destination_city: plans[i].destination_city
+          , destination_city_name: plans[i].destination_city_name
+          , destination_city_id: plans[i].destination_city_id
           , creation_date: this.setDateCreation(plans[i].creation_date)
           , cover: this.setCoverUrl(plans[i].cover)
           , userId: plans[i].user

@@ -20,9 +20,8 @@ export interface ResFollowReq {
 
 export interface Follower {
   id;
-  created;
-  user_id;
-  following_user_id;
+  profile_img;
+  username;
 }
 
 @Injectable({
@@ -87,37 +86,27 @@ export class FollowService {
     }))
   }
 
-  getFollowers() : Observable<Follower[]>{
-    const url = environment.baseUrl + '/followers/';
+  getFollowers(id): Observable<Follower[]> {
+    const url = environment.baseUrl + '/user/' + id + '/followers/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
       return this.http
         .get<Follower[]>(url, {
-          observe: 'response',
-          headers: new HttpHeaders({
-            'Authorization': token,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          })
+          observe: 'response'
         }).pipe(
           map(res => res.body))
     }))
   }
 
-  getFollowings() : Observable<Follower[]>{
-    const url = environment.baseUrl + '/followings/';
+  getFollowings(id): Observable<Follower[]> {
+    const url = environment.baseUrl + '/user/' + id + '/followings/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
       var token = 'token ' + user.token;
       return this.http
         .get<Follower[]>(url, {
-          observe: 'response',
-          headers: new HttpHeaders({
-            'Authorization': token,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          })
+          observe: 'response'
         }).pipe(
           map(res => res.body))
     }))
