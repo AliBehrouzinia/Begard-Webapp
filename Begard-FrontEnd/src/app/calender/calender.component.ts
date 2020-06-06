@@ -6,13 +6,16 @@ import { GridComponent, RowDDService, EditService, EditSettingsModel, RowDropSet
 
 import { L10n } from '@syncfusion/ej2-base';
 import { DataStorageService, PlanItem, Plan } from '../data-storage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlanningItem } from '../plan-item.model';
 import { MatDialog } from '@angular/material/dialog';
 import { PostDialogComponent } from './../post-dialog/post-dialog.component';
 import { PostPlan, PI } from '../post-plan';
 import { PostPlanService } from '../post-plan.service';
 import { MapLocationService } from '../map-locations.service';
+import { Observable } from 'rxjs';
+import { AuthService } from '../auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 L10n.load({
@@ -39,25 +42,37 @@ export class CalenderComponent implements OnInit {
   postPlan: PostPlan;
   pi: PI[];
   cityId;
-
+  isLoggedIn = false;
   planItems: PlanningItem[] = [];
   gridItems: PlanningItem[] = [];
+  loginStatus$: Observable<boolean>;
+  cityName
 
   constructor(
     public dataService: DataStorageService,
     public postPlanService: PostPlanService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    private location: MapLocationService
+    private location: MapLocationService,
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit() {
+    this.loginStatus$ = this.authService.isLogedIn;
+
+    this.loginStatus$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn
+    })
+
     this.route.paramMap.subscribe(params => {
       this.cityId = +params.get('city');
     });
 
     this.route.data.subscribe(data => {
       var plan: Plan = data['plan'];
+      this.cityName = this.dataService.getCityName()
       this.location.setLocation(plan.plan.plan_items);
       for (var i = 0; i < plan.plan.plan_items.length; i++) {
         this.planItems.push(new PlanningItem(
@@ -183,8 +198,12 @@ export class CalenderComponent implements OnInit {
     }
     return false;
   }
-  
+
   openDialog(): void {
+    if (!this.isLoggedIn) {
+      this.openSnackBar("login to save the plan!")
+      return;
+    }
     this.pi = [];
     this.planItems.forEach(pi => {
       this.pi.push({ start_date: pi.startDate, finish_date: pi.finishDate, place_id: pi.placeId })
@@ -215,6 +234,28 @@ export class CalenderComponent implements OnInit {
 
   addPlanDetails(postDetil) {
     console.log(" post details : " + postDetil.description)
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
+  }
+
+  goToMyplan() {
+    if (this.isLoggedIn)
+      this.router.navigate(['/myplans'])
+    else
+      this.openSnackBar("login to see your plans!")
+  }
+
+  goToProfile() {
+    if (this.isLoggedIn)
+      this.router.navigate(['/profile', 1])
+    else
+      this.openSnackBar("login to see your profile!")
   }
 
 }

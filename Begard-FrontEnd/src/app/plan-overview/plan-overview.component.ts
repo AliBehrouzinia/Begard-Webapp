@@ -53,6 +53,6 @@ export class PlanOverviewComponent implements OnInit {
   }
 
   goToPlan() {
-    this.router.navigate(['/myplan', this.planId]);
+    this.router.navigate(['/plan', this.planId]);
   }
 }

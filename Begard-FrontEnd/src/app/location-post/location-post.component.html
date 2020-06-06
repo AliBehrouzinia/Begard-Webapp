@@ -11,7 +11,7 @@
                     class="post-username">{{post.userName}}</span></div>
         </mat-grid-tile>
         <mat-grid-tile class="post-follow" [colspan]=3 style="background: #3f51b5;border-top-right-radius: 10px;">
-            <button *ngIf="post.followingState != 'Own' && (authService.isLogedIn | async)" (click)="onFollow(post)"
+            <button *ngIf="post.usrId != userId && (authService.isLogedIn | async)" (click)="onFollow(post)"
                 mat-stroked-button color="primary" style="transform: scale(0.75);background: white;">
                 <mat-icon *ngIf="post.followingState=='Follow'">person_add </mat-icon>
                 <mat-icon *ngIf="post.followingState!='Follow'">person</mat-icon>
@@ -53,9 +53,9 @@
             <b style=" color: #424242;margin-left: -18px;margin-top: 35px;">{{post.likeNums}}</b>
         </form>
 
-        <form *ngIf="!post.disable  && (authService.isLogedIn | async)" class="example-form">
+        <form *ngIf="!post.disable" class="example-form">
 
-            <div style="width: 100%;">
+            <div style="width: 100%;" *ngIf="(authService.isLogedIn | async)">
                 <mat-form-field class="example-full-width" style="margin-right: 5px;">
                     <mat-label>Leave a comment</mat-label>
                     <textarea [formControl]="commentFc" matInput placeholder="It makes me feel..."></textarea>

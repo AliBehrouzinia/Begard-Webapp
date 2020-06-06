@@ -3,9 +3,9 @@
         <span routerLink="/homepage" routerLinkActive="active">
             <img class="logo" src="{{url+'/media/images/begrd_icon.svg'}}"> <span class="name">Begard</span>
         </span>
-        <button class="searchinput">
+        <!-- <button class="searchinput">
             <mat-icon style="color: black; font-size: 30px;">search</mat-icon>
-        </button>
+        </button> -->
         <div class="spacer"></div>
         <div *ngIf="!(loginStatus$ | async)">
             <a mat-raised-button color="basic" routerLink="/login" routerLinkActive="active">Login</a>

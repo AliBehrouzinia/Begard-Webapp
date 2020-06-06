@@ -69,8 +69,7 @@ import { PostLocationService } from './post-location.service';
 import { MyLocationService } from './my-location.service';
 import { PlanComponent } from './plan/plan.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-
-
+import { FollowerDialogComponent } from './follower-dialog/follower-dialog.component';
 
 
 @NgModule({
@@ -97,7 +96,8 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
       UnfollowDialog,
       PostLocationComponent,
       PlanComponent,
-      LandingPageComponent
+      LandingPageComponent,
+      FollowerDialogComponent
    ],
    imports: [
       BrowserModule,
@@ -122,7 +122,6 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
       NguCarouselModule,
       TabModule,
       MDBBootstrapModule
-
    ],
 
    providers: [ DataStorageService, MyPlanService, MyLocationService, ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],

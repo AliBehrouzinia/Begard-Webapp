@@ -17,12 +17,12 @@
                     <p style="margin-left: 10px;margin-top: 10px;">Home</p>
                 </div>
                 <hr class="hr">
-                <div routerLink="{{userPro}}" class="underline">
+                <div (click)="goToProfile()" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">person_outline</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">Profile</p>
                 </div>
                 <hr class="hr">
-                <div routerLink="/myplans" class="underline">
+                <div (click)="goToMyplan()" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">date_range</mat-icon>
                     <p style="margin-left: 10px;margin-top: 10px;">My plans</p>
                 </div>
@@ -63,6 +63,9 @@
                         <app-top-planners style="width: 100%;" [username]="tp.username" [email]="tp.email"
                             [profileImg]="tp.profile_img" [rate]="tp.average_rate" [isPublic]="tp.is_public"
                             [userId]="tp.pk"></app-top-planners>
+                    </div>
+                    <div style="text-align: center;" class="tp" *ngIf="noPlannerEnable">
+                        No Planner to Follow
                     </div>
                 </mat-card-content>
             </mat-card>

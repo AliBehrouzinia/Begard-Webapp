@@ -9,6 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take, exhaustMap } from 'rxjs/operators';
 import { ReqUser, NotifService } from './notificaton.service';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 
 class FollowReq {
@@ -35,6 +36,7 @@ export class NavBarComponent implements OnInit {
   constructor(public authService: AuthService, public matIconRegistry: MatIconRegistry, public domSanitizer: DomSanitizer,
     public dialog: MatDialog,
     public http: HttpClient,
+    private router: Router,
     private notifService: NotifService) {
     //to add custom icon
     this.matIconRegistry.addSvgIcon(
@@ -47,7 +49,7 @@ export class NavBarComponent implements OnInit {
   }
   items: FollowReq[] = [];
   public notfiNums;
-  public url ;
+  public url;
 
   ngOnInit(): void {
     this.notifService.getFollowRequests().subscribe(res => {
@@ -69,7 +71,10 @@ export class NavBarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    location.reload()
+    if (this.router.url.toString().includes('register') || this.router.url.toString().includes('login'))
+      location.reload()
+    else
+      this.router.navigate(['/landingpage'])
   }
 
   openDialog(event: Event): void {
