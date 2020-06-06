@@ -1,0 +1,13 @@
+<div style="overflow: auto;">
+    <div *ngFor="let user of users" style="display: flex;margin-bottom: 20px;">
+        <img mat-card-avatar [src]="user.profleCover" />
+        <div style="align-content: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: start;
+    font-size: 120%;
+    margin-left: 15px;">
+            <p>username</p>
+        </div>
+    </div>
+</div>

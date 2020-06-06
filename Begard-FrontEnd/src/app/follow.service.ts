@@ -18,6 +18,13 @@ export interface ResFollowReq {
   status: string;
 }
 
+export interface Follower {
+  id;
+  created;
+  user_id;
+  following_user_id;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -77,6 +84,42 @@ export class FollowService {
           })
         }).pipe(
           map(res => res.status.toString()))
+    }))
+  }
+
+  getFollowers() : Observable<Follower[]>{
+    const url = environment.baseUrl + '/followers/';
+
+    return this.authservice.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      return this.http
+        .get<Follower[]>(url, {
+          observe: 'response',
+          headers: new HttpHeaders({
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          })
+        }).pipe(
+          map(res => res.body))
+    }))
+  }
+
+  getFollowings() : Observable<Follower[]>{
+    const url = environment.baseUrl + '/followings/';
+
+    return this.authservice.user.pipe(take(1), exhaustMap(user => {
+      var token = 'token ' + user.token;
+      return this.http
+        .get<Follower[]>(url, {
+          observe: 'response',
+          headers: new HttpHeaders({
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          })
+        }).pipe(
+          map(res => res.body))
     }))
   }
 

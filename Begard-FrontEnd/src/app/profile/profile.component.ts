@@ -5,11 +5,12 @@ import { ProfileService } from './profile.service';
 import { TopPlannersService } from '../top-planners.service';
 import { TopPlanner } from '../top-planner';
 import { UserService } from '../user.service';
-import { FollowService } from '../follow.service';
+import { FollowService, Follower } from '../follow.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { PlanService, MyPlan } from '../plan.service';
 import { AuthService } from '../auth.service';
+import { FollowerDialogComponent } from '../follower-dialog/follower-dialog.component';
 
 export interface DialogData {
   userId: string;
@@ -31,6 +32,9 @@ export class ProfileComponent implements OnInit {
   userId
   isLogged
   noPlannerEnable = false
+  followers: Follower[]
+  followings: Follower[]
+
 
   ngOnInit(): void {
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
@@ -40,6 +44,14 @@ export class ProfileComponent implements OnInit {
 
     this.authService.isLogedIn.subscribe(isLogged => {
       this.isLogged = isLogged;
+    })
+
+    this.followSerivce.getFollowers().subscribe(followers => {
+      this.followers = followers;
+    })
+
+    this.followSerivce.getFollowings().subscribe(followings => {
+      this.followings = followings;
     })
 
     this.profileService.getHeaderData(this.id).subscribe(res => {
@@ -196,6 +208,26 @@ export class ProfileComponent implements OnInit {
 
   refresh() {
     location.reload()
+  }
+
+  showFollowers() {
+    let dialogRef;
+    dialogRef = this.dialog.open(FollowerDialogComponent, {
+      height: 'auto',
+      minWidth: '300px',
+      maxHeight: '400px',
+      data: { followers: this.followers }
+    });
+  }
+
+  showFollowings() {
+    let dialogRef;
+    dialogRef = this.dialog.open(FollowerDialogComponent, {
+      height: 'auto',
+      minWidth: '300px',
+      maxHeight: '400px',
+      data: { followers: this.followings }
+    });
   }
 
   goToHome() {

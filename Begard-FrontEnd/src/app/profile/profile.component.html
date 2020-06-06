@@ -34,11 +34,11 @@
                 </mat-grid-tile>
                 <mat-grid-tile class="username" style="margin-left: -4%;" [colspan]="1" [rowspan]="1"><b>
                         <div style="font-size: 20px;">Followers</div>
-                        <div class="number">{{follwersNum}}</div>
+                        <div (click)="showFollowers()" class="number">{{follwersNum}}</div>
                     </b></mat-grid-tile>
                 <mat-grid-tile class="username" style="margin-left: -10%;" [colspan]="1" [rowspan]="1"><b>
                         <div style="font-size: 20px;">Followings</div>
-                        <div class="number">{{follwingsNum}}</div>
+                        <div (click)="showFollowings()" class="number">{{follwingsNum}}</div>
                     </b></mat-grid-tile>
 
 
@@ -50,7 +50,7 @@
     <div style="display:flex">
         <div id="leftbar">
 
-            <mat-card *ngIf="(authService.isLogedIn   | async)" class="shadow-lg"
+            <mat-card *ngIf="(authService.isLogedIn | async)" class="shadow-lg"
                 style="height: auto;margin: 20px;;border-radius: 10px">
                 <div routerLink="/homepage" class="underline">
                     <mat-icon style="margin-left: 10px;margin-top: 7px;">home</mat-icon>

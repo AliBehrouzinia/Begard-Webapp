@@ -52,7 +52,7 @@ export class PlanComponent implements OnInit {
   userId
   userPlanId
   cityName
-  
+
   constructor(
     public dataService: DataStorageService,
     public postPlanService: PostPlanService,
@@ -74,7 +74,7 @@ export class PlanComponent implements OnInit {
 
     this.userServie.getUserId().subscribe(res => {
       this.userId = res.pk;
-      if (this.plan.user != this.userPlanId) {
+      if (this.userPlanId != this.userId) {
         this.isOwn = false;
       }
     })
@@ -85,7 +85,7 @@ export class PlanComponent implements OnInit {
         this.plan = data;
         this.userPlanId = this.plan.user
         this.cityName = this.plan.destination_city_name
-        if (this.plan.user != this.userPlanId) {
+        if (this.plan.user != this.userId) {
           this.isOwn = false;
         }
         this.cityId = this.plan.destination_city_id
