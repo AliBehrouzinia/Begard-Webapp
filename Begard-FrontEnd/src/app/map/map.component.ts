@@ -18,7 +18,8 @@ import { MapMarker } from './mapmarker.model';
 import { MapLocationService } from '../map-locations.service';
 import { Style } from 'ol/style';
 import { Icon } from 'ol/style';
-
+import { CalenderComponent } from '../calender/calender.component'
+import { PlanComponent } from '../plan/plan.component'
 
 
 
@@ -30,11 +31,17 @@ import { Icon } from 'ol/style';
 })
 export class MapComponent implements AfterViewInit {
 
-  constructor(private locationService: MapLocationService) { }
+  constructor(private locationService: MapLocationService,
+    private pc : PlanComponent,
+    private cc : CalenderComponent) { }
   markerLocations: MapMarker[];
 
   ngAfterViewInit() {
-
+    // if (this.pc.getLocations() == null){
+    this.locationService.setLocation(this.cc.getLocations())
+    // }else{
+    //   this.locationService.setLocation(this.pc.getLocations())
+    // }
     this.markerLocations = this.locationService.getLocations();
     //
     // elements that make up the popup.
@@ -130,7 +137,7 @@ export class MapComponent implements AfterViewInit {
       if (map.hasFeatureAtPixel(evt.pixel) == true) {
         var coordinate = evt.coordinate;
         var hdms = coordinate;
-        content.innerHTML = '<p>hello I am a popup:</p><code>' + hdms +
+        content.innerHTML = '<p></p><code>' + hdms +
           '</code>';
         overlay.setPosition(coordinate);
 
