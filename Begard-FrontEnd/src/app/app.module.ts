@@ -71,6 +71,7 @@ import { PlanComponent } from './plan/plan.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { FollowerDialogComponent } from './follower-dialog/follower-dialog.component';
 
+import { StarRatingComponent } from './start-rating/star-rating.component';
 
 @NgModule({
    declarations: [
@@ -97,7 +98,8 @@ import { FollowerDialogComponent } from './follower-dialog/follower-dialog.compo
       PostLocationComponent,
       PlanComponent,
       LandingPageComponent,
-      FollowerDialogComponent
+      FollowerDialogComponent,
+      StarRatingComponent
    ],
    imports: [
       BrowserModule,
@@ -121,7 +123,7 @@ import { FollowerDialogComponent } from './follower-dialog/follower-dialog.compo
       DateTimePickerModule,
       NguCarouselModule,
       TabModule,
-      MDBBootstrapModule
+      MDBBootstrapModule,
    ],
 
    providers: [ DataStorageService, MyPlanService, MyLocationService, ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
