@@ -727,7 +727,7 @@ class UserSearchView(generics.ListAPIView):
 
 class UserFollowingView(generics.ListAPIView):
     permission_classes = [AllowAny, IsPublicOrFollowing]
-    serializer_class = FollowingsSerializer
+    serializer_class = serializers.ListOfFollowingsSerializer
 
     def get_queryset(self):
         user = self.kwargs.get('id')
@@ -736,7 +736,7 @@ class UserFollowingView(generics.ListAPIView):
 
 class UserFollowerView(generics.ListAPIView):
     permission_classes = [AllowAny, IsPublicOrFollowing]
-    serializer_class = serializers.FollowersSerializer
+    serializer_class = serializers.ListOfFollowersSerializer
 
     def get_queryset(self):
         user = self.kwargs.get('id')
