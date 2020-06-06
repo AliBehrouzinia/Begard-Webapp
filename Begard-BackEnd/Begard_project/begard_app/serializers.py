@@ -243,34 +243,6 @@ class ListOfFollowersSerializer(serializers.ModelSerializer):
         fields = ['user_id']
 
 
-class ListOfFollowingsSerializer(serializers.ModelSerializer):
-    def to_representation(self, instance):
-        result = super(ListOfFollowingsSerializer, self).to_representation(instance)
-        user = instance.following_user_id
-        result['id'] = result.pop('following_user_id')
-        result['profile_img'] = user.profile_img.url
-        result['username'] = user.email
-        return result
-
-    class Meta:
-        model = UserFollowing
-        fields = ['following_user_id']
-
-
-class ListOfFollowersSerializer(serializers.ModelSerializer):
-    def to_representation(self, instance):
-        result = super(ListOfFollowersSerializer, self).to_representation(instance)
-        user = instance.user_id
-        result['id'] = result.pop('user_id')
-        result['profile_img'] = user.profile_img.url
-        result['username'] = user.email
-        return result
-
-    class Meta:
-        model = UserFollowing
-        fields = ['user_id']
-
-
 class CreateLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
