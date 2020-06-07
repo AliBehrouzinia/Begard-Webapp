@@ -26,7 +26,7 @@ export class HorizontlListComponent implements OnInit {
 
   public carouselTileItems: any[] = [];
   public carouselTileConfig: NguCarouselConfig = {
-    grid: { xs: 3, sm: 1, md: 1, lg: 2, all: 0 },
+    grid: { xs: 1, sm: 2, md: 1, lg: 2, all: 0 },
     speed: 250,
     point: {
       visible: true

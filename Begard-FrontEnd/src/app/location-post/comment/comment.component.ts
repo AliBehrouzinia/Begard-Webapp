@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from 'src/app/auth.service';
 import { take, exhaustMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+
 export interface Comment {
   id: number,
   content: string,
@@ -20,6 +21,8 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./comment.component.css']
 })
 export class CommentComponent implements OnInit {
+  baseUrl = environment.baseUrl
+
   constructor(private http: HttpClient,
     private authService: AuthService) { }
 

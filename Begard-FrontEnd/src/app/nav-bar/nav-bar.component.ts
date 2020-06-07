@@ -9,6 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take, exhaustMap } from 'rxjs/operators';
 import { ReqUser, NotifService } from './notificaton.service';
 import { environment } from '../../environments/environment';
+import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 
 
@@ -29,15 +30,14 @@ export class NavBarComponent implements OnInit {
 
   userEmail$: Observable<string>;
 
-  notifDisable: boolean = true;
-
-  notifFlag: boolean = false;
+  public userPro : string;
 
   constructor(public authService: AuthService, public matIconRegistry: MatIconRegistry, public domSanitizer: DomSanitizer,
     public dialog: MatDialog,
     public http: HttpClient,
     private router: Router,
-    private notifService: NotifService) {
+    private notifService: NotifService,
+    private user :UserService) {
     //to add custom icon
     this.matIconRegistry.addSvgIcon(
       "begard_logo",
@@ -52,6 +52,10 @@ export class NavBarComponent implements OnInit {
   public url;
 
   ngOnInit(): void {
+    this.user.getUserId().subscribe(res => {
+      this.userPro = '/profile/' + res.pk;
+    });
+
     this.notifService.getFollowRequests().subscribe(res => {
       this.setItems(res);
     });
@@ -78,29 +82,13 @@ export class NavBarComponent implements OnInit {
   }
 
   openDialog(event: Event): void {
-    if (this.notifDisable == true) {
-      this.notifDisable = false;
-      this.notifFlag = true;
-    }
-    else {
-      this.notifDisable = true;
-    }
+    document.getElementById("myPopup").classList.toggle("show");
   }
+
   onAccept(item: FollowReq) {
     this.notifService.onAction('accept', item.id).subscribe(res => {
       this.removeItem(item);
     });
-  }
-
-  onAllPage() {
-    if (this.notifFlag == false) {
-      this.notifDisable = true;
-    }
-    this.notifFlag = false;
-  }
-
-  onNotif() {
-    this.notifFlag = true;
   }
 
   onDecline(item: FollowReq) {

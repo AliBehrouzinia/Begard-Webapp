@@ -41,19 +41,35 @@ export class PlanService {
     const url = environment.baseUrl + '/plans/' + planId;
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      return this.http
-        .get<Plan[]>(url, {
-          observe: 'response',
-        })
-        .pipe(
-          map(res => {
-            return res.body;
+      if (user == null) {
+        return this.http
+          .get<Plan[]>(url, {
+            observe: 'response',
           })
-        );
+          .pipe(
+            map(res => {
+              return res.body;
+            })
+          );
+      } else {
+        var token = 'token ' + user.token;
+        alert(token)
+        return this.http
+          .get<Plan[]>(url, {
+            observe: 'response',
+            headers: new HttpHeaders({ 'Authorization': token })
+          })
+          .pipe(
+            map(res => {
+              return res.body;
+            })
+          );
+      }
+
     }));
   }
 
-  getUserPlans(userId) : Observable<MyPlan[]>{
+  getUserPlans(userId): Observable<MyPlan[]> {
     const url = environment.baseUrl + '/user/' + userId + "/plans/";
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {

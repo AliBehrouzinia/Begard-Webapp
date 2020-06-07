@@ -7,11 +7,12 @@ import { type } from 'os';
 import { environment } from 'src/environments/environment';
 
 export interface FollowRequest {
-  request_to
+  request_to,
 }
 
 export interface FollowResult {
   status
+  follow_request_id
 }
 
 export interface ResFollowReq {
@@ -90,12 +91,27 @@ export class FollowService {
     const url = environment.baseUrl + '/user/' + id + '/followers/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
-      return this.http
-        .get<Follower[]>(url, {
-          observe: 'response'
-        }).pipe(
-          map(res => res.body))
+      if (user == null) {
+        return this.http
+          .get<Follower[]>(url, {
+            observe: 'response'
+          }).pipe(
+            map(res => res.body)
+          )
+      } else {
+        var token = 'token ' + user.token;
+        return this.http
+          .get<Follower[]>(url, {
+            observe: 'response',
+            headers: new HttpHeaders({
+              'Authorization': token,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            })
+          }).pipe(
+            map(res => res.body)
+          )
+      }
     }))
   }
 
@@ -103,12 +119,27 @@ export class FollowService {
     const url = environment.baseUrl + '/user/' + id + '/followings/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
-      return this.http
-        .get<Follower[]>(url, {
-          observe: 'response'
-        }).pipe(
-          map(res => res.body))
+      if (user == null) {
+        return this.http
+          .get<Follower[]>(url, {
+            observe: 'response'
+          }).pipe(
+            map(res => res.body)
+          )
+      } else {
+        var token = 'token ' + user.token;
+        return this.http
+          .get<Follower[]>(url, {
+            observe: 'response',
+            headers: new HttpHeaders({
+              'Authorization': token,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            })
+          }).pipe(
+            map(res => res.body)
+          )
+      }
     }))
   }
 

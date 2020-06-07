@@ -464,12 +464,14 @@ class FollowingRequestView(generics.CreateAPIView):
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
             if serializer.is_valid(True):
                 serializer.save()
-                return Response(data={"status": "Followed"}, status=status.HTTP_201_CREATED)
+                return Response(data={"status": "Followed", "follow_request_id": None},
+                                status=status.HTTP_201_CREATED)
         else:
             serializer = serializers.FollowingRequestSerializer(data=data)
             if serializer.is_valid(True):
-                serializer.save()
-                return Response(data={"status": "Requested"}, status=status.HTTP_201_CREATED)
+                follow_request = serializer.save()
+                return Response(data={"status": "Requested", "follow_request_id": follow_request.id},
+                                status=status.HTTP_201_CREATED)
 
         return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -599,6 +601,7 @@ class ProfileDetailsView(generics.RetrieveAPIView):
         data['posts_count'] = models.Post.objects.filter(user=target_user).count()
         data['followings_count'] = models.UserFollowing.objects.filter(user_id=target_user).count()
         data['followers_count'] = models.UserFollowing.objects.filter(following_user_id=target_user).count()
+        data['follow_request_id'] = None
 
         if source_user == target_user:
             following_state = FollowingState.Own.name
@@ -606,6 +609,8 @@ class ProfileDetailsView(generics.RetrieveAPIView):
             following_state = FollowingState.Following.name
         elif models.FollowRequest.objects.filter(request_from=source_user.id, request_to=target_user).exists():
             following_state = FollowingState.Requested.name
+            data['follow_request_id'] = get_object_or_404(models.FollowRequest, request_from=source_user.id,
+                                                          request_to=target_user).id
         else:
             following_state = FollowingState.Follow.name
 

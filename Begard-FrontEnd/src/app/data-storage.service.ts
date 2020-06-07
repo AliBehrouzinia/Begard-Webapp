@@ -66,8 +66,10 @@ export class DataStorageService {
 
     getPlan(planId): Observable<MyPlan> {
         let url = environment.baseUrl + "/plans/" + planId + "/"
+
         return this.authservice.user.pipe(take(1), exhaustMap(user => {
-            return this.http
+            if (user == null){
+                return this.http
                 .get<MyPlan>(url, {
                     observe: 'response',
                 })
@@ -76,8 +78,23 @@ export class DataStorageService {
                         return res.body;
                     })
                 );
+            }else{
+                var token = 'token ' + user.token;
+
+                return this.http
+                .get<MyPlan>(url, {
+                    observe: 'response',
+                    headers: new HttpHeaders({ 'Authorization': token })
+                })
+                .pipe(
+                    map(res => {
+                        return res.body;
+                    })
+                );
+            }
         }));
     }
+
 
     getCities() {
         return this.http.get<City[]>(environment.baseUrl + '/cities/');

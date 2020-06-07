@@ -11,7 +11,8 @@ export interface ProfileHeader {
   posts_count: number,
   followings_count: number,
   followers_count: number,
-  following_state: string
+  following_state: string,
+  follow_request_id: string
 }
 
 @Injectable({ providedIn: 'root' })

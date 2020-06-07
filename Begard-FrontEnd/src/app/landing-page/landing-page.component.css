@@ -3,7 +3,7 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     background-color: #3f51b5 ;
-    padding: 1% 15%  !important;
+    padding: 2% 15%  !important;
 }
 
 .nav-hover:hover {
@@ -72,6 +72,12 @@ p {
 
 .download-btn {
     margin : 5% 2% 5% 0;
+    
+}
+
+.download-btn-visit {
+    margin : 5% 2% 5% 0;
+    background-color: #ff4081; color: white
 }
 
 .title-img {

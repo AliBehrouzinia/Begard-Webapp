@@ -65,11 +65,12 @@
   .search-wrapper .example-quart-width {
     margin-left: 1%;
     margin-top: 30px;
-    width: 22%;
+    width: 100%;
   }
   .search-wrapper .btn-block {
-    width: 30%;
+    width: 100%;
     font-size: 18px;
+    margin-top: 20px;
     
     transform: scale(0.70);
   }

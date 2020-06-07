@@ -30,10 +30,10 @@
             <div class="row">
                 <div class="col-lg-6">
                     <h1>Plan your trips and have a good journey.</h1>
-                    <button routerLink="/homepage" type="button" class="btn btn-dark btn-lg download-btn"><i
+                    <button routerLink="/homepage" type="button" class="btn btn-lg download-btn-visit"><i
                             class="fas fa-eye user-icon-btn"></i> VISIT
                         US</button>
-                    <button routerlink="/login" type="button" class="btn btn-light btn-lg download-btn"><i
+                    <button (click)="goToLogin()" type="button" class="btn btn-light btn-lg download-btn"><i
                             class="fas fa-user-friends user-icon-btn"></i>
                         JOIN US</button>
                 </div>
@@ -86,18 +86,34 @@
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <h2>I no longer have to sniff other dogs for love. I've found the hottest Corgi on TinDog. Woof.
-                    </h2>
-                    <img class="testimonials-img" src="{{baseUrl+'/media/images/dog-img.jpg'}}" alt="dog-profile">
-                    <em>Pebbles, New York</em>
-
+                    <div class="row">
+                        <div style="text-align: left;" class="col-md-4">
+                          <h2 style="font-size: 2rem;"> You can search for the place you want to travel</h2>
+                        </div>
+                        <div class="col-md-8" style="text-align: center;">
+                            <img style="width: 100%;border-radius: 10px;" class="shadow-lg" src="{{baseUrl + '/media/images/feature1.gif'}}" alt="e">
+                        </div>
+                    </div>
                 </div>
                 <div class="carousel-item">
-                    <h2 class="testimonial-text">My dog used to be so lonely, but with TinDog's help, they've found the
-                        love of
-                        their life. I think.</h2>
-                    <img class="testimonials-img" src="{{baseUrl + '/media/images/lady-img.jpg'}}" alt="lady-profile">
-                    <em>Beverly, Illinois</em>
+                    <div class="row">
+                        <div style="text-align: left;" class="col-md-4">
+                          <h2 style="font-size: 2rem;"> You can have your own planning for the journey</h2>
+                        </div>
+                        <div class="col-md-8" style="text-align: center;">
+                            <img style="width: 100%;border-radius: 10px;" class="shadow-lg" src="{{baseUrl + '/media/images/feature2.gif'}}" alt="e">
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div style="text-align: left;" class="col-md-4">
+                          <h2 style="font-size: 2rem;"> You can enjoy using other's plannings</h2>
+                        </div>
+                        <div class="col-md-8" style="text-align: center;">
+                            <img style="width: 100%;border-radius: 10px;" class="shadow-lg" src="{{baseUrl + '/media/images/feature3.png'}}" alt="">
+                        </div>
+                    </div>
                 </div>
             </div>
             <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -121,25 +137,25 @@
     <section #team id="team">
         <div class="row">
             <div class="col-lg-3 col-md-6 profile-item  ">
-                <img class="shadow-lg p-1 mb-2 profile-img " src="{{baseUrl+'/media/images/developer-pro.jpg'}}" alt="">
+                <img class="shadow-lg p-1 mb-2 profile-img " src="{{baseUrl+'/media/images/Reza.jpg'}}" alt="">
                 <hr class=" vertical-hr">
                 <h6>‌‌‌Reza Alidoost</h6>
                 <p>Front-end developer</p>
             </div>
             <div class="col-lg-3 col-md-6 profile-item">
-                <img class="shadow-lg p-1 mb-2 profile-img" src="{{baseUrl+'/media/images/developer-pro.jpg'}}" alt="">
+                <img class="shadow-lg p-1 mb-2 profile-img" src="{{baseUrl+'/media/images/Ali.JPG'}}" alt="">
                 <hr class=" vertical-hr">
                 <h6>Ali Behruz</h6>
                 <p>Front-end developer</p>
             </div>
             <div class="col-lg-3 col-md-6 profile-item">
-                <img class="shadow-lg p-1 mb-2 profile-img" src="{{baseUrl+'/media/images/developer-pro.jpg'}}" alt="">
+                <img class="shadow-lg p-1 mb-2 profile-img" src="{{baseUrl+'/media/images/mostafa.JPG'}}" alt="">
                 <hr class="vertical-hr">
                 <h6>Mostafa Masoudi</h6>
                 <p>Back-end developer</p>
             </div>
             <div class="col-lg-3 col-md-6 profile-item">
-                <img class="shadow-lg p-1 mb-2 profile-img" src="{{baseUrl+'/media/images/developer-pro.jpg'}}" alt="">
+                <img class="shadow-lg p-1 mb-2 profile-img" src="{{baseUrl+'/media/images/mamad.JPG'}}" alt="">
                 <hr class="vertical-hr">
                 <h6>Mohammad Yarmoghadam</h6>
                 <p>Back-end developer</p>
@@ -154,9 +170,9 @@
     <section #cta id="cta">
 
         <h3 class="cta-heading">Find the True and the Best Way to Plan your Journey.</h3>
-        <button routerLink="/homepage" type="button" class="btn btn-dark btn-lg download-btn"><i class="fas fa-eye user-icon-btn"></i> VISIT
+        <button routerLink="/homepage" type="button" class="btn  btn-lg download-btn-visit"><i class="fas fa-eye user-icon-btn"></i> VISIT
             US</button>
-        <button routerlink="/register" type="button" class="btn btn-light btn-lg download-btn"><i
+        <button (click)="goToLogin()" type="button" class="btn btn-light btn-lg download-btn"><i
                 class="fas fa-user-friends user-icon-btn"></i>
             JOIN US</button>
     </section>
