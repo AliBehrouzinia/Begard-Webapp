@@ -19,7 +19,6 @@ export class ProfileService {
     var url = environment.baseUrl + '/profile/' + id + '/header/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var url = environment.baseUrl + '/profile/' + id + '/header/';
 
       if (user == null) {
         return this.http.get<Profile>(url);

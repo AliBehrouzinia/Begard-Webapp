@@ -49,7 +49,7 @@ export class HomePageComponent implements OnInit {
 
     this.baseurl = environment.baseUrl;
     this.user.getUserId().subscribe(res => {
-      this.userPro = '/profile/' + res.pk;
+      this.userPro = 'profile/' + res.pk;
     });
 
     this.planOverviews = this.planOverviewService.getPlanOverviews()
@@ -108,32 +108,17 @@ export class HomePageComponent implements OnInit {
     );
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll(e) {
-    if (window.pageYOffset > 335) {
-      let element1 = document.getElementById('leftbar');
-      element1.classList.add('sticky');
-      let element2 = document.getElementById('rightbar');
-      element2.classList.add('sticky');
-      let element3 = document.getElementById('content');
-      element3.classList.add('sticky');
-
-    } else {
-      let element1 = document.getElementById('leftbar');
-      element1.classList.remove('sticky');
-
-      let element2 = document.getElementById('rightbar');
-      element2.classList.remove('sticky');
-
-      let element3 = document.getElementById('content');
-      element3.classList.remove('sticky');
-    }
-  }
-
   refresh() {
     location.reload()
   }
 
+  openNav(){
+    document.getElementById("mySidenav").style.width = "400px";
+  }
+
+  closeNav(){
+    document.getElementById("mySidenav").style.width = "0";
+  }
   goToMyplan() {
     if (this.isLogged)
       this.router.navigate(['/myplans'])

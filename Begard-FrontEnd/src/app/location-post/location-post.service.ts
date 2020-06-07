@@ -37,12 +37,20 @@ export class LocationPostService {
         private followServie: FollowService) { }
 
     getProfilePostData(id: string) {
+        var url = environment.baseUrl + "/profile/" + id + "/posts/";
+
         return this.authService.user.pipe(take(1), exhaustMap(user => {
-            var url = environment.baseUrl + "/profile/" + id + "/posts/";
-            return this.http.get<PostRes[]>(url,
-                {
-                }
-            );
+            if (user == null) {
+                return this.http.get<PostRes[]>(url);
+            } else {
+                var token = 'token ' + user.token;
+                return this.http.get<PostRes[]>(url,
+                    {
+                        headers: new HttpHeaders({ 'Authorization': token })
+                    }
+                );
+            }
+
         }));
     }
 

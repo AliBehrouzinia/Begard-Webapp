@@ -43,35 +43,28 @@
     border-radius: 10px;
 }
 
-#leftbar {
-    width: 20%;
-}
 
-#content {
-    width: 50%;
-}
-
-#content.sticky {
+/* #content.sticky {
     width: 50%;
     margin-left: 20%;
-}
+} */
 
-#leftbar.sticky {
-    width: 20%;
+/* #leftbar.sticky {
+    width: 100%;
     position: fixed;
     top: 60px;
-}
+} */
 
-#rightbar {
+/* #rightbar {
     width: 30%;
-}
+} */
 
-#rightbar.sticky {
+/* #rightbar.sticky {
     position: fixed;
     margin-left: 70%;
     width: 30%;
     top: 60px
-}
+} */
 
 .add-post {
     display: flex;
@@ -85,6 +78,34 @@
     transform: scale(1.25);
 }
 
+mat-card {
+    margin: 20px 0px;
+}
+
+.content-item {
+    padding: 0 !important;
+}
+
+.side-item {
+    padding: 0% 0% !important;
+    
+}
+
+.sidebar {
+    position: absolute;
+	top: 0;
+	left: 10%;
+	width: 80%;
+	height: 100%;
+	
+}
+
+.make-me-sticky {
+    position: -webkit-sticky;
+      position: sticky;
+      top: 80px;
+      
+  }
 .tp {
     animation: fadein 2s;
     -moz-animation: fadein 2s;
@@ -129,4 +150,89 @@
     to {
         opacity: 1;
     }
+}
+
+
+@media (max-width: 1000px) {
+    .side-item {
+        display: none;
+    }
+    #content {
+        padding: 20px;
+    }
+    
+}
+
+.top-planners-toggle {
+    float: right;
+    position: sticky;
+    top: 200px;
+    margin-top: 20px;
+    z-index: 100;
+    color: #3f51b5;
+    cursor: pointer; 
+}
+
+
+
+@media (min-width:1000px)
+{
+    .sidenav{
+        display: none;
+
+    }
+    .top-planners-toggle{
+        display: none;
+    }
+}
+
+
+
+  
+.sidenav {
+
+    height: 80%;
+    width: 0;
+    position: fixed;
+    z-index: 101;
+    top: 80px;
+    right: 0;
+    background-color: white;
+    overflow-x: hidden;
+    transition: 0.5s;
+    border-radius: 10px;
+    
+  }
+  
+  .sidenav a {
+    padding: 10px 10px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #3f51b5;
+    display: inline-block;
+    transition: 0.3s;
+  }
+  
+  .sidenav a:hover {
+    cursor: pointer;
+  }
+  
+  .sidenav .closebtn {
+    position: fixed;
+    z-index: 200;
+    
+    font-size: 36px;
+  
+  }
+  
+  .scrollbar-ripe-malinka::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar-ripe-malinka::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-image: -webkit-linear-gradient(330deg, #bbdefb 0%, #0d47a1 100%);
+    background-image: linear-gradient(120deg, #bbdefb 0%, #0d47a1 100%);
 }

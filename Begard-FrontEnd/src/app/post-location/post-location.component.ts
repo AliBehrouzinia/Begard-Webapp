@@ -180,7 +180,7 @@ export class PostLocationComponent implements OnInit {
         result.place_name,
         result.destination_city,
         result.user_name,
-        result.user_profile_image,
+        environment.baseUrl + result.user_profile_image,
         result.following_state,
         result.number_of_likes,
         result.is_liked,

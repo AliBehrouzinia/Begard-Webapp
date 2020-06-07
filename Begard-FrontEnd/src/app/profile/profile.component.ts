@@ -16,6 +16,7 @@ export interface DialogData {
   userId: string;
   username: string;
   unfollow: boolean;
+  followingRequestId: string
 }
 
 @Component({
@@ -34,6 +35,9 @@ export class ProfileComponent implements OnInit {
   noPlannerEnable = false
   followers: Follower[]
   followings: Follower[]
+  followingRequestId
+  public baseurl = environment.baseUrl;
+
 
   ngOnInit(): void {
     this.topPlaners.getTopPlanners().subscribe(tp => { this.allTopPlanners = tp; this.initTopPlanners(tp) });
@@ -52,6 +56,7 @@ export class ProfileComponent implements OnInit {
       this.postNum = res.posts_count;
       this.imgUrl = environment.baseUrl + res.profile_image;
       this.followingState = res.following_state;
+      this.followingRequestId = res.follow_request_id;
       if (this.followingState == "Follow") {
         this.allowFollowRequest = true;
       }
@@ -80,8 +85,10 @@ export class ProfileComponent implements OnInit {
       })
     })
 
+
+
     this.planService.getUserPlans(this.id).subscribe(plans => {
-      for (let i = 0; i < plans.length; i++) {
+      for (let i = plans.length - 1; i >= 0 ; i--) {
         this.plans.push({
           id: plans[i].id
           , destination_city_name: plans[i].destination_city_name
@@ -127,6 +134,9 @@ export class ProfileComponent implements OnInit {
         } else if (this.followingState == "Following") {
           this.allowFollowRequest = false;
           this.follwersNum += 1;
+        } else if (this.followingState == "Remove") {
+          this.followingState = "Follow"
+          this.allowFollowRequest = true;
         } else {
           this.allowFollowRequest = true;
           this.follwersNum -= 1;
@@ -170,12 +180,17 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['/plan', id]);
   }
 
+  goToProfile(){
+    this.router.navigate([this.proUrl]);
+  }
+
   onFollow() {
     this.profileService.onFollow(this.id).subscribe(res => {
       if (res.status == 'Followed') {
         this.followSerivce.updateFollow.emit([this.id, "Following"]);
       }
       else if (res.status == 'Requested') {
+        this.followingRequestId = res.follow_request_id
         this.followSerivce.updateFollow.emit([this.id, "Requested"]);
       }
     });
@@ -186,13 +201,13 @@ export class ProfileComponent implements OnInit {
     if (this.followingState == 'Requested') {
       dialogRef = this.dialog.open(UnfollowDialog, {
         height: 'auto',
-        minWidth: '600px',
-        data: { username: this.userName, userId: this.id, unfollow: false }
+        width: '600px',
+        data: { username: this.userName, userId: this.id, unfollow: false, followingRequestId: this.followingRequestId }
       });
     } else {
       dialogRef = this.dialog.open(UnfollowDialog, {
         height: 'auto',
-        minWidth: '600px',
+        width: '600px',
         data: { username: this.userName, userId: this.id, unfollow: true }
       });
     }
@@ -232,24 +247,6 @@ export class ProfileComponent implements OnInit {
     this.router.navigate(['/homepage']);
   }
 
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll(e) {
-    if (window.pageYOffset >= 480) {
-      let element1 = document.getElementById('leftbar');
-      element1.classList.add('sticky');
-      let element2 = document.getElementById('rightbar');
-      element2.classList.add('sticky');
-      let element3 = document.getElementById('content');
-      element3.classList.add('sticky');
-    } else {
-      let element = document.getElementById('leftbar');
-      element.classList.remove('sticky');
-      let element2 = document.getElementById('rightbar');
-      element2.classList.remove('sticky');
-      let element3 = document.getElementById('content');
-      element3.classList.remove('sticky');
-    }
-  }
 
   initTopPlanners(tp) {
     for (let i = 0; i < Math.min(tp.length, 6); i++) {
@@ -306,6 +303,7 @@ export class UnfollowDialog {
   username = "";
   userId;
   message;
+  followingRequestId
   constructor(
     public dialogRef: MatDialogRef<UnfollowDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -314,6 +312,7 @@ export class UnfollowDialog {
   ) {
     this.username += data.username;
     this.userId = data.userId;
+    this.followingRequestId = data.followingRequestId;
     if (data.unfollow) {
       this.message = "Do you want to unfollow " + this.username + " ?"
     } else {
@@ -332,7 +331,7 @@ export class UnfollowDialog {
       )
     }
     else {
-      this.followServce.removeRequest(this.userId).subscribe(
+      this.followServce.removeRequest(this.followingRequestId).subscribe(
         status => { this.handleUnfollowResponse(status, "request removed") }
       )
     }
@@ -343,6 +342,9 @@ export class UnfollowDialog {
     if (status == "200") {
       this.openSnackBar(mes + " successfully")
       this.followServce.updateFollow.next([this.userId, "Follow"])
+    } else if (status == "204") {
+      this.openSnackBar(mes + " successfully")
+      this.followServce.updateFollow.next([this.userId, "Remove"])
     } else {
       this.openSnackBar("something went wrong!")
     }

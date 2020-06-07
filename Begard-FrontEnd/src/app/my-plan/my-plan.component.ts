@@ -27,6 +27,7 @@ export class MyPlanComponent implements OnInit {
   followersCount = 0;
   followingCount = 0;
   topPlanners = [];
+  public baseurl = environment.baseUrl
   allTopPlanners = [];
   userId
   proUrl
@@ -40,24 +41,7 @@ export class MyPlanComponent implements OnInit {
     , private snackBar: MatSnackBar
   ) { }
 
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll(e) {
-    if (window.pageYOffset >= 480) {
-      let element1 = document.getElementById('leftbar');
-      element1.classList.add('sticky');
-      let element2 = document.getElementById('rightbar');
-      element2.classList.add('sticky');
-      let element3 = document.getElementById('content');
-      element3.classList.add('sticky');
-    } else {
-      let element = document.getElementById('leftbar');
-      element.classList.remove('sticky');
-      let element2 = document.getElementById('rightbar');
-      element2.classList.remove('sticky');
-      let element3 = document.getElementById('content');
-      element3.classList.remove('sticky');
-    }
-  }
+ 
 
   ngOnInit(): void {
     this.user.getUserId().subscribe(user => {
@@ -79,7 +63,7 @@ export class MyPlanComponent implements OnInit {
     this.myPlans = [];
     this.myPlanService.getMyPlans().subscribe(myPlans => {
       this.plansCount = myPlans.length;
-      for (let i = 0; i < myPlans.length; i++) {
+      for (let i = myPlans.length - 1; i >= 0 ; i--) {
         this.myPlans.push(new MyPlan(myPlans[i].id, myPlans[i].destination_city_name, myPlans[i].destination_city_id, this.setDateCreation(myPlans[i].creation_date), this.setCoverUrl(myPlans[i].cover)))
       };
     })

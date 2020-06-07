@@ -95,6 +95,7 @@ export class LocationPostComponent implements OnInit {
   }
 
   private setPostData(resdata: PostRes[]) {
+    this.posts = []
     for (var i = 0; i < resdata.length; i++) {
       this.posts.push(new Post(resdata[i].type,
         resdata[i].content,
@@ -152,7 +153,6 @@ export class LocationPostComponent implements OnInit {
   onFollow(post: Post) {
     if (post.followingState == "Follow") {
       this.postservice.onFollow(post.usrId).subscribe(res => {
-        this.followService.updateFollow.emit([post.usrId, "Following"]);
         if (res.status == "Followed") {
           this.followService.updateFollow.emit([post.usrId, "Following"]);
           for (var i = 0; i < this.posts.length; i++) {
@@ -160,6 +160,9 @@ export class LocationPostComponent implements OnInit {
               this.posts[i].followingState = "Following";
             }
           }
+        }
+        if (res.status == "Requested") {
+          this.followService.updateFollow.emit([post.usrId, "Requested"]);
         }
       });
     }

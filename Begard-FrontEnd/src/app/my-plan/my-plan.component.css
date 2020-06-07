@@ -184,6 +184,31 @@ mat-card-subtitle {
     -o-animation: fadein 2s;
 }
 
+.content-item {
+    padding: 0 !important;
+    margin-top: 40px;
+  }
+
+.side-item {
+    padding: 0% 3% !important;
+    
+  }
+  
+  .sidebar {
+    position: absolute;
+  top: 40px;
+  left: 10%;
+  width: 82%;
+  height: 100%;
+  }
+  
+  .make-me-sticky {
+    position: -webkit-sticky;
+      position: sticky;
+      top: 80px;
+      
+  }
+
 @keyframes fadein {
     from {
         opacity: 0;
@@ -252,3 +277,87 @@ mat-card-subtitle {
     width: 26.5% !important;
     top: 80px;
 }
+
+
+.pro-info {
+    height: auto;
+    width: 100%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    margin-top: -9%;
+    border-radius: 10px;
+    padding: 50px 0 30px;
+  }
+
+
+.header {
+    margin: 0;
+  }
+  
+  @media (max-width: 1000px) {
+  
+    .smaller{
+      font-size: 1rem !important;
+    }
+    .side-item {
+        display: none;
+    }
+    #content {
+        padding: 20px;
+    }
+    
+    .center-bar{
+        padding-left: 2.5%;
+        padding-right: 2.5%;
+        margin: 0 !important;
+    }
+
+    .user-name{
+      text-align: center;
+    }
+    .header{
+      margin: auto;
+      margin-top: 40px;
+      padding: 0 !important;
+  
+    }
+    .header-down {
+      margin: auto;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .followings {
+      margin-left: -30px !important;
+    }
+    .followers { 
+      margin-left: -45px !important;
+    }
+  
+    .posts {
+      margin-left: 45px;
+    }
+    .follow-btn{
+      position: relative !important;
+      position: relative !important;
+      right: 0 !important;
+      width: 100%;
+      margin: 0 !important;
+    }
+    .last-col{
+      text-align: center;
+    }
+  
+  
+  .user-font{
+    font-size: 1.5rem !important;
+  }
+  
+  }
+  
+  .post-items  {
+    cursor: pointer;
+  
+  }
+  .post-items:hover .post-items-num{
+    text-decoration: underline;
+  }

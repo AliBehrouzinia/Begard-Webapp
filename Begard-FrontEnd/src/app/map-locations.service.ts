@@ -16,12 +16,4 @@ export class MapLocationService {
     getLocations() {
         return this.locations;
     }
-
-    public addLocation(planitem) {
-        this.locations.push({ lan: planitem.place_info.lng, lat: planitem.place_info.lat, place_name: planitem.place_name })
-    }
-
-    public removeLocation(indx) {
-        this.locations.splice(indx, 1)
-    }
 }

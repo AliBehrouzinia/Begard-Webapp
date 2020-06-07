@@ -74,9 +74,9 @@ export class PlanComponent implements OnInit {
 
     this.userServie.getUserId().subscribe(res => {
       this.userId = res.pk;
-      if (this.userPlanId != this.userId) {
-        this.isOwn = false;
-      }
+      // if (this.userPlanId != this.userId) {
+      //   this.isOwn = false;
+      // }
     })
 
     this.gridItems = [];
@@ -211,7 +211,7 @@ export class PlanComponent implements OnInit {
   }
 
   openDialog(): void {
-    if (!this.isOwn) {
+    if (!this.isLoggedIn) {
       this.openSnackBar("you need to login to edit plan")
       return
     }

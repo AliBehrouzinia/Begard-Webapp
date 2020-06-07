@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing-page',
@@ -10,10 +11,15 @@ export class LandingPageComponent implements OnInit {
 
   public baseUrl;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.baseUrl = environment.baseUrl;
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']);
+
   }
 
   scrollTo($element1, $element2) {
