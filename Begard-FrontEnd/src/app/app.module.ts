@@ -39,7 +39,7 @@ import { DynamicSearchComponent } from './dynamic-search/dynamic-search.componen
 import { environment } from '../environments/environment';
 import { CalenderResolver } from './calender-resolver.service';
 import { HomePageComponent } from './home-page/home-page.component';
-import { NavBarComponent, NotifComponent } from './nav-bar/nav-bar.component';
+import { NavBarComponent} from './nav-bar/nav-bar.component';
 import { HorizontlListComponent } from './horizontl-list/horizontl-list.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { PlanOverviewComponent } from './plan-overview/plan-overview.component';
@@ -53,7 +53,7 @@ import { LocationCarouselComponent } from './location-post/location-carousel/loc
 
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LocationPostService } from './location-post/location-post.service';
-import { ProfileComponent, DialogOverviewExampleDialog } from './profile/profile.component';
+import { ProfileComponent, UnfollowDialog } from './profile/profile.component';
 import { TopPlannersComponent } from './top-planners/top-planners.component';
 import { MyPlanComponent } from './my-plan/my-plan.component';
 
@@ -67,8 +67,11 @@ import { PostLocationComponent } from './post-location/post-location.component';
 import { PostLocationService } from './post-location.service';
 
 import { MyLocationService } from './my-location.service';
+import { PlanComponent } from './plan/plan.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { FollowerDialogComponent } from './follower-dialog/follower-dialog.component';
 
-
+import { StarRatingComponent } from './start-rating/star-rating.component';
 
 @NgModule({
    declarations: [
@@ -91,9 +94,12 @@ import { MyLocationService } from './my-location.service';
       TopPlannersComponent,
       MyPlanComponent,
       ProfileComponent,
-      DialogOverviewExampleDialog,
+      UnfollowDialog,
       PostLocationComponent,
-      NotifComponent
+      PlanComponent,
+      LandingPageComponent,
+      FollowerDialogComponent,
+      StarRatingComponent
    ],
    imports: [
       BrowserModule,
@@ -117,11 +123,10 @@ import { MyLocationService } from './my-location.service';
       DateTimePickerModule,
       NguCarouselModule,
       TabModule,
-      MDBBootstrapModule
-
+      MDBBootstrapModule,
    ],
 
-   providers: [DataStorageService, MyPlanService, MyLocationService,ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
+   providers: [ DataStorageService, MyPlanService, MyLocationService, ProfileService, PostLocationService, TopPlannersService, UserService, LocationService, DynamicSearchService, CalenderResolver, MapLocationService, NavBarService, LocationPostService],
    bootstrap: [
       AppComponent
    ],

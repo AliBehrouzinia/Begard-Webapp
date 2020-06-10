@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PostPlan } from './post-plan';
 import { AuthService } from './auth.service';
 import { Profile } from './profile'
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +16,23 @@ export class ProfileService {
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
   getProfile(id) {
-    var url = 'http://127.0.0.1:8000/profile/' + id + '/header/';
+    var url = environment.baseUrl + '/profile/' + id + '/header/';
 
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
-      var token = 'token ' + user.token;
-      return this.http
-        .get<Profile>(url, {
-          observe: 'response',
-        })
-        .pipe(
-          map(res => {
-            return res.body;
+
+      if (user == null) {
+        return this.http.get<Profile>(url);
+      } else {
+        var token = 'token ' + user.token;
+        return this.http.get<Profile>(url, {
+          headers: new HttpHeaders({
+            'Authorization': token,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           })
+        }
         );
+      }
     }));
   }
 }

@@ -5,6 +5,7 @@ import { exhaustMap, take, map } from 'rxjs/operators';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { PostPlan } from './post-plan';
+import { environment } from 'src/environments/environment';
 
 export interface UserId {
   email,
@@ -21,12 +22,12 @@ export class UserService {
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
   getUserId() {
-    const url = 'http://127.0.0.1:8000/rest-auth/user/';
+    const url = environment.baseUrl + '/rest-auth/user/';
     return this.authservice.user.pipe(take(1), exhaustMap(user => {
 
       var token = 'token ' + user.token;
       return this.http
-        .put<UserId>(url,null, {
+        .put<UserId>(url, null, {
           observe: 'response',
           headers: new HttpHeaders({
             'Authorization': token

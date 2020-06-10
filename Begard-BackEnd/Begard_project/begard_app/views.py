@@ -1,7 +1,10 @@
 import datetime
 import enum
+import os
 from itertools import chain
 
+from django.views.generic import TemplateView
+from django.shortcuts import render
 from django.db.models import Q
 from django.http import JsonResponse
 from django.http.response import HttpResponseBadRequest
@@ -15,7 +18,7 @@ from .permissions import *
 from .managers.time_table import TimeTable
 from .serializers import PlanItemSerializer, PlanSerializer, GlobalSearchSerializer, AdvancedSearchSerializer, \
     SavePostSerializer, ShowPostSerializer, FollowingsSerializer, TopPostSerializer, LocationPostSerializer, \
-    UserPlansSerializer, ImageSerializer, TopPlannerSerializer
+    UserPlansSerializer, ImageSerializer, TopPlannerSerializer, CustomUserDetailsSerializer
 
 
 class ActionOnFollowRequestType(enum.Enum):
@@ -28,6 +31,11 @@ class FollowingState(enum.Enum):
     Following = 2,
     Requested = 3,
     Own = 4
+
+
+class HomePageView(TemplateView):
+    def get(self, request, **kwargs):
+        return render(request, 'index.html', context=None)
 
 
 class CitiesListView(generics.ListAPIView):
@@ -131,14 +139,13 @@ class PlansView(generics.ListCreateAPIView):
 
 
 class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated, GetUpdateDeletePlanPermission]
+    permission_classes = [AllowAny, GetUpdateDeletePlanPermission]
 
     def get(self, request, *args, **kwargs):
         plan_id = self.kwargs.get('id')
         plan = get_object_or_404(models.Plan, pk=plan_id)
 
         plan_details = serializers.PlanSerializer(instance=plan).data
-        plan_details.pop('user')
         plan_details['plan_items'] = []
 
         plan_items = models.PlanItem.objects.filter(plan=plan)
@@ -157,12 +164,23 @@ class GetUpdateDeletePlanView(generics.RetrieveUpdateDestroyAPIView):
         plan_id = self.kwargs.get('id')
         plan = get_object_or_404(models.Plan, id=plan_id)
 
+        if self.request.data.get('cover'):
+            post = get_object_or_404(models.Post, type='plan_post', plan_id=plan_id)
+            image = get_object_or_404(models.Image, post=post.id)
+            os.remove(image.image.path)
+            image.delete()
+
+            data = {'image': self.request.data.get('cover'), 'post': post.id}
+            serializer = ImageSerializer(data=data)
+            if serializer.is_valid(True):
+                serializer.save()
+
         plan_detail = self.request.data
         plan_detail['id'] = plan_id
 
         plan_detail.pop('plan_items')
 
-        plan_serializer = serializers.UpdatePlanSerializer(instance=plan, data=plan_detail)
+        plan_serializer = serializers.UpdatePlanSerializer(instance=plan, data=plan_detail, partial=True)
         if plan_serializer.is_valid(True):
             plan_serializer.save()
 
@@ -446,12 +464,14 @@ class FollowingRequestView(generics.CreateAPIView):
             serializer = serializers.FollowingsSerializer(data=follow_user_data)
             if serializer.is_valid(True):
                 serializer.save()
-                return Response(data={"status": "Followed"}, status=status.HTTP_201_CREATED)
+                return Response(data={"status": "Followed", "follow_request_id": None},
+                                status=status.HTTP_201_CREATED)
         else:
             serializer = serializers.FollowingRequestSerializer(data=data)
             if serializer.is_valid(True):
-                serializer.save()
-                return Response(data={"status": "Requested"}, status=status.HTTP_201_CREATED)
+                follow_request = serializer.save()
+                return Response(data={"status": "Requested", "follow_request_id": follow_request.id},
+                                status=status.HTTP_201_CREATED)
 
         return Response(status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -581,6 +601,7 @@ class ProfileDetailsView(generics.RetrieveAPIView):
         data['posts_count'] = models.Post.objects.filter(user=target_user).count()
         data['followings_count'] = models.UserFollowing.objects.filter(user_id=target_user).count()
         data['followers_count'] = models.UserFollowing.objects.filter(following_user_id=target_user).count()
+        data['follow_request_id'] = None
 
         if source_user == target_user:
             following_state = FollowingState.Own.name
@@ -588,6 +609,8 @@ class ProfileDetailsView(generics.RetrieveAPIView):
             following_state = FollowingState.Following.name
         elif models.FollowRequest.objects.filter(request_from=source_user.id, request_to=target_user).exists():
             following_state = FollowingState.Requested.name
+            data['follow_request_id'] = get_object_or_404(models.FollowRequest, request_from=source_user.id,
+                                                          request_to=target_user).id
         else:
             following_state = FollowingState.Follow.name
 
@@ -656,21 +679,23 @@ class TopPlannerView(generics.ListAPIView):
         users_list = list(users)
         for person in users_list:
             posts = models.Post.objects.filter(Q(user_id__in=users) & Q(user_id=person.id))
-            sum_of_rates = 0
-            for item1 in posts:
-                sum_of_rates += item1.rate
-            if len(posts) != 0:
-                person.average_rate = sum_of_rates / len(posts)
+            number_of_likes = 0
+            for item in posts:
+                number_of_likes += models.Like.objects.filter(post_id=item.id).count()
+            person.average_rate = number_of_likes
+        sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:20]
+        sorted_list.reverse()
+        for person in users_list:
+            if sorted_list[0].average_rate != 0:
+                person.average_rate = (person.average_rate / sorted_list[0].average_rate) * 9.9
             else:
                 person.average_rate = 0
-        sorted_list = sorted(users_list, key=lambda x: x.average_rate)[0:5]
-        sorted_list.reverse()
         return sorted_list
 
 
 class UserPlansView(generics.ListAPIView):
     serializer_class = UserPlansSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         user_pk = self.kwargs.get('id')
@@ -693,3 +718,31 @@ class LocationsOfPlanView(generics.ListAPIView):
 
     def get_queryset(self):
         return models.PlanItem.objects.filter(plan=self.kwargs.get('id'))
+
+
+class UserSearchView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = CustomUserDetailsSerializer
+
+    def get_queryset(self):
+        query = self.request.query_params.get('query', None)
+        result = models.BegardUser.objects.filter(email__icontains=query)
+        return result
+
+
+class UserFollowingView(generics.ListAPIView):
+    permission_classes = [AllowAny, IsPublicOrFollowing]
+    serializer_class = serializers.ListOfFollowingsSerializer
+
+    def get_queryset(self):
+        user = self.kwargs.get('id')
+        return models.UserFollowing.objects.filter(Q(user_id=user))
+
+
+class UserFollowerView(generics.ListAPIView):
+    permission_classes = [AllowAny, IsPublicOrFollowing]
+    serializer_class = serializers.ListOfFollowersSerializer
+
+    def get_queryset(self):
+        user = self.kwargs.get('id')
+        return models.UserFollowing.objects.filter(Q(following_user_id=user))

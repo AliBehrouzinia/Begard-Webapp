@@ -1,7 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Output, Inject, EventEmitter } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostPlanService } from '../post-plan.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UpdatePlanService } from '../update-plan.service';
+import { MyPlan } from './../data-storage.service'
+import { environment } from 'src/environments/environment';
 
 export interface PlanDetail {
   description: string;
@@ -22,16 +25,27 @@ export class PostDialogComponent implements OnInit {
   imgURL: any;
   public message: string;
   saveDisabled = true;
-
+  isUpdate = false
+  plan
 
   constructor(
     public dialogRef: MatDialogRef<PostDialogComponent>,
     public postPlanService: PostPlanService,
-    private snackBar: MatSnackBar
-  ) { }
+    public updatePlanService: UpdatePlanService,
+    private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) private data: MyPlan
+  ) {
+    if (data != null) {
+      this.plan = data
+      this.description = data.description;
+      this.isUpdate = true;
+      this.imgURL = environment.baseUrl + data.cover;
+    }
+  }
 
 
   ngOnInit(): void {
+    this.updateSaveButtonDisabled()
   }
 
   onCancel() {
@@ -39,8 +53,15 @@ export class PostDialogComponent implements OnInit {
   }
 
   onPost() {
-    this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
-      .subscribe(status => this.handleRequestResponse(status))
+    if (!this.isUpdate) {
+      this.postPlanService.setPostPlanDetail({ description: this.description, photo: this.coverBinaryString })
+        .subscribe(status => this.handleRequestResponse(status))
+    } else {
+      this.plan.description = this.description;
+      this.plan.cover = this.coverBinaryString;
+      this.updatePlanService.updatePlan(this.plan.id, this.plan)
+        .subscribe(status => this.handleRequestResponse(status))
+    }
     this.dialogRef.close();
   }
 
@@ -84,9 +105,10 @@ export class PostDialogComponent implements OnInit {
         this.saveDisabled = true;
       }
     }
-    else {
+    else if (this.description != undefined && this.isUpdate && this.description.length > 0) {
+      this.saveDisabled = false;
+    } else
       this.saveDisabled = true;
-    }
   }
 
   onChange(e) {
@@ -103,10 +125,13 @@ export class PostDialogComponent implements OnInit {
 
   handleRequestResponse(status) {
     if (status == "200") {
-      this.openSnackBar("plan saved successfully!")
+      if (this.isUpdate)
+        this.openSnackBar("plan updated successfully!")
+      else
+        this.openSnackBar("plan saved successfully!")
     }
     else {
-      this.openSnackBar("somethins went wrong!")
+      this.openSnackBar("something went wrong!")
     }
   }
 }

@@ -13,10 +13,10 @@ import { NgForm } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
 
-  error : string =null;
+  error: string = null;
   user = new Subject<User>();
 
-  constructor(private authService : AuthService , private router : Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
 
 
@@ -24,24 +24,19 @@ export class RegisterComponent implements OnInit {
   }
 
 
-  onCreateUser(registerData : NgForm){
-    if(!registerData.valid){
+  onCreateUser(registerData: NgForm) {
+    if (!registerData.valid) {
       return;
     }
     this.authService.signup(registerData.value)
-    .subscribe(
-      resData=> {
-      console.log(resData);
-        this.router.navigate(['/homepage']);
-      },
-      errorMessage => {
-        console.log(errorMessage);
-        this.error=errorMessage;
-      }
-    );
-    // console.log(registerData.value);
-    // this.dataStorageService.register(registerData.value)
-
+      .subscribe(
+        resData => {
+          this.router.navigate(['/homepage']);
+        },
+        errorMessage => {
+          this.error = errorMessage;
+        }
+      );
     registerData.reset();
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FollowService } from '../follow.service';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-top-planners',
@@ -9,8 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./top-planners.component.css']
 })
 export class TopPlannersComponent implements OnInit {
-  SERVER_URL = 'http://127.0.0.1:8000';
-
   @Input() userId
   @Input() email;
   @Input() username;
@@ -24,31 +22,36 @@ export class TopPlannersComponent implements OnInit {
   constructor(private followService: FollowService,
     private route: ActivatedRoute,
     private router: Router,
-    ) { }
+    public authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.email = this.email.substring(0, this.email.search('@'));
-
   }
 
   onFollow() {
     if (this.allowFollowRequest) {
       this.followService.sendFollowRequest({ request_to: this.userId }).subscribe(res => {
-        console.log(JSON.stringify(res))
         this.handleResponse(res.status)
       })
     }
+  }
+
+  goToProfile(id) {
+    location.assign('/profile/' + id)
   }
 
   handleResponse(status) {
     if (status == "Requested") {
       this.followButtonTitle = "Requested"
       this.allowFollowRequest = false
+      this.followService.updateFollow.next([this.userId, "Requested"])
     }
     else if (status == "Followed") {
       this.followButtonTitle = "Following"
       this.allowFollowRequest = false
+      this.followService.updateFollow.next([this.userId, "Following"])
+      this.followService.addFollowing()
     }
   }
-
 }

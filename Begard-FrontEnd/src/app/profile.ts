@@ -6,6 +6,7 @@ export class Profile {
     followings_count: number;
     followers_count: number;
     following_state: string;
+    follow_request_id: string;
 
     constructor(username: string,
         profile_image: string,

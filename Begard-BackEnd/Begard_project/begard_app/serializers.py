@@ -85,17 +85,52 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = BegardUser
-        fields = ('email', 'pk')
+        fields = ('email', 'pk', 'profile_img')
         read_only_fields = ('email',)
 
 
 class PlanItemSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        result = super(PlanItemSerializer, self).to_representation(instance)
+        place_id = instance.place_id
+
+        places = list(Restaurant.objects.filter(place_id=place_id))
+        places += list(Hotel.objects.filter(place_id=place_id))
+        places += list(Museum.objects.filter(place_id=place_id))
+        places += list(TouristAttraction.objects.filter(place_id=place_id))
+        places += list(RecreationalPlace.objects.filter(place_id=place_id))
+        places += list(Cafe.objects.filter(place_id=place_id))
+        places += list(ShoppingMall.objects.filter(place_id=place_id))
+
+        if len(places) == 0:
+            raise NotFound("any Location not found.")
+
+        result['place_info'] = {}
+        result['place_info']['id'] = place_id
+        result['place_info']['lat'] = places[0].lat
+        result['place_info']['lng'] = places[0].lng
+        result['place_name'] = places[0].name
+        result.pop('place_id')
+
+        return result
+
     class Meta:
         model = PlanItem
         fields = ['id', 'place_id', 'plan', 'start_date', 'finish_date']
 
 
 class PlanSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(PlanSerializer, self).to_representation(instance)
+        result.pop('destination_city')
+        result['destination_city_id'] = instance.destination_city.id
+        result['destination_city_name'] = instance.destination_city.name
+        post = get_object_or_404(Post, plan_id=instance.id, type='plan_post')
+        result['cover'] = get_object_or_404(Image, post=post.id).image.url
+
+        return result
+
     class Meta:
         model = Plan
         fields = ['id', 'user', 'destination_city', 'description', 'creation_date', 'start_date', 'finish_date']
@@ -178,6 +213,34 @@ class FollowingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFollowing
         fields = '__all__'
+
+
+class ListOfFollowingsSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(ListOfFollowingsSerializer, self).to_representation(instance)
+        user = instance.following_user_id
+        result['id'] = result.pop('following_user_id')
+        result['profile_img'] = user.profile_img.url
+        result['username'] = user.email
+        return result
+
+    class Meta:
+        model = UserFollowing
+        fields = ['following_user_id']
+
+
+class ListOfFollowersSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        result = super(ListOfFollowersSerializer, self).to_representation(instance)
+        user = instance.user_id
+        result['id'] = result.pop('user_id')
+        result['profile_img'] = user.profile_img.url
+        result['username'] = user.email
+        return result
+
+    class Meta:
+        model = UserFollowing
+        fields = ['user_id']
 
 
 class CreateLikeSerializer(serializers.ModelSerializer):
@@ -268,7 +331,9 @@ class MyPlansSerializer(serializers.ModelSerializer):
         post = get_object_or_404(Post, plan_id=ret['id'], type='plan_post')
         image = get_object_or_404(Image, post=post)
         ret['cover'] = image.image.url
-        ret['destination_city'] = instance.destination_city.name
+        ret.pop('destination_city')
+        ret['destination_city_id'] = instance.destination_city.id
+        ret['destination_city_name'] = instance.destination_city.name
 
         return ret
 
@@ -311,6 +376,10 @@ class UserPlansSerializer(serializers.ModelSerializer):
         post = get_object_or_404(Post, plan_id=result['id'], type='plan_post')
         image = get_object_or_404(Image, post=post)
         result['cover'] = image.image.url
+        result.pop('destination_city')
+        result.pop('user')
+        result['destination_city_id'] = instance.destination_city.id
+        result['destination_city_name'] = instance.destination_city.name
         return result
 
     class Meta:

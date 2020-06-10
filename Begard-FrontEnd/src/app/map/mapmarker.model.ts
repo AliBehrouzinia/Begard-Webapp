@@ -1,7 +1,5 @@
-export class MapMarker {
-    constructor(
-        public lan: string,
-        public lat: string
-    ) { }
-
+export interface MapMarker {
+    place_name: string,
+    lan: string,
+    lat: string
 }

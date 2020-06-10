@@ -18,20 +18,14 @@ class AnswerFollowRequestPermission(permissions.BasePermission):
 class GetUpdateDeletePlanPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            if request.method == "GET":
-                plan = models.Plan.objects.get(pk=view.kwargs['id'])
-                if not plan.is_public:
-                    user = plan.user
-                    if request.user == user:
-                        return True
-                    return False
+        plan = models.Plan.objects.get(pk=view.kwargs['id'])
+        if request.method == "GET":
+            if plan.user.is_public:
                 return True
-            plan = models.Plan.objects.get(pk=view.kwargs['id'])
-            user = plan.user
-            if request.user == user:
+            if models.UserFollowing.objects.filter(user_id=request.user.id, following_user_id=plan.user).exists():
                 return True
-            return False
+
+        return plan.user == request.user
 
 
 class LikeAndCommentOnPostPermission(permissions.BasePermission):
@@ -72,3 +66,17 @@ class IsPlanOwner(permissions.BasePermission):
     def has_permission(self, request, view):
         plan = get_object_or_404(models.Plan, id=view.kwargs.get('id'))
         return request.user == plan.user
+
+
+class IsPublicOrFollowing(permissions.BasePermission):
+    """Check that target user is public or one of followings of user that requested"""
+
+    def has_permission(self, request, view):
+        target_user = get_object_or_404(models.BegardUser, id=view.kwargs.get('id'))
+        source_user = request.user
+        if target_user.is_public:
+            return True
+        if source_user == target_user:
+            return True
+
+        return models.UserFollowing.objects.filter(user_id=source_user.id, following_user_id=target_user.id).exists()

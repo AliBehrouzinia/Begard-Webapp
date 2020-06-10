@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plan-overview',
@@ -7,18 +8,20 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./plan-overview.component.css']
 })
 export class PlanOverviewComponent implements OnInit {
-  SERVER_URL = 'http://127.0.0.1:8000';
   @Input() plannerUsername;
   @Input() planCity;
   @Input() planCover;
   @Input() planDateCreted;
   @Input() plannerProfileCover;
+  @Input() planId;
+  @Input() userId;
 
-  constructor() { }
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.planCover = this.SERVER_URL + this.planCover;
-    this.plannerProfileCover = this.SERVER_URL + this.plannerProfileCover;
+    this.planCover = environment.baseUrl + this.planCover;
+    this.plannerProfileCover = environment.baseUrl + this.plannerProfileCover;
     this.setDateCreation();
     this.setUserName();
   }
@@ -43,5 +46,13 @@ export class PlanOverviewComponent implements OnInit {
 
   setUserName() {
     this.plannerUsername = this.plannerUsername.substring(0, this.plannerUsername.search('@'));
+  }
+
+  goToProfile() {
+    this.router.navigate(['/profile', this.userId]);
+  }
+
+  goToPlan() {
+    this.router.navigate(['/plan', this.planId]);
   }
 }

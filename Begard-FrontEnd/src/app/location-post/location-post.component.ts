@@ -4,12 +4,17 @@ import { ThemePalette } from '@angular/material/core';
 import { CommentComponent, Comment } from './comment/comment.component';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FollowService } from '../follow.service';
+import { environment } from '../../environments/environment';
+import { AuthService } from '../auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from '../user.service';
 
-class Post {
+export class Post {
   constructor(
     public type: string,
     public description: string,
-    public imgSrc:string[],
+    public imgSrc: string[],
     public placeName: string,
     public city: string,
     public userName: string,
@@ -32,39 +37,41 @@ class Post {
   styleUrls: ['./location-post.component.css']
 })
 export class LocationPostComponent implements OnInit {
-
-  @Input() currentUrl;
-  commentFc = new FormControl()
-
   @ViewChildren(CommentComponent) child: QueryList<CommentComponent>;
-
+  @Input() currentUrl;
   public userName: string;
-
-
   public defaultValue: string = '';
-
   public posts: Post[] = [];
   centered = false;
   disabled = false;
   unbounded = false;
-
+  isLoggedIn = false
+  userId
+  commentFc = new FormControl()
   radius: number;
   color: ThemePalette = "primary";
 
   constructor(private postservice: LocationPostService,
-    private router: Router) {
+    private router: Router,
+    public authService: AuthService,
+    private followService: FollowService,
+    private snackBar: MatSnackBar,
+    private user: UserService) {
 
-
+    this.followService.updateFollow.subscribe(res => {
+      for (var i = 0; i < this.posts.length; i++) {
+        if (this.posts[i].usrId == res[0]) {
+          this.posts[i].followingState = res[1];
+        }
+      }
+    })
   }
 
   ngOnInit(): void {
     if (this.router.url === '/homepage') {
       this.postservice.getPostData().subscribe(resdata => {
-        
         this.setPostData(resdata);
       });
-      console.log(this.posts);
-      
     }
     else {
       this.postservice.getProfilePostData(this.currentUrl).subscribe(resdata => {
@@ -72,23 +79,31 @@ export class LocationPostComponent implements OnInit {
       })
     }
 
-  
+    this.postservice.newPost$.subscribe(np => {
+      if (np != null) {
+        this.posts.splice(0, 0, np)
+      }
+    })
 
+    this.authService.isLogedIn.subscribe(isLogged => {
+      this.isLoggedIn = isLogged;
+    })
 
-
-
+    this.user.getUserId().subscribe(res => {
+      this.userId = parseInt(res.pk);
+    })
   }
 
   private setPostData(resdata: PostRes[]) {
+    this.posts = []
     for (var i = 0; i < resdata.length; i++) {
-
       this.posts.push(new Post(resdata[i].type,
         resdata[i].content,
         resdata[i].images,
         resdata[i].place_name,
         resdata[i].destination_city,
         resdata[i].user_name,
-        resdata[i].user_profile_image,
+        environment.baseUrl + resdata[i].user_profile_image,
         resdata[i].following_state,
         resdata[i].number_of_likes,
         resdata[i].is_liked,
@@ -96,21 +111,20 @@ export class LocationPostComponent implements OnInit {
         resdata[i].user,
         true,
         resdata[i].number_of_comments));
-
     }
-
   }
-  onLike(post: Post) {
 
+  onLike(post: Post) {
+    if (!this.isLoggedIn) {
+      this.openSnackBar("login to like this post !")
+    }
     this.postservice.onLike(post.id).subscribe(resdata => {
       post.isLiked = true;
       post.likeNums++;
     });
-
-
   }
-  onDislike(post: Post) {
 
+  onDislike(post: Post) {
     this.postservice.disLike(post.id).subscribe(resdata => {
       post.isLiked = false;
       post.likeNums--;
@@ -126,35 +140,29 @@ export class LocationPostComponent implements OnInit {
             commentChild.updateComment(resdata);
             post.commentNums++;
             this.commentFc.reset();
-
           });
-
         }
       }
-
-
-
-
     }
-
-
-
   }
 
   goToProfile(id: number) {
     this.router.navigate(['/profile/' + id])
   }
 
-  onFollow(post : Post) {
-    if(post.followingState=="Follow")
-    {
-      this.postservice.onFollow(post.usrId).subscribe(res=>{
-        if(res.status == "Followed"){
-          for(var i=0;i<this.posts.length;i++){
-            if(this.posts[i].usrId == post.usrId){
+  onFollow(post: Post) {
+    if (post.followingState == "Follow") {
+      this.postservice.onFollow(post.usrId).subscribe(res => {
+        if (res.status == "Followed") {
+          this.followService.updateFollow.emit([post.usrId, "Following"]);
+          for (var i = 0; i < this.posts.length; i++) {
+            if (this.posts[i].usrId == post.usrId) {
               this.posts[i].followingState = "Following";
             }
           }
+        }
+        if (res.status == "Requested") {
+          this.followService.updateFollow.emit([post.usrId, "Requested"]);
         }
       });
     }
@@ -162,11 +170,22 @@ export class LocationPostComponent implements OnInit {
 
   onAbleComment(post: Post) {
     if (post.disable == true) {
+      if (!this.isLoggedIn) {
+        this.openSnackBar("login to leave a comment !")
+      }
       post.disable = false;
     }
     else {
       post.disable = true;
     }
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(
+      message, "", {
+      duration: 3 * 1000
+    }
+    );
   }
 
 }

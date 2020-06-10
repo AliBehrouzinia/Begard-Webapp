@@ -18,7 +18,6 @@ export class LocationService {
     public locations: MapMarker[];
 
     getLocations() {
-        console.log(this.locations);
         return this.locations.slice();
     }
 
@@ -31,13 +30,9 @@ export class LocationService {
     }
 
     setLocation(planitems: PlanItem[]) {
-        this.locations=[];
+        this.locations = [];
         for (var i = 0; i < planitems.length; i++) {
-            this.locations.push(new MapMarker(planitems[i].place_info.lng, planitems[i].place_info.lat));
+            this.locations.push({ lan: planitems[i].place_info.lng, lat: planitems[i].place_info.lat, place_name: planitems[i].place_name });
         }
-
     }
-
-
 }
-    

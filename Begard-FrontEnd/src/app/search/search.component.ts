@@ -9,6 +9,7 @@ import { LocationService } from '../map/location.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataStorageService } from '../data-storage.service';
 import { inArray } from '@syncfusion/ej2-angular-grids';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -20,7 +21,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   startDateControl: FormControl = new FormControl('', [Validators.required]);
   endDateControl: FormControl = new FormControl('', [Validators.required]);
-
   endDateDisable = true;
   endDateMin: Date;
   startDateMin: Date;
@@ -118,8 +118,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSearch() {
     if (!this.startDateControl.valid || !this.endDateControl.valid || !this.isDestinationValid()) {
-      console.log("zart");
-      console.log(this.startDateControl.valid + "  " + this.endDateControl.valid + "  " + this.isDestinationValid())
       return;
     }
     var startdate = new Date(this.startDateControl.value);
@@ -128,10 +126,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       startdate.getDate() + 'T0:0Z';
     var endday: string = enddate.getFullYear() + '-' + (+enddate.getMonth() + 1) + '-' +
       enddate.getDate() + 'T0:0Z';
-    this.dataStorageService.planUrl = 'http://127.0.0.1:8000/cities/' + this.cityCtrl.value?.id + '/suggest-plan/?start_date=' +
+    this.dataStorageService.planUrl = environment.baseUrl +'/cities/' + this.cityCtrl.value?.id + '/suggest-plan/?start_date=' +
       startday + '&finish_date=' + endday;
     this.dataStorageService.setStartDate(startday);
     this.dataStorageService.setEndDate(endday);
+    this.dataStorageService.setCityName(this.cityCtrl.value?.name)
     this.dataStorageService.setCity(this.cityCtrl.value?.id);
   }
 

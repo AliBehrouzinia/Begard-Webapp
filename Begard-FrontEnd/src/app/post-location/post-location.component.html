@@ -1,9 +1,9 @@
 <div class="example-card">
-	<div style="display:flex;">
+	<div class="user-wrap" style="display:flex;">
 		<div style="width:70%;display:flex;;overflow: hidden">
-			<img mat-card-avatar class="example-header-image" [src]="profileImage" />
-			<div
-				style="margin-top:15px;margin-left:15px;margin-right:10px;font-size:20px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap">
+			<img style="cursor: pointer;" mat-card-avatar class="example-header-image" [src]="profileImage" />
+			<div class="name" matTooltip="{{username}}" matTooltipPosition="after"
+				style="display: flex;align-items: center;margin-left:15px;margin-right:10px;font-size:20px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap">
 				{{username}}</div>
 		</div>
 		<div style="float:right;width:30%;justify-content:end;display: flex;">
@@ -12,7 +12,7 @@
 				<mat-select [formControl]="planControl" style="font-size: 17px;"
 					(selectionChange)="onPlanChange($event.value)">
 					<mat-option *ngFor="let p of plans" [value]="p">
-						{{p.destination_city}}
+						{{p.destination_city_name}}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
@@ -25,7 +25,7 @@
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
-			
+
 		</div>
 	</div>
 
